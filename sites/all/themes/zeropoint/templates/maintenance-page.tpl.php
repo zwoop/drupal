@@ -3,7 +3,7 @@
 
 <head>
 <title><?php print $head_title ?></title>
-<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<meta http-equiv="X-UA-Compatible" content="edge" />
 <?php print $head ?>
 <?php print $styles ?>
 <?php print $scripts ?>
@@ -35,12 +35,10 @@
   </div> <!-- /logo -->
   <div id="name-and-slogan">
 <?php if ($site_name) : ?>
-    <h1 id="site-name"><a href="<?php print check_url($front_page); ?>" title="<?php print t('Home'); ?>"><?php print $site_name; ?></a></h1>   
+    <h1 id="site-name"><a href="<?php print check_url($front_page); ?>" title="<?php print t('Home'); ?>"><?php print filter_xss_admin($site_name); ?></a></h1>   
 <?php endif; ?>
   <?php if ($site_slogan): ?>
-    <div id="site-slogan">
-      <?php print $site_slogan; ?>
-    </div>
+    <div id="site-slogan"><?php print filter_xss_admin($site_slogan); ?></div>
   <?php endif; ?>
   </div> <!-- /name-and-slogan -->
 
@@ -95,7 +93,7 @@
 
 <div id="footer" class="clearfix">
   <div class="legal">
-    Copyright &copy; <?php print date('Y') ?> <a href="/"><?php print $site_name ?></a>.
+    Copyright &copy; <?php print date('Y') ?> <a href="/"><?php print filter_xss_admin($site_name) ?></a>.
     <div id="brand"></div>
   </div>
 </div>

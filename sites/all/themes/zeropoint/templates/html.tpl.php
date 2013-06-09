@@ -3,9 +3,10 @@
   <?php print $rdf_namespaces ?>>
 
 <head profile="<?php print $grddl_profile ?>">
-<?php print $head ?>
 <title><?php print $head_title ?></title>
-<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<meta name="ver" content="zp7-1.9"/>
+<meta http-equiv="X-UA-Compatible" content="edge" />
+<?php print $head ?>
 <?php print $styles ?>
 <?php print $scripts ?>
 </head>
@@ -15,6 +16,6 @@
   <?php print $page_top; ?>
   <?php print $page; ?>
   <?php print $page_bottom; ?>
-<div class="byy"><a href="http://www.radut.net">by Dr. Radut</a>.</div>
+  <?php print $page_b; ?>
 </body>
 </html>

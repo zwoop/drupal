@@ -1,10 +1,8 @@
-/* style.css, v4.0 2010/01/18
+/* style.css, v4.1 2010/01/18
  *
  * 0 POINT theme for Drupal 7
  * Dr. Florian Radut, florian@radut.net
  */
-
-* {padding: 0;margin: 0;}
 
 body {
 	margin: 0;
@@ -270,7 +268,7 @@ ul.links {
   margin: 0;
   padding: 0;
 }
-ul.links.inline {
+ul.links.inline, #breadcrumb ul li {
   display: inline;
 }
 ul.links li {
@@ -304,10 +302,8 @@ td.section {
 	border-color: red;
 }
 .title, .title a {
-	font-weight: bold;
 	margin: 0 auto;
 }
-
 .block {
 	padding-bottom: 0.75em;
 	margin-bottom: .5em;
@@ -320,8 +316,7 @@ td.section {
 	padding: 0;
 	margin: 0 0 .25em 0;
 }
-.block h2.title a {
-	font-size: 100%;
+.block title a {
 	font-weight: bold;
 }
 .block .content {
@@ -344,13 +339,13 @@ td.section {
 }
 
 #main h2.title a {			/* front, node */
-	font-size: 130%;
+	font-size: 120%;
 	line-height: normal;
 	font-weight: normal;
 	text-transform: none;
 }
 #main h1.title {		/* node */
-	font-size: 180%;
+	font-size: 160%;
 	padding: 10px 0;
 	font-weight: normal;
 	text-transform: none;
@@ -371,15 +366,10 @@ td.section {
 .node .terms a {
 	font-weight: normal;
 }
-
 .terms ul.taxonomy ul.vocab-list, .terms ul.taxonomy li.vocab-term {
 	display: inline;
 	padding: 0;
 	margin: 0;
-}
-.terms ul.taxonomy li.vocab {
-	list-style: none;
-	font-weight: bold;
 }
 .submitted {
 	font-size: 0.8em;
@@ -407,6 +397,10 @@ h2.title.comments-header, h2.title.comment-form {
 .node .user-picture, .comment .user-picture {
 	float: right; /* LTR */
 	padding: 0 0 .5em .5em; /* LTR */
+}
+.node-unpublished,
+.comment-unpublished {
+	background-color: #fdd !important;
 }
 .signature p {
 	font-size: 85%;
@@ -467,10 +461,11 @@ div.admin-panel h3 {
 	margin: 0;
 	padding: 0;
 }
-#site-name a, #site-name a:hover {
+p#site-name a, p#site-name a:hover,
+h1#site-name a, h1#site-name a:hover {
 	font-weight: bold;
 	text-decoration: none;
-	font-size: 36px;
+	font-size: 32px;
 	line-height: normal;
 }
 #site-slogan {
@@ -517,6 +512,9 @@ div.admin-panel h3 {
 	clear: both;
 	font-size: 80%;
 }
+#breadcrumb ul {
+	margin: 0;
+}
 #breadcrumb .breadcrumb {
 	padding: 0;
 }
@@ -540,7 +538,7 @@ div.admin-panel h3 {
 	padding: 10px 20px 20px 20px;
 	overflow: visible;
 }
-#main .content .content a {
+#main .field-name-body a {
 	text-decoration: underline;
 }
 #main .block {
@@ -556,7 +554,8 @@ div.admin-panel h3 {
 #footer a {
 	font-weight: normal;
 }
-#footer ul.links li.first, ul.links li.first {
+#footer ul.links li.first, ul.links li.first,
+ul.links li.taxonomy-term-reference-0 {
 	border: none;
 }
 #footer .block ul, #footer ul.links li.first {
@@ -732,7 +731,7 @@ body.in-maintenance #main {
 /* li containing sublevels */
 #navlinks ul li {
 	position: relative;
-	z-index: 1;
+	/*z-index: 1;*/
 }
 
 /* set li width & color */
@@ -898,7 +897,7 @@ div.toboggan-login-link-container {
 }
 
 /*--- user ---*/
-.bicons32 #block-system-navigation .block-icon {
+.bicons32 #block-system-navigation .block-icon, .bicons32 #block-system-user-menu .block-icon {
 	background: transparent url(../images/icons/blocks/icon_08_32.png) no-repeat;
 }
 .bicons32 .block-shortcut .block-icon {
@@ -907,7 +906,7 @@ div.toboggan-login-link-container {
 .bicons32 #block-system-management .block-icon {
 	background: transparent url(../images/icons/blocks/icon_12_32.png) no-repeat;
 }
-.bicons48 #block-system-navigation .block-icon {
+.bicons48 #block-system-navigation .block-icon, .bicons48 #block-system-user-menu .block-icon {
 	background: transparent url(../images/icons/blocks/icon_08_48.png) no-repeat;
 }
 .bicons48 .block-shortcut .block-icon {
@@ -1065,7 +1064,7 @@ div.toboggan-login-link-container {
 	margin: auto 0;
 	padding-right: 0; /* LTR */
 }
-.picons .field-name-field-tags {
+.picons .field-type-taxonomy-term-reference {
 	background: url(../images/icons/tag.png) no-repeat left top; /* LTR */
 	padding-left: 20px; /* LTR */
 	margin: 10px 0;
@@ -1092,24 +1091,14 @@ div.toboggan-login-link-container {
 	padding-left: 20px; /* LTR */
 }
 
+/* HEADER IMAGE ROTATOR */
+.himg #headimg {
+	background: #fff url(../_custom/headerimg/rotate.php) no-repeat 100% 100%; /* rotates images in the headerimg folder */
+	border-bottom: 1px solid #eee;
+}
+
 /* MODULE SPECIFIC STYLES */
 
-.book-navigation {
-	padding-top: 20px;
-	clear: both;
-}
-.book-navigation a {
-	text-decoration: none !important;
-}
-.book-navigation a:hover {
-	text-decoration: underline !important;
-}
-.book-navigation .menu {
-	border-top: none;
-}
-.book-navigation .page-up {
-	width: 5%;
-}
 .panel-col-top .node .content {
 	background-image: none;
 }

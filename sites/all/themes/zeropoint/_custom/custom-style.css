@@ -2,15 +2,14 @@
 /* CUSTOM STYLE CSS         */
 /****************************/
 /* 
-Put your custom css and css overrides in this file.  By restricting 
-your css changes to custom-style.css, your changes will not be overwritten 
-when upgrading to a new version of this theme.
+Put your custom css and css overrides in this file.  By restricting your css changes to 
+custom-style.css, your changes will not be overwritten when upgrading to a new version of this theme.
 
 Steps to customize your 0 Point theme:                       
 1. Add your custom css to this file                
 2. Uncomment different examples and modify data as you wish 
 3. Clear cached data at admin/settings/performance 
-4. Save this file with a different name to avoid loosing it after a theme update.
+4. Save a copy of this file with a different name to avoid loosing it after a theme update.
 */
 /****************************/
 
@@ -29,13 +28,6 @@ Steps to customize your 0 Point theme:
 	height: 50px;
 }
 
-/************************/
-/* HEADER IMAGE ROTATOR */
-/************************/
-.himg #headimg {
-	background: #fff url(headerimg/rotate.php) no-repeat 100% 100%; /* rotates images in the headerimg folder */
-	border-bottom: 1px solid #eee;
-}
 
 /********************/
 /* DROP DOWN SHADOW */
@@ -72,10 +64,10 @@ ul.sublayer {
  * Uncomment the lines below and modify the value as you wish. 
  * E.g. 1000px for fixed width or 85% for fluid width */
 /*
-body.layout-fluid .sizer {
+body.layout-fluid .sizer0 {
 	width: 90%;
 }
-body.layout-fixed .sizer {
+body.layout-fixed .sizer0 {
 	width: 980px;
 }
 */
@@ -115,20 +107,26 @@ body.sidebar-second.eq .colright {
 /******************************/
 /* SPECIAL STATIC-MENU COLORS */
 /******************************/
+/* Uncomment this to have different colors for menu items. 
+ * Change the values below accordingly: XXX=menu item number; YYY=background color. */
 
-/* Uncomment this to have different colors (and chooose them) for first and last menu items. */
+/* First menu item */
 /*
 #navlist li.first a {
-	background: #D0932C;
-}
-#navlist li.last a {
-	background: #BF5D8C;
+	background: #YYY;
 }
 */
 
-/* Change the values below accordingly: XXX=menu numer; YYY=background color. */
+/* Middle menu items */
 /*
 #navlist li.menu-XXX a {
+	background: #YYY;
+}
+*/
+
+/* Last menu item */
+/*
+#navlist li.last a {
 	background: #YYY;
 }
 */
@@ -144,3 +142,13 @@ body.sidebar-second.eq .colright {
 	background: transparent url(../images/contact_48.png) no-repeat;
 }
 */
+
+
+/*************************/
+/* REMOVE DEVELOPER LINK */
+/*************************/
+
+.by {
+	display: none;
+}
+

@@ -17,6 +17,7 @@ function zeropoint_preprocess_maintenance_page(&$vars) {
 function zeropoint_preprocess_html(&$vars) {
   global $theme_key, $user;
 
+
 // Add to array of helpful body classes
   $vars['classes_array'][] = ($vars['is_admin']) ? 'admin' : 'not-admin';                                     // Page user is admin
   if (isset($vars['node'])) {
@@ -33,10 +34,10 @@ function zeropoint_preprocess_html(&$vars) {
 
 // Add unique classes for each page and website section
   if (!$vars['is_front']) {
-    $path = drupal_get_path_alias($_GET['q']);
+    $path = drupal_get_path_alias(check_plain($_GET['q']));
     list($section, ) = explode('/', $path, 2);
     $vars['classes_array'][] = ('section-' . $section);
-    $vars['classes_array'][] = ('page-' . $path);
+    $vars['classes_array'][] = ('page-' . check_plain($path));
   }
 
 
@@ -89,25 +90,17 @@ $headerimg = theme_get_setting('headerimg');
 // Add language and site ID classes
   $vars['classes_array'][] = ($vars['language']->language) ? 'lg-'. $vars['language']->language : '';        // Page has lang-x
 
-$siteid = theme_get_setting('siteid');
+$siteid = check_plain(theme_get_setting('siteid'));
   $vars['classes_array'][] = $siteid;
 
 
 // Add a unique page id
-  $vars['body_id'] = 'pid-' . strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', drupal_get_path_alias($_GET['q'])));
+  $vars['body_id'] = 'pid-' . strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', drupal_get_path_alias(check_plain($_GET['q']))));
 
 
 // Set IE6 & IE7 stylesheets
-  drupal_add_css(path_to_theme() . '/css/ie6.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'lte IE 6', '!IE' => FALSE), 'preprocess' => FALSE));
-  drupal_add_css(path_to_theme() . '/css/ie7.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'IE 7', '!IE' => FALSE), 'preprocess' => FALSE));
-
-
-// Get css styles 
-  function get_zeropoint_style() {
-    $style = theme_get_setting('style');
-    return $style;
-  }
-
+  drupal_add_css(drupal_get_path('theme','zeropoint').'/css/ie6.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'lte IE 6', '!IE' => FALSE), 'preprocess' => FALSE));
+  drupal_add_css(drupal_get_path('theme','zeropoint').'/css/ie7.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'IE 7', '!IE' => FALSE), 'preprocess' => FALSE));
   drupal_add_css(drupal_get_path('theme','zeropoint').'/css/style-zero.css', array('group' => CSS_THEME, 'every_page' => TRUE));
   drupal_add_css(drupal_get_path('theme','zeropoint') . '/css/' . get_zeropoint_style() . '.css', array('group' => CSS_THEME, 'every_page' => TRUE));
   drupal_add_css(drupal_get_path('theme','zeropoint').'/_custom/custom-style.css', array('group' => CSS_THEME, 'every_page' => TRUE));
@@ -118,6 +111,14 @@ $roundcorners = theme_get_setting('roundcorners');
 }
 
   drupal_add_css(drupal_get_path('theme','zeropoint').'/css/print.css', array('group' => CSS_THEME, 'media' => 'print', 'every_page' => TRUE));
+
+  $vars['page_b'] = ($vars['is_front']) ? '<div class="by"><a href="http://www.radut.net">by Dr. Radut</a></div>' : '<div class="by"><a href="http://www.radut.net/en/how-to-seo-and-sem">about seo</a></div>';
+}
+
+// Get css styles 
+function get_zeropoint_style() {
+$style = theme_get_setting('style');
+return $style;
 }
 
 
@@ -125,9 +126,38 @@ $roundcorners = theme_get_setting('roundcorners');
  * Page preprocessing
  */
 function zeropoint_preprocess_page(&$vars) {
-  // Hide breadcrumb on all pages
+// Hide breadcrumb on all pages
   if (theme_get_setting('breadcrumb_display') == 0) {
     $vars['breadcrumb'] = '';
+  }
+}
+
+
+/**
+ * Breadcrumb override
+ */
+
+function zeropoint_breadcrumb($variables) {
+  $breadcrumb = $variables['breadcrumb'];
+  if (!empty($breadcrumb)) {
+    // Provide a navigational heading to give context for breadcrumb links to
+    // screen-reader users. Make the heading invisible with .element-invisible.
+    $breadcrumb[] = drupal_get_title();
+    $output = '<h2 class="element-invisible">' . t('You are here') . '</h2>';
+    $lastitem = sizeof($breadcrumb);
+    $output .= '<ul class="breadcrumb">';
+    $a=1;
+    foreach($breadcrumb as $value) {
+        if ($a!=$lastitem){
+  $output .= '<li class="breadcrumb-'.$a.'">'. $value . t(' &raquo; ') . '</li>';
+          $a++;
+        }
+        else {
+            $output .= '<li class="breadcrumb-last">'.$value.'</li>';
+        }
+      }
+     $output .= '</ul>';
+    return $output;
   }
 }
 
@@ -145,7 +175,7 @@ $themedblocks = theme_get_setting('themedblocks');
   if ($themedblocks == '1'){ 
     $themed_regions = array('sidebar_first','sidebar_second','user1','user2','user3','user4','user5','user6','user7','user8');
   }
-  if (is_array($themed_regions))
+  if (isset($themed_regions) && is_array($themed_regions))
     $vars['themed_block'] = (in_array($vars['block']->region, $themed_regions)) ? TRUE : FALSE;
   else $vars['themed_block'] = FALSE;
 }
@@ -234,6 +264,31 @@ function zeropoint_preprocess_search_result(&$vars) {
 
 
 /**
+ * Implements theme_field__field_type().
+ */
+function zeropoint_field__taxonomy_term_reference($variables) {
+  $output = '';
+
+  // Render the label, if it's not hidden.
+  if (!$variables['label_hidden']) {
+    $output .= '<div class="field-label">' . $variables['label'] . ': </div>';
+  }
+
+  // Render the items.
+  $output .= ($variables['element']['#label_display'] == 'inline') ? '<ul class="links inline">' : '<ul class="links">';
+  foreach ($variables['items'] as $delta => $item) {
+    $output .= '<li class="taxonomy-term-reference-' . $delta . '"' . $variables['item_attributes'][$delta] . '>' . drupal_render($item) . '</li>';
+  }
+  $output .= '</ul>';
+
+  // Render the top-level DIV.
+  $output = '<div class="' . $variables['classes'] . (!in_array('clearfix', $variables['classes_array']) ? ' clearfix' : '') . '">' . $output . '</div>';
+
+  return $output;
+}
+
+
+/**
  * Set default form file input size 
  */
 function zeropoint_file($element) {
@@ -272,7 +327,7 @@ function zeropoint_login(){
       print '<ul class="links inline"><li class="first"><a href="' .url('user/'.$user->uid). '">' .$user->name. '</a></li><li><a href="' .url('user/logout'). '">' .t('Logout'). '</a></li></ul>'; 
     } 
     else { 
-      print '<ul class="links inline"><li class="first"><a href="' .url('user'). '">' .t('Login'). '</a></li><li><a href="' .url('user/register'). '">' .t('Register'). '</a></li></ul>'; 
+      print '<ul class="links inline"><li class="first"><a href="' .url('user'). '" rel="nofollow">' .t('Login'). '</a></li><li><a href="' .url('user/register'). '" rel="nofollow">' .t('Register'). '</a></li></ul>'; 
     }
   }
 }

@@ -20,6 +20,7 @@
       'nature' => t('Nature'),
       'ivy' => t('Ivy'),
       'ink' => t('Ink'),
+      'orange' => t('Orange'),
       'sangue' => t('Sangue'),
       'lime' => t('Lime'),
       'themer' => t('- Themer -'),
@@ -83,7 +84,7 @@
     '#type' => 'select',
     '#title' => t('Menu style and position'),
     '#default_value' => theme_get_setting('navpos'),
-    '#description' => t('If "Main menu" is selected in theme settings 0 Point will display a static menu. To activate the drop-down menu put the <a href="?q=/admin/structure/block/manage/system/main-menu/configure">Main menu block</a> in the "Drop Down menu" region and set the correct levels to "expanded" (the parent item). <br /> NOTE: Only the static menu can be properly centered. <br /> NOTE for RTL sites: IE6 will accept only left positioned Drop-Down menu.'),
+    '#description' => t('"Out of the box" 0 Point will display a static menu. To activate the drop-down menu put the <a href="?q=/admin/structure/block/manage/system/main-menu/configure">Main menu block</a> in the "Drop Down menu" region and set the correct levels to "expanded" (the parent item). <br /> NOTE: Only the static menu can be properly centered. <br /> NOTE for RTL sites: IE6 will accept only left positioned Drop-Down menu.'),
     '#options' => array(
       0 => 'Left',
       1 => 'Center',
@@ -94,7 +95,7 @@
   $form['tnt_container']['layout_settings']['roundcorners'] = array(
     '#type' => 'checkbox',
     '#title' => t('Rounded corners'),
-    '#description' => t('Some page elements (comments, search, blocks) and primary menu will have rounded corners in all browsers but IE. <br /> NOTE: With this option enabled 0 Point will not validate CSS2.'),
+    '#description' => t('Some page elements (comments, search, blocks) and primary menu will have rounded corners in all browsers but IE6,7. <br /> NOTE: With this option enabled 0 Point will not validate CSS2/CSS3.'),
     '#default_value' => theme_get_setting('roundcorners'),
   );
 
@@ -118,7 +119,7 @@
     '#default_value' => theme_get_setting('loginlinks'),
   );
 
-  // Breadcrumb
+// Breadcrumb
   $form['tnt_container']['general_settings']['breadcrumb'] = array(
     '#type' => 'fieldset',
     '#title' => t('Breadcrumb'),
@@ -131,7 +132,7 @@
     '#default_value' => theme_get_setting('breadcrumb_display'),
   );
 
-  // Search Settings
+// Search Settings
   if (module_exists('search')) {
     $form['tnt_container']['general_settings']['search_container'] = array(
       '#type' => 'fieldset',
@@ -171,7 +172,7 @@
       '#default_value' => theme_get_setting('search_info_upload'),
     );
 
-  // Development settings
+// Development settings
   $form['tnt_container']['themedev'] = array(
     '#type' => 'fieldset',
     '#title' => t('Theme development settings'),
@@ -186,6 +187,6 @@
     '#size' => 10,
 	);
 
-  // Return theme settings form
+// Return theme settings form
   return $form;
 }  
