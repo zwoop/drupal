@@ -476,7 +476,7 @@ function cdn_admin_details_form_validate($form, &$form_state) {
  * Default validate callback for the other settings form.
  */
 function cdn_admin_other_settings_form_validate($form, &$form_state) {
-  if ($form_state['values'][CDN_PICK_SERVER_PHP_CODE_VARIABLE] !== '') {
+  if (!empty($form_state['values'][CDN_PICK_SERVER_PHP_CODE_VARIABLE])) {
     $php_code = $form_state['values'][CDN_PICK_SERVER_PHP_CODE_VARIABLE];
     $servers = array();
     if (_cdn_eval_pick_server($php_code, $servers) === FALSE) {
@@ -569,9 +569,10 @@ function _cdn_admin_check_requirements() {
   if (!empty($errors)) {
     drupal_set_message(
       t(
-          'Please fix the following problems with the installation of the CDN
-          integration module:<br />!error-list You can also see them on
-          the !status-report.',
+          'The CDN module has detected the following <em>potential</em>
+          problems in its configuration:<br />
+          !error-list
+          You can also see them on the !status-report.',
           array(
             '!status-report' => l(t('status report'), 'admin/reports/status'),
             '!error-list' => theme('item_list', array('items' => $errors)),

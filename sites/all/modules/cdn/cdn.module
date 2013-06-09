@@ -2,61 +2,11 @@
 
 /**
  * @file
- * Implements the core hooks, defines, public and private functions.
+ * Implements the core hooks, public and private functions.
  */
 
-define('CDN_DISABLED', 0);
-define('CDN_TESTING', 1);
-define('CDN_ENABLED', 2);
 
-// Permissions.
-define('CDN_PERM_ACCESS_STATS',   'access per-page statistics');
-define('CDN_PERM_ACCESS_TESTING', 'access files on CDN when in testing mode');
-define('CDN_PERM_TOUCH',          'touch files');
-define('CDN_PERM_ADMIN',          'administer CDN configuration');
-
-// Variables and values.
-define('CDN_MODE_VARIABLE', 'cdn_mode');
-define('CDN_MODE_BASIC', 'basic');
-define('CDN_MODE_ADVANCED', 'advanced');
-define('CDN_STATUS_VARIABLE', 'cdn_status');
-define('CDN_STATS_VARIABLE', 'cdn_stats');
-define('CDN_DRUPAL_ROOT_VARIABLE', 'cdn_drupal_root');
-define('CDN_HTTPS_SUPPORT_VARIABLE', 'cdn_https_support');
-define('CDN_PICK_SERVER_PHP_CODE_VARIABLE', 'CDN_PICK_SERVER_PHP_CODE_VARIABLE');
-
-// Variables for exceptions.
-define('CDN_EXCEPTION_FILE_PATH_BLACKLIST_VARIABLE', 'cdn_exception_file_path_blacklist');
-define('CDN_EXCEPTION_FILE_PATH_BLACKLIST_DEFAULT',  "");
-define('CDN_EXCEPTION_FILE_PATH_WHITELIST_VARIABLE', 'cdn_exception_file_path_whitelist');
-define('CDN_EXCEPTION_FILE_PATH_WHITELIST_DEFAULT',  "misc/*.js\nmodules/*.js");
-define('CDN_EXCEPTION_DRUPAL_PATH_BLACKLIST_VARIABLE', 'cdn_exception_drupal_path_blacklist');
-define('CDN_EXCEPTION_DRUPAL_PATH_BLACKLIST_DEFAULT',  '');
-define('CDN_EXCEPTION_AUTH_USERS_BLACKLIST_VARIABLE', 'cdn_exception_auth_users_blacklist');
-define('CDN_EXCEPTION_AUTH_USERS_BLACKLIST_DEFAULT', 'admin*');
-
-// Variables for basic mode.
-define('CDN_BASIC_MAPPING_VARIABLE', 'cdn_basic_mapping');
-define('CDN_BASIC_MAPPING_HTTPS_VARIABLE', 'cdn_basic_mapping_https');
-define('CDN_BASIC_FARFUTURE_VARIABLE', 'cdn_farfuture_status');
-define('CDN_BASIC_FARFUTURE_DEFAULT', FALSE);
-define('CDN_BASIC_FARFUTURE_EXTENSIONS_VARIABLE', "cdn_farfuture_extensions");
-define('CDN_BASIC_FARFUTURE_EXTENSIONS_DEFAULT', "css\njs\nsvg\nico\ngif\njpg\njpeg\npng\notf\nttf\neot\nwoff\nflv\nswf");
-define('CDN_BASIC_FARFUTURE_GZIP_EXTENSIONS', "css\njs\nico\nsvg\neot\notf\nttf");
-define('CDN_BASIC_FARFUTURE_GZIP_DIRECTORY', "cdn/farfuture/gzip");
-define('CDN_BASIC_FARFUTURE_REMOVE_HEADERS', "Set-Cookie\nETag");
-define('CDN_BASIC_FARFUTURE_UNIQUE_IDENTIFIER_MAPPING_VARIABLE', 'cdn_farfuture_unique_identifier_mapping');
-define('CDN_BASIC_FARFUTURE_UNIQUE_IDENTIFIER_MAPPING_DEFAULT', "misc/*:modules/*:themes/*|drupal_version\nsites/*|mtime\nsites/*|.avi .m4v .mov .mp4 .wmv .flv|perpetual");
-define('CDN_BASIC_FARFUTURE_UNIQUE_IDENTIFIER_DEFAULT', 'mtime');
-
-// Variables for advanced mode.
-define('CDN_ADVANCED_PID_FILE_VARIABLE', 'cdn_advanced_pid_file');
-define('CDN_ADVANCED_SYNCED_FILES_DB_VARIABLE', 'cdn_advanced_synced_files_db');
-
-// Hardcoded settings for accessing the daemon's metadata, to show statistics.
-define('CDN_DAEMON_SYNCED_FILES_DB', 'synced_files.db');
-define('CDN_DAEMON_PERSISTENT_DATA_DB', 'persistent_data.db');
-define('CDN_DAEMON_FSMONITOR_DB', 'fsmonitor.db');
+require_once('cdn.constants.inc');
 
 
 //----------------------------------------------------------------------------
@@ -81,7 +31,7 @@ function cdn_file_url_alter(&$original_uri) {
   if (cdn_status_is_enabled()) {
     $scheme = file_uri_scheme($original_uri);
 
-    // If the current URI is an absolute or protocol-relevative URI, return
+    // If the current URI is an absolute or protocol-relative URI, return
     // immediately.
     if (($scheme && ($scheme == 'http' || $scheme == 'https'))
         || drupal_substr($original_uri, 0, 2) == '//'
@@ -90,6 +40,13 @@ function cdn_file_url_alter(&$original_uri) {
       return;
     }
     elseif ($scheme) {
+      // Only alter URLs for local stream wrappers. If a file is served
+      // remotely, it doesn't make sense to serve it from a CDN.
+      $local_schemes = array_keys(file_get_stream_wrappers(STREAM_WRAPPERS_LOCAL));
+      if (!in_array($scheme, $local_schemes)) {
+        return;
+      }
+
       // Attempt to get an external URL using the appropriate wrapper.
       if ($wrapper = file_stream_wrapper_get_instance_by_uri($original_uri)) {
         $uri = str_replace($GLOBALS['base_url'] . '/', '', $wrapper->getExternalUrl());
@@ -105,7 +62,7 @@ function cdn_file_url_alter(&$original_uri) {
     if (!cdn_check_protocol()) {
       return;
     }
-    if (!cdn_check_drupal_path($_GET['q'])) {
+    if (!cdn_check_drupal_path(current_path())) {
       return;
     }
     if (!cdn_check_file($uri)) {
@@ -514,6 +471,14 @@ function cdn_exit($destination = NULL) {
 function cdn_flush_caches() {
   // Force refresh of the blacklist.
   cdn_get_blacklist(TRUE);
+
+  // Clear aggregated CSS files for pages served via HTTP.
+  variable_del('cdn_css_cache_files_http');
+  file_scan_directory('public://cdn/css/http', '/.*/', array('callback' => 'drupal_delete_file_if_stale'));
+
+  // Clear aggregated CSS files for pages served via HTTPS.
+  variable_del('cdn_css_cache_files_https');
+  file_scan_directory('public://cdn/css/https', '/.*/', array('callback' => 'drupal_delete_file_if_stale'));
 }
 
 /**
@@ -605,12 +570,17 @@ function cdn_get_domains() {
 
       // Parse this line. It may or may not limit the CDN URL to a list of
       // file extensions.
-      if (strpos($line, '|') !== FALSE) {
-        $parts = explode('|', $line);
-        $domains[] = parse_url(trim($parts[0]), PHP_URL_HOST);
-      }
-      else {
-        $domains[] = parse_url(trim($line), PHP_URL_HOST);
+      $parts = explode('|', $line);
+      // It may also list more than one domain.
+      foreach (explode(' ', $parts[0]) as $part) {
+        // Remove white space.
+        $part = trim($part);
+        // Allow for protocol-relative domains. We prepend "http:", otherwise
+        // parse_url() won't return anything.
+        if (strpos($part, '//') === 0) {
+          $part = 'http:' . $part;
+        }
+        $domains[] = parse_url($part, PHP_URL_HOST);
       }
     }
   }
@@ -702,6 +672,12 @@ function cdn_request_is_https() {
            isset($_SERVER['HTTP_X_FORWARDED_PROTO'])
            &&
            $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'
+         )
+         ||
+         (
+           isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])
+           &&
+           $_SERVER['HTTP_X_FORWARDED_PROTOCOL'] == 'https'
          );
 }
 
@@ -789,18 +765,7 @@ function cdn_check_file($uri) {
  * Helper function to efficiently load include files for this module.
  */
 function cdn_load_include($basename) {
-  static $used = array();
-  static $base_path;
-
-  if (!isset($base_path)) {
-    $base_path = './' . drupal_get_path('module', 'cdn');
-  }
-
-  if (!isset($used[$basename])) {
-    require $base_path . "/cdn.$basename.inc";
-  }
-
-  $used[$basename] = TRUE;
+  module_load_include('inc', 'cdn', "cdn.$basename");
 }
 
 /**

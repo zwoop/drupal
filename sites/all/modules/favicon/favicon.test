@@ -6,28 +6,44 @@
  */
 
 class FaviconTestCase extends DrupalWebTestCase {
-  public function getInfo() {
+
+  /**
+   * Description of these test cases.
+   */
+  public static function getInfo() {
     return array(
-      'name' => 'Favicon block functionality',
-      'description' => 'Test blocks in Favicon',
+      'name' => 'Favicon functionality',
+      'description' => 'Check the favicon module works as expected',
       'group' => 'Favicon',
     );
-  } // end of getInfo()
-  
+  }
+
+  /**
+   * The setup function.
+   */
   public function setUp() {
     parent::setUp('favicon');
-  } // end of setUp()
-  
+  }
+
+  /**
+   * Test the return of the hook_menu function.
+   */
   public function testMenu() {
     $info = module_invoke('favicon', 'menu');
-    
     $this->assertEqual(1, count($info), t('Module defines one menu'));
-    $this->assertTrue(isset($info['favicon']), t('Module favicon exists.'));
-    $this->assertEqual(isset($info['favicon']['page callback']),'favicon_shortcut_icon', t('page callback link correct'));
-    $this->assertTrue($info['favicon']['access callback'], t('All can access callback'));
-    $this->assertEqual($info['favicon']['type'], MENU_CALLBACK, t('callback is menu callback'));
-  } // end of testMenu()
-  
+    $this->assertTrue(isset($info['favicon.ico']), t('Module favicon exists.'));
+    $this->assertEqual(isset($info['favicon.ico']['page callback']), 'favicon_shortcut_icon', t('page callback link correct'));
+    $this->assertTrue($info['favicon.ico']['access callback'], t('All can access callback'));
+    $this->assertEqual($info['favicon.ico']['type'], MENU_CALLBACK, t('callback is menu callback'));
+  }
+
+  /**
+   * Basic check for the default icon.
+   */
+  public function testGetFaviconFile() {
+    $this->assertEqual(_favicon_get_favicon_file(), realpath('misc/favicon.ico'));
+  }
+
   // unable to test favicon_shortcut_icon() header redirect because
   //  simple test does not use the theme settings from the site. It does something
   //  else. I've got two problems:

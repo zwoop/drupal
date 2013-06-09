@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Module file for favicon module.
+ */
+
+/**
  * Implements hook_menu().
  */
 function favicon_menu() {
@@ -10,6 +15,7 @@ function favicon_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
+
   return $items;
 }
 
@@ -17,15 +23,38 @@ function favicon_menu() {
  * Menu callback; forwards to the favicon.
  */
 function favicon_shortcut_icon() {
-  drupal_theme_initialize();
-  $favicon = theme_get_setting('favicon_path');
-  if (!$favicon) {
+  $file = _favicon_get_favicon_file();
+
+  if (empty($file)) {
     drupal_not_found();
   }
-  else {
-    $file = drupal_realpath($favicon);
-    header('Content-Type: image/x-icon');
-    header('Expires: 0');
-    readfile($file);
+
+  $mime = mime_content_type($file);
+  header('Content-Type: ' . $mime);
+  header('Expires: 0');
+
+  // The readfile function is disabled on some hosting providers.
+  $handle = fopen($file, 'rb');
+  if ($handle !== false) {
+    fpassthru($handle);
+    fclose($handle);
   }
+
+  drupal_exit();
+}
+
+/**
+ * Get the realpath to the favicon.
+ *
+ * @return string|bool
+ *   The absolute system path to the favicon file or
+ *   FALSE if it cannot be found.
+ */
+function _favicon_get_favicon_file() {
+  drupal_theme_initialize();
+  $favicon = theme_get_setting('favicon_path');
+
+  // If no theme favicon is supplied, use the Drupal default.
+  $favicon = empty($favicon) ? 'misc/favicon.ico' : $favicon;
+  return realpath($favicon);
 }

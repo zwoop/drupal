@@ -5,9 +5,9 @@ files[] = favicon.module
 files[] = favicon.test
 configure = admin/appearance/settings
 
-; Information added by drupal.org packaging script on 2011-04-06
-version = "7.x-1.x-dev"
+; Information added by drupal.org packaging script on 2013-06-06
+version = "7.x-1.0-rc1"
 core = "7.x"
 project = "favicon"
-datestamp = "1302048531"
+datestamp = "1370520352"
 

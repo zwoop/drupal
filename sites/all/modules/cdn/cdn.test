@@ -17,7 +17,18 @@ class CDNTestCase extends DrupalUnitTestCase {
     );
     $alt_server = array_merge($alt_server, $_SERVER);
     $_SERVER = $alt_server;
+    $this->setRequestProtocol('http');
 
+    // Pretend the CDN module is enabled; this ensures invocations of its own
+    // hook implementations will work as expected.
+    $cdn_module_file = drupal_get_path('module', 'cdn') . '/cdn.module';
+    $module_list = module_list();
+    $module_list['cdn']['filename'] = $cdn_module_file;
+    module_list(TRUE, FALSE, FALSE, $module_list);
+    $implementations = &drupal_static('module_implements');
+    $implementations = array();
+
+    $this->loadFile('cdn.constants.inc');
     $this->loadFile('cdn.module');
 
     // Override $conf to be able to use variable_set() and variable_get() in
@@ -55,9 +66,12 @@ class CDNTestCase extends DrupalUnitTestCase {
   function variableSetDefaults() {
     global $conf;
     $this->defaultConfig = array(
+      CDN_STATUS_VARIABLE => CDN_ENABLED,
+      CDN_MODE_VARIABLE => FALSE,
       CDN_HTTPS_SUPPORT_VARIABLE => FALSE,
       CDN_BASIC_MAPPING_VARIABLE => '',
       CDN_BASIC_MAPPING_HTTPS_VARIABLE => '',
+      CDN_BASIC_FARFUTURE_VARIABLE => FALSE,
     );
     $conf = array_merge($conf, $this->defaultConfig);
   }
@@ -93,6 +107,31 @@ class CDNTestCase extends DrupalUnitTestCase {
     $this->variableSet(CDN_HTTPS_SUPPORT_VARIABLE, $supported);
     $this->variableSet(CDN_BASIC_MAPPING_HTTPS_VARIABLE, $mapping);
   }
+
+  /**
+   * Given a file URI, get the expanded file path.
+   *
+   * @param $uri
+   *   @see file_stream_wrapper_get_instance_by_uri()
+   * @return
+   *  A Drupal root-relative path.
+   */
+  function getExpandedFilePath($uri) {
+    $wrapper = file_stream_wrapper_get_instance_by_uri($uri);
+    return str_replace($GLOBALS['base_url'] . '/', '', $wrapper->getExternalUrl());
+  }
+
+  /**
+   * Given a file URI, get its path, create the file and ensure it exists.
+   *
+   * @param $uri
+   *   @see getExpandedFilePath()
+   */
+  function touchFile($uri) {
+    $path = $this->getExpandedFilePath($uri);
+    $this->assertTrue(touch(rawurldecode($path)), 'Test file created.');
+    return $path;
+  }
 }
 
 class CDNGeneralTestCase extends CDNTestCase {
@@ -105,6 +144,7 @@ class CDNGeneralTestCase extends CDNTestCase {
   }
 
   function testHTTPSDetection() {
+    // HTTPS + HTTP_X_FORWARDED_PROTO permutations.
     $_SERVER['HTTPS'] = 'off';
     $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'http';
     $this->assertEqual(FALSE, cdn_request_is_https(), 'HTTP request detected.');
@@ -119,6 +159,24 @@ class CDNGeneralTestCase extends CDNTestCase {
 
     $_SERVER['HTTPS'] = 'on';
     $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'http';
+    $this->assertEqual(TRUE, cdn_request_is_https(), 'HTTPS request detected.');
+
+    // HTTPS + HTTP_X_FORWARDED_PROTOCOL permutations.
+    unset($_SERVER['HTTP_X_FORWARDED_PROTO']);
+    $_SERVER['HTTPS'] = 'off';
+    $_SERVER['HTTP_X_FORWARDED_PROTOCOL'] = 'http';
+    $this->assertEqual(FALSE, cdn_request_is_https(), 'HTTP request detected.');
+
+    $_SERVER['HTTPS'] = 'off';
+    $_SERVER['HTTP_X_FORWARDED_PROTOCOL'] = 'https';
+    $this->assertEqual(TRUE, cdn_request_is_https(), 'HTTPS request detected.');
+
+    $_SERVER['HTTPS'] = 'on';
+    $_SERVER['HTTP_X_FORWARDED_PROTOCOL'] = 'https';
+    $this->assertEqual(TRUE, cdn_request_is_https(), 'HTTPS request detected.');
+
+    $_SERVER['HTTPS'] = 'on';
+    $_SERVER['HTTP_X_FORWARDED_PROTOCOL'] = 'http';
     $this->assertEqual(TRUE, cdn_request_is_https(), 'HTTPS request detected.');
   }
 }
@@ -136,6 +194,7 @@ class CDNOriginPullTestCase extends CDNTestCase {
     parent::setUp();
     $this->loadFile('cdn.basic.inc');
     $this->loadFile('cdn.basic.farfuture.inc');
+    $this->variableSet(CDN_MODE_VARIABLE, CDN_MODE_BASIC);
   }
 
   /**
@@ -145,12 +204,18 @@ class CDNOriginPullTestCase extends CDNTestCase {
    *   The mapping to set; if FALSE, no new mapping will be set.
    * @param $parsed_reference
    *   The reference the parsed mapping will be compared to.
+   * @param $domains_reference
+   *   The reference the domains (as returned by cdn_get_domains()) will be
+   *   compared to.
    */
-  function assertMapping($mapping, $parsed_reference) {
+  function assertMapping($mapping, $parsed_reference, $domains_reference) {
     if ($mapping !== FALSE) {
       $this->variableSet(CDN_BASIC_MAPPING_VARIABLE, $mapping);
     }
     $this->assertEqual($parsed_reference, _cdn_basic_parse_raw_mapping(cdn_basic_get_mapping()), 'CDN mapping parsed correctly.');
+    $domains = cdn_get_domains();
+    sort($domains);
+    $this->assertEqual($domains_reference, $domains, 'CDN domains parsed correctly.');
   }
 
   function testMapping() {
@@ -159,11 +224,11 @@ class CDNOriginPullTestCase extends CDNTestCase {
     $this->assertEqual('', cdn_basic_get_mapping(), 'The default CDN mapping is empty.');
 
     // Ensure the parsing of the raw mapping works correctly.
-    $this->assertMapping('', array());
-    $this->assertMapping('http://cdn-a.com',  array('*' => array('http://cdn-a.com')));
-    $this->assertMapping('http://cdn-a.com/', array('*' => array('http://cdn-a.com')));
-    $this->assertMapping('//cdn-a.com',       array('*' => array('//cdn-a.com')));
-    $this->assertMapping('//cdn-a.com/',      array('*' => array('//cdn-a.com')));
+    $this->assertMapping('', array(), array());
+    $this->assertMapping('http://cdn-a.com',  array('*' => array('http://cdn-a.com')), array('cdn-a.com'));
+    $this->assertMapping('http://cdn-a.com/', array('*' => array('http://cdn-a.com')), array('cdn-a.com'));
+    $this->assertMapping('//cdn-a.com',       array('*' => array('//cdn-a.com')), array('cdn-a.com'));
+    $this->assertMapping('//cdn-a.com/',      array('*' => array('//cdn-a.com')), array('cdn-a.com'));
     $parsed_mapping = array(
       'css'  => array('http://cdn-a.com'),
       'jpg'  => array('http://cdn-a.com'),
@@ -172,9 +237,11 @@ class CDNOriginPullTestCase extends CDNTestCase {
       'zip'  => array('http://cdn-b.com'),
       '*'    => array('http://cdn-c.com'),
     );
+    $domains = array('cdn-a.com', 'cdn-b.com', 'cdn-c.com');
     $this->assertMapping(
       "http://cdn-a.com|.css .jpg .jpeg .png\nhttp://cdn-b.com|.zip\nhttp://cdn-c.com",
-      $parsed_mapping
+      $parsed_mapping,
+      $domains
     );
     $parsed_mapping = array(
       'css'  => array('http://cdn-a.com', 'http://cdn-d.com'),
@@ -183,22 +250,24 @@ class CDNOriginPullTestCase extends CDNTestCase {
       'png'  => array('http://cdn-a.com', 'http://cdn-d.com', 'http://cdn-b.com'),
       '*'    => array('http://cdn-c.com'),
     );
+    $domains = array('cdn-a.com', 'cdn-b.com', 'cdn-c.com', 'cdn-d.com');
     $this->assertMapping(
       "http://cdn-a.com http://cdn-d.com|.css .jpg .jpeg .png\nhttp://cdn-b.com|.png\nhttp://cdn-c.com",
-      $parsed_mapping
+      $parsed_mapping,
+      $domains
     );
 
     // When a HTTPS request is performed and the CDN is not marked to support
     // HTTPS, then it should fall back to the default CDN mapping.
     $this->setRequestProtocol('https');
-    $this->assertMapping(FALSE, $parsed_mapping);
+    $this->assertMapping(FALSE, $parsed_mapping, $domains);
 
     // When a HTTPS request is performed and the CDN *is* marked to support
     // HTTPS, then it should still fall back to the default CDN mapping. (When
     // file URLs are actually altered, it will then replace `http://` with
     // `https://` -- this will be tested in a different test.)
     $this->configureHTTPS(TRUE);
-    $this->assertMapping(FALSE, $parsed_mapping);
+    $this->assertMapping(FALSE, $parsed_mapping, $domains);
 
     // When a HTTPS request is performed *and* the CDN is marked to support
     // HTTPS *and* there's a HTTPS-specific CDN mapping, that mapping should
@@ -213,14 +282,46 @@ class CDNOriginPullTestCase extends CDNTestCase {
         'png'  => array('https://cdn-a.com'),
         'zip'  => array('https://cdn-b.com'),
         '*'    => array('https://cdn-c.com'),
-      )
+      ),
+      array('cdn-a.com', 'cdn-b.com', 'cdn-c.com')
     );
 
     // Ensure the default CDN mapping is used whenever a HTTP request occurs
     // and the CDN is marked to suppport HTTPS and there's a HTTPS-specific
     // CDN mapping.
     $this->configureHTTPS(FALSE);
-    $this->assertMapping(FALSE, $parsed_mapping);
+    $this->assertMapping(FALSE, $parsed_mapping, $domains);
+  }
+
+  function testFileUrlAlterHook() {
+    // Provide a very basic CDN mapping.
+    $this->variableSet(CDN_BASIC_MAPPING_VARIABLE, 'http://cdn-a.com');
+
+    $filename = 'újjáépítésérol — 100% in B&W.jpg';
+    $uri = "public://$filename";
+    $this->touchFile($uri);
+
+    cdn_file_url_alter($uri);
+    $expected = 'http://cdn-a.com' . base_path() . variable_get('file_public_path', conf_path() . '/files') . '/' . drupal_encode_path($filename);
+    $this->assertIdentical($uri, $expected, 'cdn_file_url_alter() works correctly.');
+  }
+}
+
+class CDNOriginPullFarFutureTestCase extends CDNTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Origin Pull mode — Far Future expiration',
+      'description' => 'Verify Origin Pull mode\'s Far Future expiration functionality.',
+      'group' => 'CDN',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+    $this->loadFile('cdn.basic.inc');
+    $this->loadFile('cdn.basic.farfuture.inc');
+    $this->variableSet(CDN_MODE_VARIABLE, CDN_MODE_BASIC);
+    $this->variableSet(CDN_BASIC_FARFUTURE_VARIABLE, TRUE);
   }
 
   /**
@@ -341,5 +442,108 @@ class CDNOriginPullTestCase extends CDNTestCase {
     $this->assertUFIMethod('sites/foo/bar/baz.ttf', 'md5_hash');
     $this->assertUFIMethod('sites/movies/foo.mov', 'perpetual');
     $this->assertUFIMethod('sites/movies/bar.mp4', 'perpetual');
+  }
+
+  function testFileUrlAlterHook() {
+    // We don't want to test the UFI functionality here.
+    $this->variableSet(CDN_BASIC_FARFUTURE_UNIQUE_IDENTIFIER_MAPPING_VARIABLE, '*|perpetual');
+    // Provide a very basic CDN mapping.
+    $this->variableSet(CDN_BASIC_MAPPING_VARIABLE, 'http://cdn-a.com');
+
+    $filename = 'újjáépítésérol — 100% in B&W.jpg';
+    $uri = "public://$filename";
+    $this->touchFile($uri);
+
+    cdn_file_url_alter($uri);
+
+    $path_info = pathinfo($filename);
+    $expected = implode('/', array(
+      'http://cdn-a.com' . base_path() . 'cdn/farfuture',
+      drupal_hmac_base64('perpetual:forever' . $path_info['filename'], drupal_get_private_key() . drupal_get_hash_salt()),
+      'perpetual:forever',
+      variable_get('file_public_path', conf_path() . '/files'),
+      drupal_encode_path($filename)
+    ));
+    $this->assertIdentical($uri, $expected, 'cdn_file_url_alter() works correctly.');
+  }
+}
+
+class CDNImageTestCase extends CDNTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Image HTML altering',
+      'description' => 'Verify that image URLs inside HTML are rewritten correctly.',
+      'group' => 'CDN',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+    $this->loadFile('cdn.fallback.inc');
+  }
+
+  function testImage() {
+    $cdn = 'http://cdn-a.com';
+    $this->variableSet(CDN_BASIC_MAPPING_VARIABLE, $cdn);
+    $this->variableSet(CDN_MODE_VARIABLE, CDN_MODE_BASIC);
+
+    // Image altering type 1: "just image", i.e. "<img />".
+    $template = function($url) {
+      return '<img src="' . $url . '" />';
+    };
+    // Simplest case possible.
+    $img_url = base_path() . 'foo/bar/image.png';
+    $html = $template($img_url);
+    cdn_html_alter_image_urls($html);
+    $this->assertIdentical($template($cdn . $img_url), $html, 'Image HTML correctly altered.');
+    // Query strings should not be stripped
+    $img_url = base_path() . 'foo/bar/image.png?foobar';
+    $html = $template($img_url);
+    cdn_html_alter_image_urls($html);
+    $this->assertIdentical($template($cdn . $img_url), $html, 'Image HTML correctly altered (query string not stripped).');
+    // In particular: not the query string used to generate image styles.
+    $img_url = base_path() . 'foo/bar/image.png?itok=1234abcd';
+    $html = $template($img_url);
+    cdn_html_alter_image_urls($html);
+    $this->assertIdentical($template($cdn . $img_url), $html, 'Image HTML correctly altered (image style query string not stripped).');
+    // Edge case: a script generating an image is not (yet) supported.
+    $img_url = base_path() . 'foo/bar/showimage?formula=12345.png';
+    $html = $template($img_url);
+    cdn_html_alter_image_urls($html);
+    $this->assertIdentical($template($cdn . $img_url), $html, 'Image HTML correctly altered (query string not stripped).');
+
+    // Image altering type 2: "linked image", i.e. "<a><img /></a>"..
+    $template = function($a_url, $img_url) {
+      return '<a href="' . $a_url . '"><img src="' . $img_url . '" /></a>';
+    };
+    // Simplest case possible: a linked image linking to the same image.
+    $img_base_url = base_path() . 'foo/bar/image';
+    $a_url = $img_url = $img_base_url . '.png';
+    $html = $template($a_url, $img_url);
+    cdn_html_alter_image_urls($html);
+    $this->assertIdentical($template($cdn . $a_url, $cdn . $img_url), $html, 'Linked image HTML correctly altered.');
+    // Slightly more complex: a linked image linking to a derivative image.
+    $img_url = $img_base_url . '-thumbnail.png?itok=5678wxyz';
+    $html = $template($a_url, $img_url);
+    cdn_html_alter_image_urls($html);
+    $this->assertIdentical($template($cdn . $a_url, $cdn . $img_url), $html, 'Linked image HTML correctly altered.');
+    // Slightly more complex: a linked derivative image linking to another
+    // derivative image.
+    $a_url = $img_base_url . '-large.png?itok=9012klmn';
+    $img_url = $img_base_url . '-thumbnail.png?itok=5678wxyz';
+    $html = $template($a_url, $img_url);
+    cdn_html_alter_image_urls($html);
+    $this->assertIdentical($template($cdn . $a_url, $cdn . $img_url), $html, 'Linked image HTML correctly altered.');
+    // Ensure that images linking to content (i.e. not a bigger version of the
+    // image) don't get their anchors modified
+    $a_url = base_path() . 'node';
+    $html = $template($a_url, $img_url);
+    cdn_html_alter_image_urls($html);
+    $this->assertIdentical($template($a_url, $cdn . $img_url), $html, 'Linked image HTML correctly altered (anchor unmodified).');
+    // Same, but now for a link with a query string.
+    $a_url = base_path() . 'node?foobar';
+    $html = $template($a_url, $img_url);
+    cdn_html_alter_image_urls($html);
+    $this->assertIdentical($template($a_url, $cdn . $img_url), $html, 'Linked image HTML correctly altered (anchor unmodified, even with query strings).');
   }
 }

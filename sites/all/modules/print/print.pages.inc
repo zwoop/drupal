@@ -23,10 +23,15 @@ function print_controller_html() {
   $path = filter_xss(implode('/', $args));
   $cid = isset($_GET['comment']) ? (int)$_GET['comment'] : NULL;
 
-  $print = print_controller($path, $cid, PRINT_HTML_FORMAT);
+  // Handle the query
+  $query = $_GET;
+  unset($query['q']);
+
+  $print = print_controller($path, $query, $cid, PRINT_HTML_FORMAT);
   if ($print !== FALSE) {
     $node = $print['node'];
     $html = theme('print', array('print' => $print, 'type' => PRINT_HTML_FORMAT, 'node' => $node));
+    drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
     drupal_send_headers();
     print $html;
 
@@ -50,6 +55,9 @@ function print_controller_html() {
  *
  * @param $path
  *   path of the original page
+ * @param array $query
+ *   (optional) array of key/value pairs as used in the url() function for the
+ *   query
  * @param $cid
  *   comment ID of the individual comment to be rendered
  * @param $format
@@ -64,7 +72,7 @@ function print_controller_html() {
  * @see _print_generate_path()
  * @see _print_generate_book()
  */
-function print_controller($path, $cid = NULL, $format = PRINT_HTML_FORMAT, $teaser = FALSE, $message = NULL) {
+function print_controller($path, $query = NULL, $cid = NULL, $format = PRINT_HTML_FORMAT, $teaser = FALSE, $message = NULL) {
   if (empty($path)) {
     // If no path was provided, let's try to generate a page for the referer
     global $base_url;
@@ -81,22 +89,22 @@ function print_controller($path, $cid = NULL, $format = PRINT_HTML_FORMAT, $teas
     $path = $alias;
   }
   $parts = explode('/', $path);
-  if (($parts[0] == 'node') && (count($parts) > 1)) {
+  if (($parts[0] == 'node') && (count($parts) > 1) && ctype_digit($parts[1])) {
     array_shift($parts);
     $path = implode('/', $parts);
   }
   if (ctype_digit($parts[0]) && (count($parts) == 1)) {
-    $print = _print_generate_node($path, $cid, $format, $teaser, $message);
+    $print = _print_generate_node($path, $query, $cid, $format, $teaser, $message);
   }
   else {
     $ret = preg_match('!^book/export/html/(.*)!i', $path, $matches);
     if ($ret == 1) {
       // This is a book PF page link, handle trough the book handling functions
-      $print = _print_generate_book($matches[1], $format, $teaser, $message);
+      $print = _print_generate_book($matches[1], $query, $format, $teaser, $message);
     }
     else {
       // If no content node was found, handle the page printing with the 'printable' engine
-      $print = _print_generate_path($path, $format, $teaser, $message);
+      $print = _print_generate_path($path, $query, $format, $teaser, $message);
     }
   }
 
@@ -141,6 +149,9 @@ function _print_robots_meta_generator() {
  *
  * @param $node
  *   generated node with a printer-friendly node body
+ * @param array $query
+ *   (optional) array of key/value pairs as used in the url() function for the
+ *   query
  * @param $message
  *   optional sender's message (used by the send email module)
  * @param $cid
@@ -149,7 +160,7 @@ function _print_robots_meta_generator() {
  * @return
  *   array with the fields to be used in the template
  */
-function _print_var_generator($node, $message = NULL, $cid = NULL) {
+function _print_var_generator($node, $query = NULL, $message = NULL, $cid = NULL) {
   global $base_url, $language, $_print_urls;
 
   $path = empty($node->nid) ? $node->path : "node/$node->nid";
@@ -177,7 +188,7 @@ function _print_var_generator($node, $message = NULL, $cid = NULL) {
   $print['scripts'] = drupal_get_js();
   $print['footer_scripts'] = drupal_get_js('footer');
   $print['robots_meta'] = _print_robots_meta_generator();
-  $print['url'] = url($path, array('absolute' => TRUE));
+  $print['url'] = url($path, array('absolute' => TRUE, 'query' => $query));
   $print['base_href'] = "<base href='" . $print['url'] . "' />\n";
   $print['favicon'] = theme_get_setting('toggle_favicon') ? "<link rel='shortcut icon' href='" . theme_get_setting('favicon') . "' type='image/x-icon' />\n" : '';
 
@@ -214,7 +225,7 @@ function _print_var_generator($node, $message = NULL, $cid = NULL) {
   }
 
   $window_close = ($print_html_new_window && $print_html_windowclose) ? 'window.close();' : '';
-  $print['sendtoprinter'] = $print_html_sendtoprinter ? "<script type='text/javascript'>(function ($) { Drupal.behaviors.print = { attach: function(context) {window.print();$window_close}};}(jQuery));</script>" : '';
+  $print['sendtoprinter'] = $print_html_sendtoprinter ? '<script type="text/javascript">(function ($) { Drupal.behaviors.print = {attach: function(context) {$(window).load(function() {window.print();' . $window_close . '})}}})(jQuery);</script>' : '';
 
   switch ($print_logo_options) {
     case 0: // none
@@ -227,8 +238,9 @@ function _print_var_generator($node, $message = NULL, $cid = NULL) {
       $logo_url = strip_tags($print_logo_url);
       break;
   }
+  $logo_url = preg_replace('!^' . base_path() . '!', '', $logo_url);
   $site_name = variable_get('site_name', 'Drupal');
-  $print['logo'] = $logo_url ? "<img class='print-logo' src='" . check_url($logo_url) . "' alt='$site_name' id='logo' />\n" : '';
+  $print['logo'] = $logo_url ? theme('image', array('path' => $logo_url, 'alt' => $site_name, 'attributes' => array('class' => 'print-logo', 'id' => 'logo'))) : '';
 
   switch ($print_footer_options) {
     case 0: // none
@@ -263,7 +275,7 @@ function _print_var_generator($node, $message = NULL, $cid = NULL) {
       $url = $base_url . '/' . (((bool)variable_get('clean_url', '0')) ? '' : '?q=') . $path;
     }
     if (is_int($cid)) {
-      $url .= '#comment-$cid';
+      $url .= "#comment-$cid";
     }
     $retrieved_date = format_date(REQUEST_TIME, 'short');
     $print_text_retrieved = filter_xss(variable_get('print_text_retrieved', t('retrieved on %date')));
@@ -340,9 +352,25 @@ function _print_rewrite_urls($matches) {
     if (preg_match('!^(?:href|src)\s*?=(.*)!i', $attribs[$i], $urls) > 0) {
       $url = trim($urls[1], " \t\n\r\0\x0B\"'");
 
-      if (strpos(html_entity_decode($url), '://') || preg_match('!^mailto:.*?@.*?\..*?$!iu', html_entity_decode($url))) {
+      if (empty($url)) {
+        // If URL is empty, use current_url
+        $path = explode('/', $_GET['q']);
+        unset($path[0]);
+        $path = implode('/', $path);
+        if (ctype_digit($path)) {
+          $path = "node/$path";
+        }
+        // Printer-friendly URLs is on, so we need to make it absolute
+        $newurl = url($path, array('fragment' => drupal_substr($url, 1), 'absolute' => TRUE));
+      }
+      elseif (strpos(html_entity_decode($url), '://') || preg_match('!^mailto:.*?@.*?\..*?$!iu', html_entity_decode($url))) {
         // URL is absolute, do nothing
         $newurl = $url;
+      }
+      elseif (strpos(html_entity_decode($url), '//') === 0) {
+        // URL is 'almost absolute', but it does not contain protocol; replace with base_path protocol
+        $newurl = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . ":" . $url;
+        $matches[1] = str_replace($url, $newurl, $matches[1]);
       }
       else {
         if ($url[0] == '#') {
@@ -402,7 +430,7 @@ function _print_rewrite_urls($matches) {
  */
 function _print_friendly_urls($url = 0) {
   static $urls = array();
-  if ($url) {
+  if ($url !== 0) {
     $url_idx = array_search($url, $urls);
     if ($url_idx !== FALSE) {
       return ($url_idx + 1);
@@ -468,6 +496,9 @@ function _print_url_list_enabled($node, $format = PRINT_HTML_FORMAT) {
  *
  * @param $nid
  *   node ID of the node to be rendered into a printer-friendly page
+ * @param array $query
+ *   (optional) array of key/value pairs as used in the url() function for the
+ *   query
  * @param $cid
  *   comment ID of the individual comment to be rendered
  * @param $format
@@ -479,7 +510,7 @@ function _print_url_list_enabled($node, $format = PRINT_HTML_FORMAT) {
  * @return
  *   filled array ready to be used in the template
  */
-function _print_generate_node($nid, $cid = NULL, $format = PRINT_HTML_FORMAT, $teaser = FALSE, $message = NULL) {
+function _print_generate_node($nid, $query = NULL, $cid = NULL, $format = PRINT_HTML_FORMAT, $teaser = FALSE, $message = NULL) {
   global $_print_urls;
 
   if (!isset($langcode)) {
@@ -513,7 +544,7 @@ function _print_generate_node($nid, $cid = NULL, $format = PRINT_HTML_FORMAT, $t
 
   if ($cid === NULL) {
     // Adapted (simplified) version of node_view
-    //Render the node content
+    // Render the node content
     node_build_content($node, $view_mode);
 
     // Disable the links area
@@ -530,15 +561,24 @@ function _print_generate_node($nid, $cid = NULL, $format = PRINT_HTML_FORMAT, $t
   $print_comments = variable_get('print_comments', PRINT_COMMENTS_DEFAULT);
 
   if (function_exists('comment_node_page_additions') && (($cid != NULL) || ($print_comments))) {
-    //Print only the requested comment (or if $cid is NULL, all of them)
+    // Print only the requested comment (or if $cid is NULL, all of them)
 
     $comments = comment_node_page_additions($node);
-    unset($comments['comment_form']);
-    foreach ($comments['comments'] as &$comment) {
-      unset($comment['links']);
-    }
+    if (!empty($comments)) {
+      unset($comments['comment_form']);
+      foreach ($comments['comments'] as $key => &$comment) {
+        if (is_numeric($key)) {
+          if (($cid != NULL) && ($key != $cid)) {
+            unset($comments['comments'][$key]);
+          }
+          else {
+            unset($comment['links']);
+          }
+        }
+      }
 
-    $build['comments'] = $comments;
+      $build['comments'] = $comments;
+    }
   }
 
   $build += array(
@@ -554,7 +594,7 @@ function _print_generate_node($nid, $cid = NULL, $format = PRINT_HTML_FORMAT, $t
 
   $content = render($build);
 
-  //Get rid of any links before the content
+  // Get rid of any links before the content
   $parts = explode('<div class="content', $content, 2);
   if (count($parts) == 2) {
     $pattern = '!(.*?)<a [^>]*?>(.*?)</a>(.*?)!mis';
@@ -562,14 +602,14 @@ function _print_generate_node($nid, $cid = NULL, $format = PRINT_HTML_FORMAT, $t
     $content = implode('<div class="content', $parts);
   }
 
-  //Check URL list settings
+  // Check URL list settings
   $_print_urls = _print_url_list_enabled($node, $format);
 
   // Convert the a href elements
   $pattern = '!<(a\s[^>]*?)>(.*?)(</a>)!is';
   $content = preg_replace_callback($pattern, '_print_rewrite_urls', $content);
 
-  $print = _print_var_generator($node, $message, $cid);
+  $print = _print_var_generator($node, $query, $message, $cid);
   $print['content'] = $content;
 
   return $print;
@@ -580,6 +620,9 @@ function _print_generate_node($nid, $cid = NULL, $format = PRINT_HTML_FORMAT, $t
  *
  * @param $path
  *   path of the node to be rendered into a printer-friendly page
+ * @param array $query
+ *   (optional) array of key/value pairs as used in the url() function for the
+ *   query
  * @param $format
  *   format of the page being generated
  * @param $teaser
@@ -589,7 +632,7 @@ function _print_generate_node($nid, $cid = NULL, $format = PRINT_HTML_FORMAT, $t
  * @return
  *   filled array ready to be used in the template
  */
-function _print_generate_path($path, $format = PRINT_HTML_FORMAT, $teaser = FALSE, $message = NULL) {
+function _print_generate_path($path, $query = NULL, $format = PRINT_HTML_FORMAT, $teaser = FALSE, $message = NULL) {
   global $_print_urls;
 
   // Handle node tabs
@@ -628,14 +671,14 @@ function _print_generate_path($path, $format = PRINT_HTML_FORMAT, $teaser = FALS
   // Delete any links area
   $node->body = preg_replace('!\s*<div class="links">.*?</div>!sim', '', $node->body);
 
-  //Check URL list settings
+  // Check URL list settings
   $_print_urls = _print_url_list_enabled($node, $format);
 
   // Convert the a href elements
   $pattern = '!<(a\s[^>]*?)>(.*?)(</a>)!is';
   $node->body = preg_replace_callback($pattern, '_print_rewrite_urls', $node->body);
 
-  $print = _print_var_generator($node, $message);
+  $print = _print_var_generator($node, $query, $message);
   $print['content'] = $node->body;
 
   return $print;
@@ -647,6 +690,9 @@ function _print_generate_path($path, $format = PRINT_HTML_FORMAT, $teaser = FALS
  *
  * @param $nid
  *   node ID of the node to be rendered into a printer-friendly page
+ * @param array $query
+ *   (optional) array of key/value pairs as used in the url() function for the
+ *   query
  * @param $format
  *   format of the page being generated
  * @param $teaser
@@ -656,7 +702,7 @@ function _print_generate_path($path, $format = PRINT_HTML_FORMAT, $teaser = FALS
  * @return
  *   filled array ready to be used in the template
  */
-function _print_generate_book($nid, $format = PRINT_HTML_FORMAT, $teaser = FALSE, $message = NULL) {
+function _print_generate_book($nid, $query = NULL, $format = PRINT_HTML_FORMAT, $teaser = FALSE, $message = NULL) {
   global $_print_urls;
 
   $node = node_load($nid);
@@ -674,14 +720,14 @@ function _print_generate_book($nid, $format = PRINT_HTML_FORMAT, $teaser = FALSE
   $tree = book_menu_subtree_data($node->book);
   $node->body = book_export_traverse($tree, 'book_node_export');
 
-  //Check URL list settings
+  // Check URL list settings
   $_print_urls = _print_url_list_enabled($node, $format);
 
   // Convert the a href elements
   $pattern = '!<(a\s[^>]*?)>(.*?)(</a>)!is';
   $node->body = preg_replace_callback($pattern, '_print_rewrite_urls', $node->body);
 
-  $print = _print_var_generator($node, $message);
+  $print = _print_var_generator($node, $query, $message);
   $print['content'] = $node->body;
 
   // The title is already displayed by the book_recurse, so avoid duplication
