@@ -131,6 +131,14 @@ body.sidebar-second.eq .colright {
 }
 */
 
+/* NO drop down border */
+/*
+#navlinks ul li a, #navlist a {
+	border: none;
+	padding: 2px 22px;
+}
+*/
+
 
 /*******************************/
 /* UPDATE ICONS FOR NEW BLOCKS */
@@ -140,6 +148,31 @@ body.sidebar-second.eq .colright {
 /*
 #block-block-XXX .block-icon {
 	background: transparent url(../images/contact_48.png) no-repeat;
+}
+*/
+
+
+/*************************/
+/* USER BLOCKS ALIGNMENT */
+/*************************/
+
+/* if you want to have user blocks aligned at bottom instead of top uncomment the lines below */
+
+/*
+td.section {
+	vertical-align: bottom;
+}
+*/
+
+/* to change the width of user blocks from auto to fixed width uncomment the lines below 
+and set "width" to 50% for two blocks, 33% for three blocks nas 25% for four blocks */
+
+/*
+#section1 td.section {
+  width: 25%;
+}
+#section2 td.section {
+  width: 33%;
 }
 */
 

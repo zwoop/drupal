@@ -112,7 +112,7 @@ $roundcorners = theme_get_setting('roundcorners');
 
   drupal_add_css(drupal_get_path('theme','zeropoint').'/css/print.css', array('group' => CSS_THEME, 'media' => 'print', 'every_page' => TRUE));
 
-  $vars['page_b'] = ($vars['is_front']) ? '<div class="by"><a href="http://www.radut.net">by Dr. Radut</a></div>' : '<div class="by"><a href="http://www.radut.net/en/how-to-seo-and-sem">about seo</a></div>';
+  $vars['page_b'] = ($vars['is_front']) ? '<div class="by"><a href="http://www.radut.net">by Dr. Radut</a></div>' : '<div class="by"><a href="http://www.radut.net">Dr. Radut Consulting</a></div>';
 }
 
 // Get css styles 

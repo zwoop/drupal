@@ -1,5 +1,10 @@
 CHANGELOG - 0 Point for Drupal 7
 
+0 Point (Jun 27, 2013)
+-------------------------
+  Bug fixes:
+    o #537974: Collection of layout issues
+
 0 Point (Mar 26, 2013)
 ----------------------
   Security update and bug fixes:

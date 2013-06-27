@@ -47,9 +47,9 @@ scripts[] = /js/jquery.hoverIntent.minified.js
 scripts[] = /js/dropdown.js
 
 
-; Information added by drupal.org packaging script on 2013-03-27
-version = "7.x-1.9"
+; Information added by drupal.org packaging script on 2013-06-27
+version = "7.x-1.10"
 core = "7.x"
 project = "zeropoint"
-datestamp = "1364346924"
+datestamp = "1372294551"
 

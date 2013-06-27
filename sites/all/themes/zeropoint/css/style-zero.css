@@ -292,7 +292,7 @@ table.sections {
 }
 td.section {
 	padding: 0 20px;
-	vertical-align: bottom;
+	vertical-align: top;
 }
 #help {
 	font-size: 0.9em;
