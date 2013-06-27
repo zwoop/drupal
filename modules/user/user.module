@@ -1299,10 +1299,7 @@ function user_user_categories() {
 }
 
 function user_login_block($form) {
-  global $base_url;
-  $ssl_url = preg_replace('/http:/i', 'https:', $base_url);
-
-  $form['#action'] = url($ssl_url . '/' current_path(), array('query' => drupal_get_destination(), 'external' => FALSE));
+  $form['#action'] = url(current_path(), array('query' => drupal_get_destination(), 'external' => FALSE));
   $form['#id'] = 'user-login-form';
   $form['#validate'] = user_login_default_validators();
   $form['#submit'][] = 'user_login_submit';
@@ -1323,9 +1320,9 @@ function user_login_block($form) {
   );
   $items = array();
   if (variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)) {
-    $items[] = l(t('Create new account'), $ssl_url . '/user/register', array('attributes' => array('title' => t('Create a new user account.'))));
+    $items[] = l(t('Create new account'), 'user/register', array('attributes' => array('title' => t('Create a new user account.'))));
   }
-  $items[] = l(t('Request new password'), $ssl_url . '/user/password', array('attributes' => array('title' => t('Request new password via e-mail.'))));
+  $items[] = l(t('Request new password'), 'user/password', array('attributes' => array('title' => t('Request new password via e-mail.'))));
   $form['links'] = array('#markup' => theme('item_list', array('items' => $items)));
   return $form;
 }
