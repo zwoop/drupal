@@ -2,6 +2,21 @@
 # Apache/PHP/Drupal settings:
 #
 
+# Protect these from abuse
+<Files cron.php>
+  Order Deny,Allow
+  Deny from all
+  Allow from .ogre.com
+  Allow from 127.0.0.1
+</Files>
+
+<Files update.php>
+  Order Deny,Allow
+  Deny from all
+  Allow from .ogre.com
+  Allow from 24.56.188.103
+</Files>
+
 # Protect files and directories from prying eyes.
 <FilesMatch "\.(engine|inc|info|install|make|module|profile|test|po|sh|.*sql|theme|tpl(\.php)?|xtmpl)(|~|\.sw[op]|\.bak|\.orig|\.save)?$|^(\..*|Entries.*|Repository|Root|Tag|Template)$|^#.*#$|\.php(~|\.sw[op]|\.bak|\.orig\.save)$">
   Order allow,deny
@@ -18,6 +33,10 @@ ErrorDocument 404 /index.php
 
 # Set the default handler.
 DirectoryIndex index.php index.html index.htm
+
+# Turn off etags
+Header unset ETag
+FileETag None
 
 # Override PHP settings that cannot be changed at runtime. See
 # sites/default/default.settings.php and drupal_environment_initialize() in
