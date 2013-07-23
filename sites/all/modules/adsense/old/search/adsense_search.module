@@ -71,7 +71,7 @@ function adsense_search_block_info() {
       $title = $ad[0];
     }
     else {
-      $title = t('AdSense Search: unconfigured') . ' ' . $count;
+      $title = t('AdSense Search: unconfigured !d', array('!d' => $count + 1));
     }
     $blocks[$count] = array(
       'info' => $title,
@@ -126,7 +126,7 @@ function adsense_search_block_save($delta, $edit) {
 function adsense_search_block_view($delta) {
   if (_adsense_page_match()) {
     $ad = _adsense_search_get_block_config($delta);
-    $block['content'] = ($ad) ? adsense_display(array('format' => 'Search Box', 'channel' => $ad[1])) : t('AdSense unconfigured block. <a href=!url>Click to configure.</a>', array('!url' => url('admin/structure/block/manage/adsense_search/' . $delta)));
+    $block['content'] = ($ad) ? adsense_display(array('title' => $ad[0], 'format' => 'Search Box', 'channel' => $ad[1])) : t('AdSense unconfigured block. <a href=!url>Click to configure.</a>', array('!url' => url('admin/structure/block/manage/adsense_search/' . $delta)));
 
     return $block;
   }

@@ -15,7 +15,7 @@
  * @ingroup forms
  */
 function revenue_sharing_basic_settings($form, &$form_state) {
-  include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'revenue_sharing_basic') . '/help/revenue_sharing_basic.help.inc';
+  module_load_include('inc', 'revenue_sharing_basic', 'help/revenue_sharing_basic.help');
 
   $form['help'] = array(
     '#type' => 'fieldset',
@@ -145,9 +145,32 @@ function theme_revenue_sharing_basic_author_percentage_role($variables) {
 function revenue_sharing_basic_get_profile_fields() {
   $profile_list = array(0 => 'None');
 
-  $result = db_query("SELECT fid, title FROM {profile_field} ORDER BY fid");
-  foreach ($result as $row) {
-    $profile_list[$row->fid] = $row->title;
+  // Start with the Field module fields
+  if (module_exists('field')) {
+    $fields = field_read_instances(array('entity_type' => 'user'));
+    foreach ($fields as $field) {
+      $profile_list['field:' . $field['field_name']] = $field['label'];
+    }
+  }
+
+  // Get fields from the Profile module
+  if (module_exists('profile')) {
+    $result = db_query("SELECT fid, name, title FROM {profile_field} WHERE type='textfield' ORDER BY fid");
+    foreach ($result as $row) {
+      $profile_list['profile:' . $row->name] = $row->title;
+    }
+  }
+
+  // Also display Profile2 fields
+  if (module_exists('profile2')) {
+    $bundles = field_info_instances('profile2');
+    foreach ($bundles as $bundle) {
+      foreach ($bundle as $field) {
+        if ($field['display']['default']['module'] == 'text') {
+          $profile_list['profile2:' . $field['bundle'] . ':' . $field['field_name']] = $field['label'];
+        }
+      }
+    }
   }
 
   return $profile_list;

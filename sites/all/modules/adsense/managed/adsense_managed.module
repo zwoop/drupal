@@ -31,6 +31,16 @@ function adsense_managed_menu() {
 }
 
 /**
+ * Implementation of hook_theme_registry_alter().
+ */
+function adsense_managed_theme_registry_alter(&$theme_registry) {
+  $mod_path = drupal_get_path('module', 'adsense_managed');
+  $theme_registry_copy = $theme_registry;       // munge on a copy
+  _theme_process_registry($theme_registry_copy, 'phptemplate', 'theme_engine', 'pow', $mod_path);
+  $theme_registry += array_diff_key($theme_registry_copy, $theme_registry);
+}
+
+/**
  * Implements hook_block_info().
  */
 function adsense_managed_block_info() {
@@ -41,7 +51,7 @@ function adsense_managed_block_info() {
       $title = $ad[0];
     }
     else {
-      $title = t('AdSense: unconfigured') . ' ' . $count;
+      $title = t('AdSense: unconfigured !d', array('!d' => $count + 1));
     }
     $blocks[$count] = array(
       'info' => $title,
@@ -118,9 +128,9 @@ function adsense_managed_block_save($delta = '', $edit = array()) {
 function adsense_managed_block_view($delta = '') {
   if (_adsense_page_match()) {
     $ad = _adsense_managed_get_block_config($delta);
-    $block['content'] = ($ad) ? adsense_display(array('format' => $ad[1], 'slot' => $ad[2])) : t('AdSense unconfigured block. <a href=!url>Click to configure.</a>', array('!url' => url('admin/structure/block/manage/adsense_managed/' . $delta)));
+    $block['content'] = ($ad) ? adsense_display(array('title' => $ad[0], 'format' => $ad[1], 'slot' => $ad[2])) : t('AdSense unconfigured block. <a href=!url>Click to configure.</a>', array('!url' => url('admin/structure/block/manage/adsense_managed/' . $delta)));
     if (!empty($ad[3])) {
-      $block['content'] = "<div style='text-align:${ad[3]}; display: block;'>${block['content']}</div>";
+      $block['content'] = "<div style='text-align:${ad[3]}'>${block['content']}</div>";
     }
 
     return $block;
@@ -162,7 +172,7 @@ function _adsense_managed_get_ad($format, $client, $slot) {
     $output = "";
   }
   elseif (variable_get('adsense_test_mode', ADSENSE_TEST_MODE_DEFAULT)) {
-    $output = _adsense_format_box("client = ${client}<br />slot = ${slot}<br />width = ${ad['width']}<br />height = ${ad['height']}", $ad['width'], $ad['height']);
+    $output = theme('adsense_placeholder', array('text' => "client = ${client}<br />slot = ${slot}<br />width = ${ad['width']}<br />height = ${ad['height']}", 'width' => $ad['width'], 'height' => $ad['height']));
   }
   else {
     $secret = '';

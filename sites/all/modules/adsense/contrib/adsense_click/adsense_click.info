@@ -14,9 +14,9 @@ files[] = adsense_click.install
 files[] = adsense_click.admin.inc
 files[] = adsense_click.logs.inc
 
-; Information added by drupal.org packaging script on 2012-03-31
-version = "7.x-1.0"
+; Information added by drupal.org packaging script on 2013-07-04
+version = "7.x-1.1"
 core = "7.x"
 project = "adsense"
-datestamp = "1333237238"
+datestamp = "1372970151"
 

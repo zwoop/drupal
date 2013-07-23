@@ -176,10 +176,25 @@ function revenue_sharing_basic_choose_client($format) {
 function revenue_sharing_basic_get_profile_client_id($uid) {
   $client_id = NULL;
 
-  if ($uid) {
-    // Get the profile field for a certain user
-    $profile_field = variable_get('revenue_sharing_basic_client_id_profile_field', REVENUE_SHARING_BASIC_CLIENT_ID_PROFILE_FIELD_DEFAULT);
-    $client_id = db_query('SELECT value FROM {profile_value} WHERE fid = :fid AND uid = :uid', array(':fid' => $profile_field, ':uid' => $uid))->fetchField();
+  // Get the profile field for a certain user
+  $profile_field = explode(':', variable_get('revenue_sharing_basic_client_id_profile_field', REVENUE_SHARING_BASIC_CLIENT_ID_PROFILE_FIELD_DEFAULT));
+  if ($uid && (count($profile_field) > 1) && module_exists($profile_field[0])) {
+    $user = user_load($uid);
+
+    switch ($profile_field[0]) {
+      case 'field':
+        $fields = field_get_items('user', $user, $profile_field[1]);
+        $client_id = render(field_view_value('user', $user, $profile_field[1], $fields[0]));
+        break;
+      case 'profile':
+        $client_id = isset($user->{$profile_field[1]}) ? $user->{$profile_field[1]} : NULL;
+        break;
+      case 'profile2':
+        $profile = profile2_load_by_user($user);
+        $items = field_get_items('profile2', $profile[$profile_field[1]], $profile_field[2]);
+        $client_id = drupal_render(field_view_value('profile2', $profile[$profile_field[1]], $profile_field[2], $items[0]));
+        break;
+    }
   }
 
   return $client_id;
