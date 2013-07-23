@@ -82,6 +82,7 @@ tt,
 samp,
 kbd,
 var {
+  margin-left: .4in;
   font: 1em "Lucida Console", Monaco, "DejaVu Sans Mono", sans-serif; /* Safari workaround */
 }
 blockquote,q {
