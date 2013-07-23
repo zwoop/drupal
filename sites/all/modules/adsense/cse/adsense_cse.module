@@ -60,7 +60,7 @@ function adsense_cse_block_info() {
       $title = $ad[0];
     }
     else {
-      $title = t('AdSense CSE: unconfigured') . ' ' . $count;
+      $title = t('AdSense CSE: unconfigured !d', array('!d' => $count + 1));
     }
     $blocks[$count] = array(
       'info' => $title,
@@ -112,7 +112,7 @@ function adsense_cse_block_save($delta = '', $edit = array()) {
 function adsense_cse_block_view($delta = '') {
   if (_adsense_page_match()) {
     $ad = _adsense_cse_get_block_config($delta);
-    $block['content'] = ($ad) ? adsense_display(array('format' => 'Search Box', 'slot' => $ad[1])) : t('AdSense unconfigured block. <a href=!url>Click to configure.</a>', array('!url' => url('admin/structure/block/manage/adsense_cse/' . $delta)));
+    $block['content'] = ($ad) ? adsense_display(array('title' => $ad[0], 'format' => 'Search Box', 'slot' => $ad[1])) : t('AdSense unconfigured block. <a href=!url>Click to configure.</a>', array('!url' => url('admin/structure/block/manage/adsense_cse/' . $delta)));
     return $block;
   }
 }

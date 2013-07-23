@@ -22,3 +22,19 @@ function revenue_sharing_basic_uninstall() {
     variable_del($variable->name);
   }
 }
+
+/**
+ * Update value of the revenue_sharing_basic_client_id_profile_field variable
+ */
+function revenue_sharing_basic_update_7100(&$sandbox) {
+  $value = variable_get('revenue_sharing_basic_client_id_profile_field', REVENUE_SHARING_BASIC_CLIENT_ID_PROFILE_FIELD_DEFAULT);
+
+  if ($value != REVENUE_SHARING_BASIC_CLIENT_ID_PROFILE_FIELD_DEFAULT) {
+    // Value is set to something useful
+    $new_value = 'profile:' . db_query("SELECT name FROM {profile_field} WHERE fid=:fid", array(':fid' => $value))->fetchField();
+
+    variable_set('revenue_sharing_basic_client_id_profile_field', $new_value);
+
+    return t('Updated the value of revenue_sharing_basic_client_id_profile_field to %value', array('%value' => $new_value));
+  }
+}
