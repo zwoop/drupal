@@ -1,13 +1,14 @@
 name = Flickr Block
-description = Adds capability to display Flickr photos and sets into blocks.
-dependencies[] = flickr
-package = Flickr
+description = Display Flickr photos and sets in blocks.
 core = 7.x
+package = Flickr
 
-files[] = flickr_block.module
-; Information added by drupal.org packaging script on 2013-02-19
-version = "7.x-1.0"
+dependencies[] = flickr
+
+
+; Information added by drupal.org packaging script on 2013-09-10
+version = "7.x-1.1"
 core = "7.x"
 project = "flickr"
-datestamp = "1361305883"
+datestamp = "1378799214"
 
