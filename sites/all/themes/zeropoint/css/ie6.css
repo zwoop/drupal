@@ -5,6 +5,15 @@ body.two-sidebars .outer a, body.sidebar-first .outer a, body.sidebar-second .ou
 } /* The above rule gives hasLayout to some page elements so that IE will not be buggy */
 
 
+#banner {
+	display: none;
+}
+#mission {
+	border: none;
+}
+.navright {
+	float: left;
+}
 #middlecontainer {
 	word-wrap: break-word;
 }
@@ -29,8 +38,6 @@ body.two-sidebars .outer a, body.sidebar-first .outer a, body.sidebar-second .ou
 .uc-store-admin-panel .panel-title a {
 	margin-left: 25px !important;
 } 
-
-
 
 
 /* fix layout width in IE6 */

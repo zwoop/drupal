@@ -3,9 +3,9 @@
 
 
 .page0, .sizer0, .expander0, 
-body.two-sidebars .outer,
-body.sidebar-first .outer,
-body.sidebar-second .outer {
+.two-sidebars .outer,
+.sidebar-first .outer,
+.sidebar-second .outer {
 	margin: 0 !important;
 	padding: 0 !important;
 	width: 100% !important;

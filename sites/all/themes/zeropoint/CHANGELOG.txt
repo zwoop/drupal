@@ -1,5 +1,14 @@
 CHANGELOG - 0 Point for Drupal 7
 
+0 Point (Oct 22, 2013)
+-------------------------
+  Bug fixes:
+    - CSS fixes;
+
+  New features:
+    o Possibility to change "Submitted by" display on all nodes;
+    o Rebuild theme registry on every page, during theme development;
+
 0 Point (Jun 27, 2013)
 -------------------------
   Bug fixes:

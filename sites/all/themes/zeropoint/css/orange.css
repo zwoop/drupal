@@ -37,12 +37,6 @@ blockquote, .messages {
 .form-item label, .item-list .title {
 	color: #222;
 }
-div.admin-panel .body {
-	background-color: #f4f4f4;
-}
-div.admin-panel h3 {
-	color: #abc;
-}
 #site-slogan {
 	color: #000;
 }
@@ -162,7 +156,7 @@ a, a:link,
 .node .terms,
 #aggregator .news-item .categories, #aggregator .source, #aggregator .age,
 #forum td .name,
-div.admin-panel .description {
+.admin-panel .description {
 	color: #fd8b0c;
 }
 

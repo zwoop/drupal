@@ -8,12 +8,20 @@ th {
 	text-align: right;
 }
 
-#top-elements, .comment .new, .node .user-picture, .comment .user-picture, .by {
+.comment .new, .by {
 	float: left;
 }
+.node .user-picture, .comment .user-picture {
+	float: left;
+	padding: 0 .5em .5em 0;
+}
 #top-elements {
+  float: left;
 	text-align: left;
 	padding: 0 0 0 20px;
+}
+#user_links {
+	margin: 0 30px 0 0;
 }
 #logo {
 	float: right;
@@ -37,33 +45,66 @@ td.section.divider {
 	background: #cdcdcd url(../images/all/forum-container_rtl.jpg) left top no-repeat !important;
 }
 #forum td.container .name a {
-	padding-right: 30px;
+	padding: 10px 40px 10px 0;
 	background: transparent url(../images/all/forum-link_rtl.png) right center no-repeat !important;
 }
 #continue-shopping-button {
 	margin-left: 50% !important;
 }
-div.toboggan-login-link-container {
+.toboggan-login-link-container {
 	padding-right: 20px;
+}
+
+
+/* MENU & link STYLES */
+
+#navlinks ul li {
+	float: right;
 }
 ul li.collapsed {
 	list-style-image: url(../images/all/menu-collapsed_rtl.png) !important;
 }
 ul.links li {
-	border-left: none;
+	border-left: none !important;
 	border-right: 1px solid #d3d3d3;
 }
+ul.firstsublayer, 
+ul.sublayer {
+	padding: 0 !important;
+	background-image: none;
+}
+ul.firstsublayer {
+	right: 0;
+}
+ul.sublayer {
+	right: 181px;
+}
+#navlinks ul li.expanded a.expandfirst {
+	padding-right: 22px;
+}
+#navlinks ul li.expanded a.expandfirst:hover {
+	background-image: none !important;
+}
+#navlinks ul li.expanded a.expand,
+#navlinks ul li.expanded ul li a.expand {
+	background-image: none !important;
+	padding-right: 10px;
+	padding-left: 24px;
+}
+#navlinks ul.firstsublayer li a {
+	padding-right: 10px;
+}
+
 
 /* BLOCK ICONS */
 
-.bicons32 div.block-icon {
+.bicons32 .block-icon {
 	margin: -5px -5px 0 0;
 }
-.bicons48 div.block-icon {
+.bicons48 .block-icon {
 	margin: -15px -18px 0 0;
 }
-.bicons32 .themed-block .title,
-.bicons48 .themed-block .title {
+.bicons32 .themed-block .title, .bicons48 .themed-block .title {
 	text-align: left;
 	padding: 6px 28px 6px 6px;
 }
@@ -74,6 +115,7 @@ ul.links li {
 .bicons32 .themed-block #search-block-form, .bicons48 .themed-block #search-block-form {
 	text-align: left;
 }
+
 
 /* PAGE ICONS */
 
@@ -147,39 +189,8 @@ ul.links li {
 	padding-right: 20px;
 }
 
+
 /* HEADER IMAGE ROTATOR */
 .himg #headimg {
 	background: #fff url(../_custom/headerimg-rtl/rotate.php) no-repeat 0% 100%; /* rotates images in the headerimg folder */
-}
-
-/* DROP DOWN */
-
-#navlinks ul li {
-	float: right;
-}
-ul.firstsublayer, 
-ul.sublayer {
-	padding: 0 !important;
-	background-image: none;
-}
-ul.firstsublayer {
-	right: 0;
-}
-ul.sublayer {
-	right: 181px;
-}
-#navlinks ul li.expanded a.expandfirst {
-	padding-right: 22px;
-}
-#navlinks ul li.expanded a.expandfirst:hover {
-	background-image: none !important;
-}
-#navlinks ul li.expanded a.expand,
-#navlinks ul li.expanded ul li a.expand {
-	background-image: none !important;
-	padding-right: 10px;
-	padding-left: 24px;
-}
-#navlinks ul.firstsublayer li a {
-	padding-right: 10px;
 }
