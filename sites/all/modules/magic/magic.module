@@ -1,22 +1,19 @@
 <?php
 
 /**
- * @file Keep Frontend DRY; sprinkle it with MAGIC!
+ * @file
+ * Keep Frontend DRY; sprinkle it with MAGIC!
  */
 
 // We set a specific group for jquery, so our CDN work actually works.
 define('JS_JQUERY', -10000);
 define('JS_DRUPAL', -9000);
 
-// Require all external scripts that are needed for this
-require_once dirname(__FILE__) . '/includes/magic.inc';
-require_once dirname(__FILE__) . '/includes/css.inc';
-require_once dirname(__FILE__) . '/includes/scripts.inc';
-require_once dirname(__FILE__) . '/includes/scripts-experimental.inc';
+require_once "includes/styles.inc";
 
 /**
-  * Implements hook_menu
-  */
+ * Implements hook_menu().
+ */
 function magic_menu() {
   $items = array();
 
@@ -32,7 +29,7 @@ function magic_menu() {
 }
 
 /**
- * Implements hook_help.
+ * Implements hook_help().
  */
 function magic_help($path, $arg) {
   $output = '';
@@ -42,8 +39,8 @@ function magic_help($path, $arg) {
       $output = '';
       $output .= '<p>' . t('All Drupal sites need some magic, so give yours some! Magic is a set of tools for front-end best practices and general front-end goodies to make your life as a front-end developer happier.') . '</p>';
       $output .= '<h2>' . t('Theme Settings Export') . '</h2>';
-      $output .= '<p>' . t('To ensure the most flexibility, Drupal pulls your theme settings from a variety of places before returning the current setting to the module or theme requesting it. It will first pull from the base theme\'s .info file, then the active theme\'s .info file, then the global theme settings form, then the active theme\'s setting form. Each check will override the previous, so the active theme settings form settings will always override the theme\'s .info file. ') . '</p>';
-      $output .= '<p>' . t('To facilitate settings export, magic provides two methods of exporting your theme settings to version control. First, you can export your settings to a new .info file, although it should be noted that this will be overridden once settings are saved within the database. To keep control of variables within the database, you can either use !features and !strongarm to maintain the code, or add a $conf[] variable within your settings.php. Currently, we are working on exporting the $conf[] variable needed to put it within your settings.php.  ', array('!features' => l('Features', 'http://drupal.org/project/features'), '!strongarm' => l('Strongarm', 'http://drupal.org/project/strongarm'))) . '</p>';
+      $output .= '<p>' . t('To ensure the most flexibility, Drupal pulls your theme settings from a variety of places before returning the current setting to the module or theme requesting it. It will first pull from the base theme\'s .info file, then the active theme\'s .info file, then the global theme settings form, then the active theme\'s setting form. Each check will override the previous, so the active theme settings form settings will always override the theme\'s .info file.') . '</p>';
+      $output .= '<p>' . t('To facilitate settings export, magic provides two methods of exporting your theme settings to version control. First, you can export your settings to a new .info file, although it should be noted that this will be overridden once settings are saved within the database. To keep control of variables within the database, you can either use !features and !strongarm to maintain the code, or add a $conf[] variable within your settings.php. Currently, we are working on exporting the $conf[] variable needed to put it within your settings.php.', array('!features' => l(t('Features'), 'http://drupal.org/project/features'), '!strongarm' => l(t('Strongarm'), 'http://drupal.org/project/strongarm'))) . '</p>';
       $output .= '<h2>' . t('Advanced CSS / JS Aggregation') . '</h2>';
       $output .= '<p>' . t('Documentation coming soon!') . '</p>';
       $output .= '<h2>' . t('Selective CSS / JS Removal') . '</h2>';
@@ -52,12 +49,11 @@ function magic_help($path, $arg) {
   }
 
   return $output;
-
 }
 
 /**
-  * Exports Theme Settings
-  */
+ * Exports theme settings.
+ */
 function magic_export_settings($form, &$form_state, $theme) {
 
   $path = drupal_get_path('theme', $theme);
@@ -87,7 +83,6 @@ function magic_export_settings($form, &$form_state, $theme) {
     $lines = 40;
   }
 
-
   $form = array();
 
   $form['info'] = array(
@@ -115,13 +110,12 @@ function magic_export_settings($form, &$form_state, $theme) {
     '#value' => t('Save ' . $name . '.info'),
   );
 
-
   return $form;
 }
 
 /**
-  * Submit hook for Export Theme Settings
-  */
+ * Submit hook for magic_export_settings().
+ */
 function magic_export_settings_submit($form, &$form_state) {
   $info = $form_state['values']['info'];
   $theme = $form['theme']['#value'];
@@ -132,21 +126,21 @@ function magic_export_settings_submit($form, &$form_state) {
 
   // Only mark that the settings have updated if the file saved.
   if ($file) {
-    drupal_set_message(t($theme . '.info has been updated.'));
+    drupal_set_message(t('@theme has been updated.', array('@theme' => $theme . '.info')));
 
     // Since we exported the file, we want to delete the settings variable.
     // This will get remade whenever we want to edit the settings in the future,
     // but can always be re-removed.
     variable_del('theme_' . $theme . '_settings');
 
+    // Rebuild the system .info file information.
+    system_rebuild_theme_data();
+
     drupal_goto('admin/appearance/settings/' . $theme);
   }
   else {
-
-    drupal_set_message(t($theme . '.info has not been saved, an error has occured.'), 'error');
+    drupal_set_message(t('@theme has not been saved, an error has occured.', array('@theme' => $theme . '.info')), 'error');
   }
-
-
 
   return $file;
 }
@@ -179,9 +173,9 @@ function _magic_build_info_file($array, $prefix = '') {
 
     foreach ($info_regions as $region) {
       if ($key === $region) {
-      	$info .= "\n; ========================================";
-      	$info .= "\n" . '; ' . ucfirst($key) . "\n";
-      	$info .= "; ========================================\n\n";
+        $info .= "\n; ========================================";
+        $info .= "\n" . '; ' . ucfirst($key) . "\n";
+        $info .= "; ========================================\n\n";
       }
     }
 
@@ -189,7 +183,7 @@ function _magic_build_info_file($array, $prefix = '') {
       $info .= _magic_build_info_file($value, (empty($prefix) ? $key : "{$prefix}[{$key}]"));
     }
     else {
-      $info .= $prefix ? ("{$prefix}[" . $key .']') : $key;
+      $info .= $prefix ? ("{$prefix}[" . $key . ']') : $key;
       $info .= " = '" . str_replace("'", "\'", $value) . "'\n";
     }
   }
@@ -200,7 +194,12 @@ function _magic_build_info_file($array, $prefix = '') {
 /**
  * A helper function to print the theme settings withing settings.php.
  *
+ * @param array $array
+ *   An array of the current settings saved.
+ * @param string $theme
+ *   The theme key we are building the export for.
  *
+ * @return string
  */
 function _magic_build_settings_php_export($array, $theme) {
   $export = '$conf[\'theme_' . $theme . '_settings\'] = ';
@@ -208,12 +207,11 @@ function _magic_build_settings_php_export($array, $theme) {
   $export .= ';';
 
   return $export;
-
 }
 
 /**
-  * Implements hook_form_alter
-  */
+ * Implements hook_form_alter().
+ */
 function magic_form_system_theme_settings_alter(&$form, &$form_state) {
   $theme = isset($form_state['build_info']['args'][0]) ? $form_state['build_info']['args'][0] : '';
 
@@ -249,7 +247,7 @@ function magic_form_system_theme_settings_alter(&$form, &$form_state) {
   $magic_settings['css']['magic_css_excludes'] = array(
     '#type' => 'textarea',
     '#title' => t('Exclude CSS files'),
-    '#description' => t("Enter one file per line. The <pre>*</pre> character is a wildcard to match all similar items, for instance <pre>system/*.css</pre> will remove all CSS provided by the System module. The <pre>~</pre> character is a reserved character to keep all similar items if they would otherwise be removed, for instance <pre>~system/system.menus.css</pre> to keep System module's menu CSS even if we remove the rest of System module's CSS. You may use <pre>:all</pre> to target all CSS files, <pre>:core</pre> to target all Core provided CSS files, <pre>:contrib</pre> to target all Contrib provided CSS files, <pre>:base-theme</pre> to target all base theme provided CSS files, and <pre>:current-theme</pre> to target all CSS files provided by the current theme."),
+    '#description' => t("<p>One entry per line.</p> <p>The <strong><code>*</code></strong> character is a wildcard to match all similar items, for instance <code>system/*.css</code> will remove all CSS provided by the System module. <p>The <strong><code>~</code></strong> character is a reserved character to keep all similar items if they would otherwise be removed, for instance <code>~system/system.menus.css</code> to keep System module's menu CSS even if we remove the rest of System module's CSS. </p> <p>You may use: <br><strong><code>:all</code></strong> to target all CSS files. <br><strong><code>:core</code></strong> to target all Core provided CSS files. <br><strong><code>:contrib</code></strong> to target all Contrib provided CSS files. <br><strong><code>:base-theme</code></strong> to target all base theme provided CSS files. <br><strong><code>:current-theme</code></strong> to target all CSS files provided by the current theme."),
     '#default_value' => theme_get_setting('magic_css_excludes', $theme),
   );
 
@@ -292,58 +290,19 @@ function magic_form_system_theme_settings_alter(&$form, &$form_state) {
   $magic_settings['js']['magic_js_excludes'] = array(
     '#type' => 'textarea',
     '#title' => t('Exclude JavaScript files'),
-    '#description' => t("Enter one file per line. The <pre>*</pre> character is a wildcard to match all similar items, for instance <pre>overlay/*.js</pre> will remove all JS provided by the Overlay module. The <pre>~</pre> character is a reserved character to keep all similar items if they would otherwise be removed, for instance <pre>~overlay/overlay-child.js</pre> to keep Overlay module's overlay-child JS even if we remove the rest of Overlay module's JS. You may use <pre>:all</pre> to target all JS files, <pre>:core</pre> to target all Core provided JS files, <pre>:contrib</pre> to target all Contrib provided JS files, <pre>:base-theme</pre> to target all base theme provided JS files, <pre>:current-theme</pre> to target all JS files provided by the current theme, and <pre>:settings</pre> to remove the settings array."),
+    '#description' => t("<p>One entry per line.</p> <p>The <strong><code>*</code></strong> character is a wildcard to match all similar items, for instance <code>overlay/*.js</code> will remove all JS provided by the Overlay module.</p> <p>The <strong><code>~</code></strong> character is a reserved character to keep all similar items if they would otherwise be removed, for instance <code>~overlay/overlay-child.js</code> to keep Overlay module's overlay-child JS even if we remove the rest of Overlay module's JS.</p> <p>You may use: <br><strong><code>:all</code></strong> to target all JS files. <br><strong><code>:core</code></strong> to target all Core provided JS files. <br><strong><code>:contrib</code></strong> to target all Contrib provided JS files. <br><strong><code>:base-theme</code></strong> to target all base theme provided JS files. <br><strong><code>:current-theme</code></strong> to target all JS files provided by the current theme. <br><strong><code>:settings</code></strong> to remove the settings array."),
     '#default_value' => theme_get_setting('magic_js_excludes', $theme),
   );
 
-  // Development Magic Grouping
-  $magic_settings['dev'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Development Enhancements'),
-  );
-
-  // Footer JavaScript Option
-  $magic_settings['dev']['magic_rebuild_registry'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Rebuild Theme Registry on Reload'),
-    '#description' => t('<a href="!link" target="_blank">Rebuild the theme registry</a> during project development.', array('!link' => 'http://drupal.org/node/173880#theme-registry')),
-    '#default_value' => theme_get_setting('magic_rebuild_registry', $theme),
-  );
-
-  // Viewport Indicator Option
-  $magic_settings['dev']['magic_viewport_indicator'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Viewport Width Indicator'),
-    '#description' => t('Displays an indicator of the viewport. Tap/click to toggle between <em>em</em> and <em>px</em>. The CSS and JavaScript for this will bypass your CSS and JavaScript exclude options.'),
-    '#default_value' => theme_get_setting('magic_viewport_indicator', $theme),
-  );
-
-  if (module_exists('modernizr')) {
-    // Modernizr Debug Option
-    $options = array('attributes' => array('target' => '_blank'));
-    $magic_settings['dev']['magic_modernizr_debug'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Modernizr Indicator'),
-      '#description' => t('Displays an indicator of !modernizr detected features. Tap/click to toggle display of all of the available features. Install the !module for full Modernizr support. The CSS and JavaScript for this will bypass your CSS and JavaScript exclude options.', array('!modernizr' => l('Modernizr', 'http://modernizr.com/', $options), '!module' => l('Modernizr Drupal module', 'http://drupal.org/project/modernizr', $options))),
-      '#default_value' => theme_get_setting('magic_modernizr_debug', $theme),
-    );
-  }
-  else {
-    // We don't have modernizr :-(
-    $magic_settings['dev']['magic_modernizr_debug'] = array(
-      '#type' => 'hidden',
-      '#value' => FALSE,
-    );
-  }
-
-  // We are adding an extra submit handler, so other can add their own.
+  // We are add an extra submit / validate handler, other can add their own.
   $magic_settings['#submit'] = array();
+  $magic_settings['#vaidate'] = array();
 
   // Run the magic settings through a hook. We do this because magic itself is
   // weighted lower than other modules for the CSS/JS work we do. This will
   // allow modules and themes to actually alter the form array we use.
   $magic_settings_hook = module_invoke_all('magic', $magic_settings, $theme);
-  $magic_settings = array_merge($magic_settings, $magic_settings_hook);
+  $magic_settings = array_merge_recursive($magic_settings, $magic_settings_hook);
 
   // Now, the fun part. Drupal doesn't actually allow the theme we are editing
   // to alter it. Because it does weird things. We are going to fix that.
@@ -364,19 +323,25 @@ function magic_form_system_theme_settings_alter(&$form, &$form_state) {
     }
   }
 
+  // We now need to merge any custom #submit or #validate hooks and add them to
+  // the form. We then unset
   if (!empty($magic_settings['#submit'])) {
-    array_merge($form['#submit'], $magic_settings['#submit']);
+    $form['#submit'] = array_merge($form['#submit'], $magic_settings['#submit']);
   }
-
   unset($magic_settings['#submit']);
-  $form['magic_performance'] = $magic_settings;
 
+  if (!empty($magic_settings['#validate'])) {
+    $form['#validate'] = array_merge($form['#validate'], $magic_settings['#validate']);
+  }
+  unset($magic_settings['#submit']);
+
+  $form['magic_performance'] = $magic_settings;
 
   // Add export button to export current theme settings
   $form['actions']['export'] = array(
     '#type' => 'button',
     '#value' => t('Export Settings'),
-    '#executes_submit_callback' => true,
+    '#executes_submit_callback' => TRUE,
     '#submit' => array('magic_goto_export'),
   );
 
@@ -388,7 +353,7 @@ function magic_form_system_theme_settings_alter(&$form, &$form_state) {
  * A helper function to send the form to the settings export page.
  */
 function magic_goto_export($form, $form_state) {
-    drupal_goto('admin/appearance/settings/' . arg(3) . '/export');
+  drupal_goto('admin/appearance/settings/' . arg(3) . '/export');
 }
 
 /**
@@ -405,7 +370,6 @@ function magic_extension_assets_theme_settings_form_submit($form, &$form_state) 
 
   foreach (array('magic_css_excludes', 'magic_js_excludes') as $item) {
 
-
     // Check to see if this has changed since the last save. If so, we have to
     // rebuild the regex and clear our caches.
     $current_settings = variable_get($values['var'], FALSE);
@@ -421,7 +385,8 @@ function magic_extension_assets_theme_settings_form_submit($form, &$form_state) 
       // Explode and trim the values for the exclusion rules.
       $excludes = array_filter(array_map('trim', explode("\n", $values[$item])));
 
-       if (!empty($excludes)) {
+      if (!empty($excludes)) {
+        module_load_include('inc', 'magic', 'includes/magic');
         // Now we get the regex and set that.
         $excludes = magic_generate_exclude_full($excludes);
 
@@ -451,7 +416,6 @@ function magic_extension_assets_theme_settings_form_submit($form, &$form_state) 
       $excludes = $current_settings[$item . '_regex'];
     }
 
-
     form_set_value(array('#parents' => array($item . '_regex')), $excludes, $form_state);
 
   }
@@ -463,64 +427,8 @@ function magic_extension_assets_theme_settings_form_submit($form, &$form_state) 
 }
 
 /**
-  * Implements hook_preprocess_html
-  */
-function magic_preprocess_html(&$vars)  {
-  global $theme_key;
-
-  //////////////////////////////
-  // Theme Registry Rebuild
-  //////////////////////////////
-  if (theme_get_setting('magic_rebuild_registry', $theme_key) && !defined('MAINTENANCE_MODE')) {
-    // Rebuild .info data.
-    system_rebuild_theme_data();
-    // Rebuild theme registry.
-    drupal_theme_rebuild();
-  }
-
-  //////////////////////////////
-  // RWD Debug Integration
-  //////////////////////////////
-  if (theme_get_setting('magic_viewport_indicator', $theme_key) || theme_get_setting('magic_modernizr_debug', $theme_key)) {
-    drupal_add_css(drupal_get_path('module', 'magic') . '/css/magic.debug.css');
-    drupal_add_js(drupal_get_path('module', 'magic') . '/js/magic.debug.js');
-  }
-}
-
-/**
-  * Implements hook_process_html
-  */
-function magic_process_html(&$vars) {
-  global $theme_key;
-
-  //////////////////////////////
-  // RWD Debug Integration
-  //////////////////////////////
-  if (theme_get_setting('magic_viewport_indicator', $theme_key) || theme_get_setting('magic_modernizr_debug', $theme_key)) {
-
-    $debug_output = '<div id="magic-development">';
-
-    if (theme_get_setting('magic_viewport_indicator', $theme_key)) {
-      $debug_output .= '<div id="magic-viewport-indicator"></div>';
-    }
-    if (theme_get_setting('magic_modernizr_debug', $theme_key)) {
-      $debug_output .= '<div id="magic-modernizr-debug" class="open"></div>';
-    }
-
-    $debug_output .= '</div>';
-
-    if (!empty($vars['page_bottom'])) {
-      $vars['page_bottom'] .= $debug_output;
-    }
-    else {
-      $vars['page_bottom'] = $debug_output;
-    }
-  }
-}
-
-/**
-  * Implements hook_theme_registry_alter().
-  */
+ * Implements hook_theme_registry_alter().
+ */
 function magic_theme_registry_alter(&$registry) {
   if (($index = array_search('template_process_html', $registry['html']['process functions'], TRUE)) !== FALSE) {
     array_splice($registry['html']['process functions'], $index, 1, 'magic_template_process_html_override');
@@ -528,10 +436,10 @@ function magic_theme_registry_alter(&$registry) {
 }
 
 /**
-  * Overrides template_process_html() in order to provide support for awesome new stuffzors!
-  *
-  * Huge, amazing ups to the wizard Sebastian Siemssen (fubhy) for showing me how to do this.
-  */
+ * Overrides template_process_html() in order to provide support for awesome new stuffzors!
+ *
+ * Huge, amazing ups to the wizard Sebastian Siemssen (fubhy) for showing me how to do this.
+ */
 function magic_template_process_html_override(&$variables) {
   // Render page_top and page_bottom into top level variables.
   $variables['page_top'] = drupal_render($variables['page']['page_top']);
@@ -539,22 +447,36 @@ function magic_template_process_html_override(&$variables) {
   // Place the rendered HTML for the page body into a top level variable.
   $variables['page'] = $variables['page']['#children'];
 
-
   $variables['head'] = drupal_get_html_head();
   $variables['css'] = drupal_add_css();
   $variables['styles']  = drupal_get_css();
 
   if (theme_get_setting('magic_experimental_js')) {
+    module_load_include('inc', 'magic', 'includes/scripts-experimental');
     $variables['page_bottom'] .= magic_experimental_js('footer');
     $variables['scripts'] = magic_experimental_js('header');
   }
   elseif (theme_get_setting('magic_footer_js')) {
+    module_load_include('inc', 'magic', 'includes/scripts');
     $variables['page_bottom'] .= magic_get_js('footer');
     $variables['scripts'] = magic_get_js('header');
   }
   else {
     $variables['page_bottom'] .= drupal_get_js('footer');
     $variables['scripts'] = drupal_get_js();
+  }
+}
+
+/**
+ * Implements hook_element_info_alter().
+ *
+ * This changes Drupal's default css aggregation to use magic's version.
+ */
+function magic_element_info_alter(&$types) {
+
+  if (isset($types['styles'])) {
+    $types['styles']['#group_callback'] = 'magic_group_css';
+    $types['styles']['#aggregate_callback'] = 'magic_aggregate_css';
   }
 }
 
@@ -618,28 +540,28 @@ function _magic_clear_cache($theme = FALSE, $types = array()) {
 }
 
 /**
- * Implements hook_flush_caches.
+ * Implements hook_flush_caches().
  */
 function magic_flush_caches() {
   return array('cache_magic');
 }
 
 /**
- * Implements hook_drush_cache_clear.
+ * Implements hook_drush_cache_clear().
  */
 function magic_drush_cache_clear(&$types) {
   $types['magic'] = '_magic_clear_cache';
 }
 
 /**
- * Implements hook_css_alter.
+ * Implements hook_css_alter().
  */
 function magic_css_alter(&$css) {
   magic_css_js_alter($css, 'css');
 }
 
 /**
- * Implements hook_js_alter.
+ * Implements hook_js_alter().
  */
 function magic_js_alter(&$js) {
   magic_css_js_alter($js, 'js');
@@ -670,6 +592,7 @@ function magic_css_js_alter(&$data, $type = 'css') {
       $data = $cache;
     }
     else {
+      module_load_include('inc', 'magic', 'includes/magic');
       magic_exclude_assets($data, $excludes['exclude'], $excludes['include']);
 
       _magic_set_cache($cid, $data);
