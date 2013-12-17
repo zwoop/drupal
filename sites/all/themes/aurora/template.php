@@ -75,43 +75,21 @@ function aurora_preprocess_html(&$vars) {
     '#tag' => 'meta',
     '#attributes' => array(
       'name' => 'viewport',
-      'content' => 'width=device-width, initial-scale=1',
+      'content' => 'initial-scale=1.0',
     ),
   );
   drupal_add_html_head($viewport, 'viewport');
 
-  if (theme_get_setting('aurora_enable_chrome_frame')) {
-    // Force IE to use most up-to-date render engine.
-    $xua = array(
-      '#tag' => 'meta',
-      '#attributes' => array(
-        'http-equiv' => 'X-UA-Compatible',
-        'content' => 'IE=edge,chrome=1',
-      ),
-    );
-    drupal_add_html_head($xua, 'x-ua-compatible');
+  // Force IE to use most up-to-date render engine.
+  $xua = array(
+    '#tag' => 'meta',
+    '#attributes' => array(
+      'http-equiv' => 'X-UA-Compatible',
+      'content' => 'IE=edge',
+    ),
+  );
 
-    // Chrome Frome
-    $chromeframe['wrapper'] = '<!--[if lt IE ' . theme_get_setting('aurora_min_ie_support') . ' ]>';
-
-    // Chrome Frame
-    $chromeframe['redirect'] = 'http://browsehappy.com/';
-    $chromeframe['url'] = 'http://www.google.com/chromeframe/?redirect=true';
-
-    $chromeframe['include']['element'] = array(
-      '#tag' => 'script',
-      '#attributes' => array(
-        'src' => '//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js',
-      ),
-    );
-    $chromeframe['launch']['element'] = array(
-      '#tag' => 'script',
-      '#attributes' => array(),
-      '#value' => 'window.attachEvent("onload",function(){CFInstall.check({mode:"overlay"});})',
-    );
-
-    $vars['chromeframe_array'] = $chromeframe;
-  }
+  drupal_add_html_head($xua, 'x-ua-compatible');
 
   $vars['minie'] = theme_get_setting('aurora_min_ie_support');
 
@@ -123,6 +101,7 @@ function aurora_preprocess_html(&$vars) {
   //////////////////////////////
   // Initializes attributes which are specific to the html and body elements.
   $vars['html_attributes_array'] = array();
+  $vars['rdf_attributes_array'] = array();
   $vars['body_attributes_array'] = array();
 
   // HTML element attributes.
@@ -135,7 +114,7 @@ function aurora_preprocess_html(&$vars) {
     // attribute inside the html element.
     $prefixes = array();
     foreach (rdf_get_namespaces() as $prefix => $uri) {
-      $vars['html_attributes_array']['prefix'][] = $prefix . ': ' . $uri . "\n";
+      $vars['rdf_attributes_array']['prefix'][] = $prefix . ': ' . $uri . "\n";
     }
   }
 
@@ -154,7 +133,6 @@ function aurora_preprocess_html(&$vars) {
     drupal_add_js("document.write('<script src=\"http://' + (location.host || 'localhost').split(':')[0] + ':$livereload_port/livereload.js?snipver=1\"></' + 'script>')", array('type' => 'inline', 'scope' => 'footer', 'weight' => 9999));
   }
 
-
   //////////////////////////////
   // Add in TypeKit Code.
   //////////////////////////////
@@ -168,22 +146,6 @@ function aurora_preprocess_html(&$vars) {
  * Implements hook_process_html().
  */
 function aurora_process_html(&$vars) {
-  //////////////////////////////
-  // Chrome Frame
-  //////////////////////////////
-  if (theme_get_setting('aurora_enable_chrome_frame')) {
-    $cf_array = $vars['chromeframe_array'];
-    $cf = $cf_array['wrapper'] . theme_html_tag($cf_array['include']) . theme_html_tag($cf_array['launch']) . '<![endif]-->';
-
-    $cf_link = $cf_array['wrapper'] . '<p class="chromeframe">' . t('You are using an outdated browser! !upgrade or !install to better experience this site.', array('!upgrade' => l(t('Upgrade your browser today'), $cf_array['redirect']), '!install' => l(t('install Google Chrome Frame'), $cf_array['url']))) . '<![endif]-->';
-
-    if (!empty($vars['page_top'])) {
-      $vars['page_top'] .= $cf_link;
-    }
-    else {
-      $vars['page_top'] = $cf_link;
-    }
-  }
 
   //////////////////////////////
   // RWD Debug Integration
@@ -217,12 +179,13 @@ function aurora_process_html(&$vars) {
   //////////////////////////////
   // Flatten out html_attributes and body_attributes.
   $vars['html_attributes'] = drupal_attributes($vars['html_attributes_array']);
+  $vars['rdf_attributes'] = drupal_attributes($vars['rdf_attributes_array']);
   $vars['body_attributes'] = drupal_attributes($vars['body_attributes_array']);
 }
 /**
  * Return a themed breadcrumb trail.
  *
- * @param $variables
+ * @param $vars
  *   - title: An optional string to be used as a navigational heading to give
  *     context for breadcrumb links to screen-reader users.
  *   - title_attributes_array: Array of HTML attributes for the title. It is
@@ -234,9 +197,7 @@ function aurora_process_html(&$vars) {
  * Lifted from Zen, because John is the man.
  */
 function aurora_breadcrumb(&$vars) {
-  if (theme_get_setting('toggle_breadcrumbs')) {
-    return theme_breadcrumb($vars);
-  }
+  return theme_breadcrumb($vars);
 }
 
 /**
@@ -268,7 +229,7 @@ function aurora_process_html_tag(&$vars) {
  * - #1189816: Convert comment.tpl.php to HTML5.
  */
 function aurora_preprocess_comment(&$variables) {
-  $variables['user_picture'] = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $comment)) : '';
+  $variables['user_picture'] = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $variables['comment'])) : '';
 }
 
 /**
@@ -410,7 +371,7 @@ function aurora_preprocess_block(&$vars) {
 
     $breadcrumbs = drupal_get_breadcrumb();
 
-    $vars['breadcrumbs'] = theme('breadcrumb', $breadcrumbs);
+    $vars['breadcrumbs'] = theme('breadcrumb', array('breadcrumb' => $breadcrumbs));
   }
   // Tabs
   else if ($vars['block']->delta == 'blockify-tabs') {

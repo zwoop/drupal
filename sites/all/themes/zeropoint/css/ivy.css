@@ -37,12 +37,6 @@ blockquote, .messages {
 .form-item label, .item-list .title {
 	color: #222;
 }
-div.admin-panel .body {
-	background-color: #f4f4f4;
-}
-div.admin-panel h3 {
-	color: #abc;
-}
 #site-slogan {
 	color: #000;
 }
@@ -154,7 +148,7 @@ ul li.collapsed {
 }
 
 h1, h2, h3 {
-	color: #5A7D4F;
+	color: #5a7d4f;
 }
 
 a, a:link,
@@ -162,8 +156,8 @@ a, a:link,
 .node .terms,
 #aggregator .news-item .categories, #aggregator .source, #aggregator .age,
 #forum td .name,
-div.admin-panel .description {
-	color: #5A7D4F;
+.admin-panel .description {
+	color: #5a7d4f;
 }
 
 .block.themed-block {

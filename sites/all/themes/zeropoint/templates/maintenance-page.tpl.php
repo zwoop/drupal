@@ -93,7 +93,6 @@
 
 <div id="footer" class="clearfix">
   <div class="legal">
-    Copyright &copy; <?php print date('Y') ?> <a href="/"><?php print filter_xss_admin($site_name) ?></a>.
     <div id="brand"></div>
   </div>
 </div>

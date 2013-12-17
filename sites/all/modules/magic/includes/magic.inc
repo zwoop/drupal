@@ -1,6 +1,7 @@
 <?php
 /**
- * @file A file to contain functions for the magic module to abuse.
+ * @file
+ * A file to contain functions for the magic module to abuse.
  */
 
 /**
@@ -9,7 +10,7 @@
  * This helper function will remove kewords such as :contrib or :base-theme and
  * change them into the paths that they represent.
  *
- * @param $exclude array
+ * @param $exclude
  *   An array of paths to remove.
  *
  * @return array
@@ -71,10 +72,8 @@ function magic_generate_exclude_full($array) {
     }
   }
 
-
   return $return;
 }
-
 
 /**
  * Helper function for generating a regex from a list of paths.
@@ -200,5 +199,3 @@ function magic_generate_asset_mapping($elements) {
 
   return $mapping;
 }
-
-

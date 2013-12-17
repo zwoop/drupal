@@ -36,20 +36,23 @@ settings[headerimg] = 1
 settings[cssPreload] = 0
 settings[loginlinks] = 1
 settings[breadcrumb_display] = 1
+settings[postedby] = 0
 settings[search_snippet] = 1
 settings[search_info_type] = 0
 settings[search_info_user] = 1
 settings[search_info_date] = 1
 settings[search_info_comment] = 1
 settings[search_info_upload] = 1
+settings[rebuild_registry] = 0
+settings[siteid] = ''
 
 scripts[] = /js/jquery.hoverIntent.minified.js
 scripts[] = /js/dropdown.js
 
 
-; Information added by drupal.org packaging script on 2013-06-27
-version = "7.x-1.10"
+; Information added by drupal.org packaging script on 2013-10-22
+version = "7.x-1.12"
 core = "7.x"
 project = "zeropoint"
-datestamp = "1372294551"
+datestamp = "1382473430"
 

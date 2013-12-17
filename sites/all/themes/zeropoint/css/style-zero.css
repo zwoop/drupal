@@ -1,6 +1,6 @@
-/* style.css, v4.1 2010/01/18
+/* style.css, v4.2 2013/10/22
  *
- * 0 POINT theme for Drupal 7
+ * ZERO POINT theme for Drupal 7
  * Dr. Florian Radut, florian@radut.net
  */
 
@@ -21,22 +21,22 @@ body {
 	position: relative; /* makes .expander0 visible outside .sizer in IEwin */
 	min-height: 1px; /* This harmless declaration gives Layout to IE7, which can't read the star/html hack */
 }
-body.layout-jello .page0 {
+.layout-jello .page0 {
 	padding: 0 520px; /* the critical side padding that sets the natural min-width! */
 }
-body.layout-jello .sizer0 {
+.layout-jello .sizer0 {
 	width: 40%; /* this value controls liquidity; 0% = full rigid, 100% = full liquid */
 	max-width: 160px; /* IE7 supports this property, doesn't need the fancy MS expression */
 }
-body.layout-jello .expander0 {
+.layout-jello .expander0 {
 	margin: 0 -520px; /* neg side margin values should be < or = to side body padding and 1/2 of min-width below */
 	min-width: 1040px; /* This prevents Safari from losing the negative margins in narrow windows */
 } /* .expander0 must receive "hasLayout" for IEwin bug fixing; applied in ie6.css and ie7.css */
 
-body.layout-fluid .sizer0 { /* custom */
+.layout-fluid .sizer0 { /* custom */
 	width: 90%;
 }
-body.layout-fixed .sizer0 { /* custom */
+.layout-fixed .sizer0 { /* custom */
 	width: 980px;
 }
 .float-wrap {
@@ -74,130 +74,111 @@ body.layout-fixed .sizer0 { /* custom */
 "Critical Left (Right) col width value = cLcwv (cRcwv) also refer to the desired mod MUST be changed as a group. */
 
 /* Variable asyimmetrical sidebars (wide) (default) */
-body.two-sidebars .outer {
+.two-sidebars .outer {
 	margin-left: 204px;			/*** cLcwv ***/
 	margin-right: 278px;			/*** cLcwv ***/
 }
-body.sidebar-first .outer {
+.sidebar-first .outer {
 	margin-left: 294px;			/*** cLcwv ***/
 }
-body.sidebar-second .outer {
+.sidebar-second .outer {
 	margin-right: 344px;			/*** cLcwv ***/
 }
-body.sidebar-first .colleft {
+.sidebar-first .colleft {
 	width: 294px;			/*** cLcwv ***/
 	margin-left: -294px;		/*** cLcwv ***/ /*** cLddv ***/
 }
-body.sidebar-second .colright {
+.sidebar-second .colright {
 	width: 344px;		/*** cRcwv ***/
 	margin-right: -344px;		/*** cRcwv ***/ /*** cRddv ***/
 }
 
 /* Fixed asyimmetrical sidebars (wide) */
-body.two-sidebars.fix .outer, body.sidebar-first.fix .outer, body.sidebar-first.fix .outer {
+.two-sidebars.fix .outer, .sidebar-first.fix .outer, .sidebar-first.fix .outer {
 	margin-left: 204px;
 }
-body.two-sidebars.fix .outer, body.sidebar-second.fix .outer, body.sidebar-second.fix .outer {
+.two-sidebars.fix .outer, .sidebar-second.fix .outer, .sidebar-second.fix .outer {
 	margin-right: 278px;
 }
-body.sidebar-first.fix .colleft {
+.sidebar-first.fix .colleft {
 	width: 204px;
 	margin-left: -204px;
 }
-body.sidebar-second.fix .colright {
+.sidebar-second.fix .colright {
 	width: 278px;
 	margin-right: -278px;
 }
 
 /* Variable asyimmetrical sidebars (narrow) */
-body.two-sidebars.var1 .colleft, body.sidebar-second.var1 .colleft, body.sidebar-first.var1 .colleft, 
-body.two-sidebars.fix1 .colleft, body.sidebar-second.fix1 .colleft, body.sidebar-first.fix1 .colleft {
+.two-sidebars.var1 .colleft, .sidebar-second.var1 .colleft, .sidebar-first.var1 .colleft, 
+.two-sidebars.fix1 .colleft, .sidebar-second.fix1 .colleft, .sidebar-first.fix1 .colleft {
 	width: 184px;
 	margin-left: -184px;
 }
-body.two-sidebars.var1 .colright, body.sidebar-second.var1 .colright, body.sidebar-first.var1 .colright, 
-body.two-sidebars.fix1 .colright, body.sidebar-second.fix1 .colright, body.sidebar-first.fix1 .colright {
+.two-sidebars.var1 .colright, .sidebar-second.var1 .colright, .sidebar-first.var1 .colright, 
+.two-sidebars.fix1 .colright, .sidebar-second.fix1 .colright, .sidebar-first.fix1 .colright {
 	width: 258px;
 	margin-right: -258px;
 }
-body.two-sidebars.var1 .outer {
+.two-sidebars.var1 .outer {
 	margin-left: 184px;
 	margin-right: 258px;
 }
-body.sidebar-first.var1 .outer {
+.sidebar-first.var1 .outer {
 	margin-left: 274px;
 }
-body.sidebar-second.var1 .outer {
+.sidebar-second.var1 .outer {
 	margin-right: 324px;
 }
-body.sidebar-first.var1 .colleft {
+.sidebar-first.var1 .colleft {
 	width: 274px;
 	margin-left: -274px;
 }
-body.sidebar-second.var1 .colright {
+.sidebar-second.var1 .colright {
 	width: 324px;
 	margin-right: -324px;
 }
 
 /* Fixed asyimmetrical sidebars (narrow)	*/
-body.two-sidebars.fix1 .outer, body.sidebar-first.fix1 .outer, body.sidebar-first.fix1 .outer {
+.two-sidebars.fix1 .outer, .sidebar-first.fix1 .outer, .sidebar-first.fix1 .outer {
 	margin-left: 184px;
 }
-body.two-sidebars.fix1 .outer, body.sidebar-second.fix1 .outer, body.sidebar-second.fix1 .outer {
+.two-sidebars.fix1 .outer, .sidebar-second.fix1 .outer, .sidebar-second.fix1 .outer {
 	margin-right: 258px;
 }
-body.sidebar-first.fix1 .colleft {
+.sidebar-first.fix1 .colleft {
 	width: 184px;
 	margin-left: -184px;
 }
-body.sidebar-second.fix1 .colright {
+.sidebar-second.fix1 .colright {
 	width: 258px;
 	margin-right: -258px;
 }
 
 /* Equal width sidebars (custom) */
-body.two-sidebars.eq .colleft, body.sidebar-second.eq .colleft, body.sidebar-first.eq .colleft {
+.two-sidebars.eq .colleft, .sidebar-second.eq .colleft, .sidebar-first.eq .colleft {
 	width: 199px;
 	margin-left: -199px;
 }
-body.two-sidebars.eq .colright, body.sidebar-second.eq .colright, body.sidebar-first.eq .colright {
+.two-sidebars.eq .colright, .sidebar-second.eq .colright, .sidebar-first.eq .colright {
 	width: 199px;
 	margin-right: -199px;
 }
-body.two-sidebars.eq .outer, body.sidebar-first.eq .outer, body.sidebar-first.eq .outer {
+.two-sidebars.eq .outer, .sidebar-first.eq .outer, .sidebar-first.eq .outer {
 	margin-left: 199px;
 }
-body.two-sidebars.eq .outer, body.sidebar-second.eq .outer, body.sidebar-second.eq .outer {
+.two-sidebars.eq .outer, .sidebar-second.eq .outer, .sidebar-second.eq .outer {
 	margin-right: 199px;
 }
-body.sidebar-first.eq .colleft {
+.sidebar-first.eq .colleft {
 	width: 199px;
 	margin-left: -199px;
 }
-body.sidebar-second.eq .colright {
+.sidebar-second.eq .colright {
 	width: 199px;
 	margin-right: -199px;
 }
 
-/* MARKUP FREE CLEARING (http://www.positioniseverything.net/easyclearing.html) */
-.clearfix:after {
-	content: ".";
-	display: block;
-	height: 0;
-	clear: both;
-	visibility: hidden;
-}
-.clearfix {
-	display: inline-block;
-}
-/* Hides from IE-mac \*/
-* html .clearfix {
-	height: 1%;
-}
-.clearfix {
-	display: block;
-}
-/* End hide from IE-mac */
 
 /* UTILITY RULES */
 .brclear {
@@ -265,16 +246,16 @@ ul.primary {
 	white-space: normal;
 }
 ul.links {
-  margin: 0;
-  padding: 0;
+	margin: 0;
+	padding: 0;
 }
 ul.links.inline, #breadcrumb ul li {
-  display: inline;
+	display: inline;
 }
 ul.links li {
-  display: inline;
-  list-style-type: none;
-  padding: 0 4px;
+	display: inline;
+	list-style-type: none;
+	padding: 0 4px;
 }
 table {
 	width: 100%;
@@ -308,7 +289,7 @@ td.section {
 	padding-bottom: 0.75em;
 	margin-bottom: .5em;
 }
-.section .block, .section .box {
+.section .block {
 	padding: 0;
 	margin-bottom: 15px;
 }
@@ -322,6 +303,10 @@ td.section {
 .block .content {
 	padding: 0;
 	margin: 0;
+}
+.block .content ul {
+	margin: 0;
+	padding: 0 10px;
 }
 .themed-block {
 	padding: 5px;
@@ -379,7 +364,7 @@ td.section {
 	margin-bottom: 1em;
 }
 .comment .title {
-	padding: 10px 0 12px 19px; /* LTR */
+	padding: 10px 0 12px 19px; /* RTL */
 }
 .comment .title a {
 	font-weight: normal;
@@ -388,15 +373,18 @@ td.section {
 	text-align: right;
 	font-weight: bold;
 	font-size: 0.8em;
-	float: right; /* LTR */
+	float: right; /* RTL */
 	color: red;
+}
+.comment-wrapper {
+	padding: 25px 0;
 }
 h2.title.comments-header, h2.title.comment-form {
 	margin: 25px 0 15px 0;
 }
 .node .user-picture, .comment .user-picture {
-	float: right; /* LTR */
-	padding: 0 0 .5em .5em; /* LTR */
+	float: right; /* RTL */
+	padding: 0 0 .5em .5em; /* RTL */
 }
 .node-unpublished,
 .comment-unpublished {
@@ -430,7 +418,7 @@ div.admin, div.admin .left, div.admin .right {
 	padding: 0;
 	overflow: hidden;
 }
-div.admin-panel h3 {
+.admin-panel h3 {
 	padding: 5px 8px 5px;
 	margin: 0;
 }
@@ -449,7 +437,7 @@ div.admin-panel h3 {
 	padding: 0;
 }
 #logo {
-	float: left; /* LTR */
+	float: left; /* RTL */
 }
 #logo img {
 	margin: 0 20px 5px 20px;
@@ -475,9 +463,9 @@ h1#site-name a, h1#site-name a:hover {
 	line-height: 22px;
 }
 #top-elements {
-	float: right; /* LTR */
-	text-align: right; /* LTR */
-	padding: 0 20px 0 0; /* LTR */
+	float: right; /* RTL */
+	text-align: right; /* RTL */
+	padding: 0 20px 0 0; /* RTL */
 }
 #search {
 	margin: 0 0 5px 0;
@@ -491,7 +479,7 @@ h1#site-name a, h1#site-name a:hover {
 	padding: 0 0.4em;
 }
 #mission {
-  margin-top: 10px;
+	margin-top: 10px;
 	padding: 0 10px;
 	font-weight: normal;
 	font-size: 85%;
@@ -508,7 +496,7 @@ h1#site-name a, h1#site-name a:hover {
 	margin: 7px 0;
 }
 #breadcrumb {
-	padding-left: 20px; /* LTR */
+	padding-left: 20px; /* RTL */
 	clear: both;
 	font-size: 80%;
 }
@@ -548,19 +536,16 @@ h1#site-name a, h1#site-name a:hover {
 	text-align: center;
 	padding: 5px 44px;
 }
-#footer {
+#footer, #footer a {
 	font-size: 75%;
-}
-#footer a {
 	font-weight: normal;
 }
-#footer ul.links li.first, ul.links li.first,
-ul.links li.taxonomy-term-reference-0 {
+#footer ul.links li.first, ul.links li.first, ul.links li.taxonomy-term-reference-0 {
 	border: none;
 }
 #footer .block ul, #footer ul.links li.first {
-	margin-left: 0; /* LTR */
-	padding-left: 0; /* LTR */
+	margin-left: 0; /* RTL */
+	padding-left: 0; /* RTL */
 }
 #footer .block {
 	padding: 0;
@@ -571,9 +556,9 @@ ul.links li.taxonomy-term-reference-0 {
 	padding: 0 90px;
 }
 .by {
-	float: right; /* LTR */
+	float: right; /* RTL */
 	clear: both;
-	font-size: 75%;
+	font-size: 10px;
 }
 .by, .by a, .by a:hover {
 	text-decoration: none;
@@ -628,7 +613,7 @@ ul.links li.taxonomy-term-reference-0 {
 #attachments a:hover {
 	text-decoration: underline !important;
 }
-#user-login-form, div.toboggan-login-link-container, div.user-login-block, .block-logintoboggan, 
+#user-login-form, .toboggan-login-link-container, .user-login-block, .block-logintoboggan, 
 #block-user-0 .content, #block-user-login .content {
 	text-align: center;
 }
@@ -642,7 +627,7 @@ ul.links li.taxonomy-term-reference-0 {
 	margin: 0;
 	list-style-type: none;
 }
-body.in-maintenance #main {
+.in-maintenance #main {
 	padding: 55px 115px 120px;
 }
 
@@ -675,7 +660,7 @@ body.in-maintenance #main {
 }
 #navlinks ul li {
 	display: inline;
-	float: left; /* LTR */
+	float: left; /* RTL */
 	position: relative;
 }
 #navlinks ul li a {
@@ -757,14 +742,14 @@ ul.sublayer {
 	width: 180px;
 	position: absolute;
 	margin: 0;
-	padding: 0 7px 5px 0 !important; /* shadow position */  /* LTR */
+	padding: 0 7px 5px 0 !important; /* shadow position */  /* RTL */
 }
 ul.firstsublayer {
-	left: 0; /* LTR */
+	left: 0; /* RTL */
 	top: 26px;
 }
 ul.sublayer {
-	left: 181px; /* LTR */
+	left: 181px; /* RTL */
 	top: -1px;
 }
 /*
@@ -776,19 +761,19 @@ ul.sublayer {
 
 /* first level */
 #navlinks ul li.expanded a.expandfirst {
-	padding-left: 22px; /* LTR */
+	padding-left: 22px; /* RTL */
 }
 
 /* sublevels */
 
 #navlinks ul li.expanded a.expand,
 #navlinks ul li.expanded ul li a.expand {
-	padding-right: 24px; /* LTR */
-	padding-left: 10px; /* LTR */
+	padding-right: 24px; /* RTL */
+	padding-left: 10px; /* RTL */
 }
 
 #navlinks ul.firstsublayer li a {
-	padding-left: 10px; /* LTR */
+	padding-left: 10px; /* RTL */
 }
 
 /* "Skip to Main Content" link - is useful for both visually impaired people and those with mobility impairments who cannot use a mouse */
@@ -811,22 +796,22 @@ ul.sublayer {
 
 /* BLOCK ICONS */
 
-.bicons32 div.block-icon {
+.bicons32 .block-icon {
 	position: absolute;
 	width: 32px;
 	height: 32px;
-	margin: -5px 0 0 -5px; /* LTR */
+	margin: -5px 0 0 -5px; /* RTL */
 }
-.bicons48 div.block-icon {
+.bicons48 .block-icon {
 	position: absolute;
 	width: 48px;
 	height: 48px;
-	margin: -15px 0 0 -18px; /* LTR */
+	margin: -15px 0 0 -18px; /* RTL */
 }
 .bicons32 .themed-block .title,
 .bicons48 .themed-block .title {
-	text-align: right; /* LTR */
-	padding: 6px 6px 6px 28px; /* LTR */
+	text-align: right; /* RTL */
+	padding: 6px 6px 6px 28px; /* RTL */
 }
 
 /*--- blog ---*/
@@ -892,8 +877,8 @@ ul.sublayer {
 .bicons48 #block-user-login .block-icon {
 	background: transparent url(../images/icons/blocks/icon_14_48.png) no-repeat;
 }
-div.toboggan-login-link-container {
-	padding-left: 20px; /* LTR */
+.toboggan-login-link-container {
+	padding-left: 20px; /* RTL */
 }
 
 /*--- user ---*/
@@ -1010,51 +995,51 @@ div.toboggan-login-link-container {
 /* PAGE ICONS */
 
 .picons .upload_attachments a {
-	background: url(../images/icons/attach.png) no-repeat; /* LTR */
-	padding-left: 20px; /* LTR */
+	background: url(../images/icons/attach.png) no-repeat; /* RTL */
+	padding-left: 20px; /* RTL */
 }
 .picons .comment-comments a {
-	background: url(../images/icons/comments.png) no-repeat; /* LTR */
-	padding-left: 20px; /* LTR */
+	background: url(../images/icons/comments.png) no-repeat; /* RTL */
+	padding-left: 20px; /* RTL */
 }
 .picons li.comment-delete a {
-	background: url(../images/icons/trash.png) no-repeat 0 2px; /* LTR */
-	padding-left: 15px; /* LTR */
+	background: url(../images/icons/trash.png) no-repeat 0 2px; /* RTL */
+	padding-left: 15px; /* RTL */
 }
 .picons li.comment-edit a {
-	background: url(../images/icons/edit.png) no-repeat 0 2px; /* LTR */
-	padding-left: 15px; /* LTR */
+	background: url(../images/icons/edit.png) no-repeat 0 2px; /* RTL */
+	padding-left: 15px; /* RTL */
 }
 .picons li.comment-reply a {
-	background: url(../images/icons/reply.png) no-repeat 0 2px; /* LTR */
-	padding-left: 15px; /* LTR */
+	background: url(../images/icons/reply.png) no-repeat 0 2px; /* RTL */
+	padding-left: 15px; /* RTL */
 }
 .picons .book_add_child a {
-	background: url(../images/icons/page-add.png) no-repeat left center; /* LTR */
-	padding-left: 20px; /* LTR */
+	background: url(../images/icons/page-add.png) no-repeat left center; /* RTL */
+	padding-left: 20px; /* RTL */
 }
 .picons .comment-add a {
-	background: url(../images/icons/comment.png) no-repeat left center; /* LTR */
-	padding-left: 20px; /* LTR */
+	background: url(../images/icons/comment.png) no-repeat left center; /* RTL */
+	padding-left: 20px; /* RTL */
 }
 .picons .print-icon {
 	display: none;
 }
 .picons .print_html a, .picons .book_printer a {
-	background: url(../images/icons/print.png) no-repeat left center; /* LTR */
-	padding-left: 20px; /* LTR */
+	background: url(../images/icons/print.png) no-repeat left center; /* RTL */
+	padding-left: 20px; /* RTL */
 	height: 16px;
 	display: inline-block;
 }
 .picons .print_mail a, .picons .book_mail a {
-	background: url(../images/icons/mail.png) no-repeat left center; /* LTR */
-	padding-left: 20px; /* LTR */
+	background: url(../images/icons/mail.png) no-repeat left center; /* RTL */
+	padding-left: 20px; /* RTL */
 	height: 16px;
 	display: inline-block;
 }
 .picons .print_pdf a, .picons .book_pdf a {
-	background: url(../images/icons/pdf.png) no-repeat left center; /* LTR */
-	padding-left: 20px; /* LTR */
+	background: url(../images/icons/pdf.png) no-repeat left center; /* RTL */
+	padding-left: 20px; /* RTL */
 	height: 16px;
 	display: inline-block;
 }
@@ -1062,33 +1047,33 @@ div.toboggan-login-link-container {
 .picons .print_mail, .picons .book_mail,
 .picons .print_pdf, .picons .book_pdf {
 	margin: auto 0;
-	padding-right: 0; /* LTR */
+	padding-right: 0; /* RTL */
 }
 .picons .field-type-taxonomy-term-reference {
-	background: url(../images/icons/tag.png) no-repeat left top; /* LTR */
-	padding-left: 20px; /* LTR */
+	background: url(../images/icons/tag.png) no-repeat left top; /* RTL */
+	padding-left: 20px; /* RTL */
 	margin: 10px 0;
 }
 .picons #sidebar-left a.active, .picons #sidebar-right a.active {
-	background: url(../images/icons/check.png) no-repeat right center; /* LTR */
-	padding-right: 20px; /* LTR */
+	background: url(../images/icons/check.png) no-repeat right center; /* RTL */
+	padding-right: 20px; /* RTL */
 }
 #sidebar-left .block-image a.active , #sidebar-right .block-image a.active	{
 	background: none;
 	padding: 0;
 }
 .picons .node-readmore a {
-	background: url(../images/icons/read_more.png) no-repeat left center; /* LTR */
-	padding-left: 15px; /* LTR */
+	background: url(../images/icons/read_more.png) no-repeat left center; /* RTL */
+	padding-left: 15px; /* RTL */
 }
 .picons .more-link a {
-	background: url(../images/icons/more.png) no-repeat left center; /* LTR */
-	padding-left: 15px; /* LTR */
+	background: url(../images/icons/more.png) no-repeat left center; /* RTL */
+	padding-left: 15px; /* RTL */
 	font-size: 9px;
 }
 .picons .blog_usernames_blog a {
-	background: url(../images/icons/user_green.png) no-repeat left center; /* LTR */
-	padding-left: 20px; /* LTR */
+	background: url(../images/icons/user_green.png) no-repeat left center; /* RTL */
+	padding-left: 20px; /* RTL */
 }
 
 /* HEADER IMAGE ROTATOR */
@@ -1115,11 +1100,11 @@ ul.galleries li, ul.images li {
 	border : none;
 	list-style-type: none;
 }
-body.mceContentBody {
+.mceContentBody {
 	background: #eee !important;
 	font-size: 14px;
 }
-body.mceContentBody a:link {
+.mceContentBody a:link {
 	font-weight: normal;
 }
 .view .view-comments-recent .views-field-subject {
@@ -1142,7 +1127,7 @@ li.topic_reply {
 	display: inline-block !important;
 }
 #continue-shopping-button {
-	margin-right: 50% !important; /* LTR */
+	margin-right: 50% !important; /* RTL */
 }
 .uc-store-admin-panel	{
 	margin: 0;

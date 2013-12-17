@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Hooks provided by the Magic module
@@ -28,7 +27,7 @@
 function hook_magic($magic_settings, $theme) {
   $settings = array();
 
-  $magic_settings['js']['my_own_js_settings'] = array(
+  $settings['js']['my_own_js_settings'] = array(
     '#type' => 'checkbox',
     '#title' => t('Do you want to?'),
   );
@@ -61,7 +60,6 @@ function hook_magic_alter(&$magic_settings, $theme) {
   // Add in your own submit handlers.
   $magic_settings['#submit'][] = 'my_module_magic_custom_submit_function';
 }
-
 
 /**
  * @} End of "addtogroup hooks".

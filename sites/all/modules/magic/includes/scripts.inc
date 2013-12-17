@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * A file with scripts to alter the default behavior of drupal js.
+ */
 
 /**
  * Returns a themed presentation of all JavaScript code for the current page.
@@ -65,7 +69,7 @@ function magic_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALSE
     }
 
     if ($js_key == 'settings') {
-      $JavaScript[$js_key]['scope'] = 'header';
+      $javascript[$js_key]['scope'] = 'header';
     }
   }
 

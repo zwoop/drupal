@@ -1,5 +1,10 @@
 <?php
 /**
+ * @file
+ * A file to contain functions for the magic module to abuse.
+ */
+
+/**
  * Returns a themed presentation of all JavaScript code for the current page.
  *
  * References to JavaScript files are placed in a certain order: first, all
@@ -32,31 +37,31 @@
  * @see locale_js_alter()
  * @see drupal_js_defaults()
  */
- function magic_experimental_js($scope = 'header', $javascript = NULL, $skip_alter = FALSE) {
-   if (!isset($javascript)) {
-     $javascript = magic_add_js();
-   }
-   if (empty($javascript)) {
-     return '';
-   }
+function magic_experimental_js($scope = 'header', $javascript = NULL, $skip_alter = FALSE) {
+  if (!isset($javascript)) {
+    $javascript = magic_add_js();
+  }
+  if (empty($javascript)) {
+    return '';
+  }
 
-   // Allow modules to alter the JavaScript.
-   if (!$skip_alter) {
-     drupal_alter('js', $javascript);
-   }
+  // Allow modules to alter the JavaScript.
+  if (!$skip_alter) {
+    drupal_alter('js', $javascript);
+  }
 
-   // Check to see if Force Header is available and set to true.
-   // If it is neither enabled nor set to true, change scope to footer,
-   // otherwise, keep it in the header.
-   // Done again here because scope may change on alter.
-   foreach ($javascript as $js_key => $js_value) {
-     if (!empty($js_value['force header'])) {
-       $javascript[$js_key]['scope'] = 'header';
-     }
-     else {
-       $javascript[$js_key]['scope'] = 'footer';
-     }
-   }
+  // Check to see if Force Header is available and set to true.
+  // If it is neither enabled nor set to true, change scope to footer,
+  // otherwise, keep it in the header.
+  // Done again here because scope may change on alter.
+  foreach ($javascript as $js_key => $js_value) {
+    if (!empty($js_value['force header'])) {
+      $javascript[$js_key]['scope'] = 'header';
+    }
+    else {
+      $javascript[$js_key]['scope'] = 'footer';
+    }
+  }
 
   // Check to see if Force Header is available and set to true.
   // If it is neither enabled nor set to true, change scope to footer, otherwise, keep it in the header.
@@ -80,61 +85,59 @@
       }
 
       if ($js_key == 'settings') {
-        $JavaScript[$js_key]['scope'] = 'header';
+        $javascript[$js_key]['scope'] = 'header';
       }
     }
   }
 
+  // Filter out elements of the given scope.
+  $items = array();
+  foreach ($javascript as $key => $item) {
+    if ($item['scope'] == $scope) {
+      $items[$key] = $item;
+    }
+  }
 
+  // Sort the JavaScript so that it appears in the correct order.
+  uasort($items, 'magic_sort_css_js');
 
-    // Filter out elements of the given scope.
-    $items = array();
-    foreach ($javascript as $key => $item) {
-      if ($item['scope'] == $scope) {
-        $items[$key] = $item;
-      }
-   }
+  // In Drupal 8, there's a JS_SETTING group for making setting variables
+  // appear last after libraries have loaded. In Drupal 7, this is forced
+  // without that group. We do not use the $key => $item type of iteration,
+  // because PHP uses an internal array pointer for that, and we're modifying
+  // the array order inside the loop.
+  foreach (array_keys($items) as $key) {
+    if (!empty($items[$key]['type']) && $items[$key]['type'] == 'setting') {
+      $item = $items[$key];
+      unset($items[$key]);
+      $items[$key] = $item;
+    }
+  }
 
-   // Sort the JavaScript so that it appears in the correct order.
-   uasort($items, 'magic_sort_css_js');
+  // Provide the page with information about the individual JavaScript files
+  // used, information not otherwise available when aggregation is enabled.
+  $setting['ajaxPageState']['js'] = array_fill_keys(array_keys($items), 1);
+  unset($setting['ajaxPageState']['js']['settings']);
+  drupal_add_js($setting, 'setting');
 
-   // In Drupal 8, there's a JS_SETTING group for making setting variables
-   // appear last after libraries have loaded. In Drupal 7, this is forced
-   // without that group. We do not use the $key => $item type of iteration,
-   // because PHP uses an internal array pointer for that, and we're modifying
-   // the array order inside the loop.
-   foreach (array_keys($items) as $key) {
-     if (!empty($items[$key]['type']) && $items[$key]['type'] == 'setting') {
-       $item = $items[$key];
-       unset($items[$key]);
-       $items[$key] = $item;
-     }
-   }
+  // If we're outputting the header scope, then this might be the final time
+  // that drupal_get_js() is running, so add the setting to this output as well
+  // as to the drupal_add_js() cache. If $items['settings'] doesn't exist, it's
+  // because drupal_get_js() was intentionally passed a $javascript argument
+  // stripped of settings, potentially in order to override how settings get
+  // output, so in this case, do not add the setting to this output.
+  if ($scope == 'header' && isset($items['settings'])) {
+    $items['settings']['data'][] = $setting;
+  }
 
-   // Provide the page with information about the individual JavaScript files
-   // used, information not otherwise available when aggregation is enabled.
-   $setting['ajaxPageState']['js'] = array_fill_keys(array_keys($items), 1);
-   unset($setting['ajaxPageState']['js']['settings']);
-   drupal_add_js($setting, 'setting');
+  // Render the HTML needed to load the JavaScript.
+  $elements = array(
+    '#type' => 'scripts',
+    '#items' => $items,
+  );
 
-   // If we're outputting the header scope, then this might be the final time
-   // that drupal_get_js() is running, so add the setting to this output as well
-   // as to the drupal_add_js() cache. If $items['settings'] doesn't exist, it's
-   // because drupal_get_js() was intentionally passed a $javascript argument
-   // stripped of settings, potentially in order to override how settings get
-   // output, so in this case, do not add the setting to this output.
-   if ($scope == 'header' && isset($items['settings'])) {
-     $items['settings']['data'][] = $setting;
-   }
-
-   // Render the HTML needed to load the JavaScript.
-   $elements = array(
-     '#type' => 'scripts',
-     '#items' => $items,
-   );
-
-   return drupal_render($elements);
- }
+  return drupal_render($elements);
+}
 
 /**
  * Adds a JavaScript file, setting, or inline code to the page.
@@ -522,7 +525,8 @@ function magic_group_js($javascript) {
 }
 
 /**
- * #pre_render callback to add the elements needed for JavaScript tags to be rendered.
+ * #pre_render callback to add the elements needed for JavaScript tags to be
+ * rendered.
  *
  * This function evaluates the aggregation enabled/disabled condition on a group
  * by group basis by testing whether an aggregate file has been made for the

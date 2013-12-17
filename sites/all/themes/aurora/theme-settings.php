@@ -71,20 +71,11 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
     '#parents' => array('vtb'),
   );
 
-  $form['chromeframe']['aurora_enable_chrome_frame'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Enable Chrome Frame'),
-    '#description' => t('Google\'s Chrome Frame is an open source project for Internet Explorer 6, 7, 8, and 9 that allows those version of Internet Explorer to <a href="!link target="_blank">harness the power of Google Chrome\'s engine</a>.', array('!link' => 'https://www.youtube.com/watch?v=sjW0Bchdj-w&feature=player_embedded"')),
-    '#default_value' => theme_get_setting('aurora_enable_chrome_frame'),
-    '#ajax' => array(
-      'callback' => 'aurora_ajax_settings_save'
-     ),
-   );
-
   $form['chromeframe']['aurora_min_ie_support'] = array(
     '#type' => 'select',
     '#title' => t('Minimum supported Internet Explorer version'),
     '#options' => array(
+      11 => t('Internet Explorer 11'),
       10 => t('Internet Explorer 10'),
       9 => t('Internet Explorer 9'),
       8 => t('Internet Explorer 8'),
@@ -309,7 +300,9 @@ function aurora_recomended_modules() {
  * Implements hook_magic_alter.
  */
 function aurora_magic_alter(&$magic_settings, $theme) {
-  $magic_settings['dev'] = array_merge(_aurora_live_reload_settings($theme), $magic_settings['dev']);
+  if (module_exists('magic_dev')) {
+    $magic_settings['dev'] = array_merge(_aurora_live_reload_settings($theme), $magic_settings['dev']);
+  }
 }
 
 /**

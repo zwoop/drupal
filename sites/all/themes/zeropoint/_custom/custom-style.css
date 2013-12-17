@@ -64,10 +64,10 @@ ul.sublayer {
  * Uncomment the lines below and modify the value as you wish. 
  * E.g. 1000px for fixed width or 85% for fluid width */
 /*
-body.layout-fluid .sizer0 {
+.layout-fluid .sizer0 {
 	width: 90%;
 }
-body.layout-fixed .sizer0 {
+.layout-fixed .sizer0 {
 	width: 980px;
 }
 */
@@ -79,25 +79,25 @@ body.layout-fixed .sizer0 {
 /* First choose "Equal width sidebars" in 0 Point settings page.
  * Uncomment the lines below and modify the values keeping pair values. */
 /*
-body.two-sidebars.eq .colleft, body.sidebar-second.eq .colleft, body.sidebar-first.eq .colleft {
+.two-sidebars.eq .colleft, .sidebar-second.eq .colleft, .sidebar-first.eq .colleft {
 	width: 199px;
 	margin-left: -199px;
 }
-body.two-sidebars.eq .colright, body.sidebar-second.eq .colright, body.sidebar-first.eq .colright {
+.two-sidebars.eq .colright, .sidebar-second.eq .colright, .sidebar-first.eq .colright {
 	width: 199px;
 	margin-right: -199px;
 }
-body.two-sidebars.eq .outer, body.sidebar-first.eq .outer, body.sidebar-first.eq .outer {
+.two-sidebars.eq .outer, .sidebar-first.eq .outer, .sidebar-first.eq .outer {
 	margin-left: 199px;
 }
-body.two-sidebars.eq .outer, body.sidebar-second.eq .outer, body.sidebar-second.eq .outer {
+.two-sidebars.eq .outer, .sidebar-second.eq .outer, .sidebar-second.eq .outer {
 	margin-right: 199px;
 }
-body.sidebar-first.eq .colleft {
+.sidebar-first.eq .colleft {
 	width: 199px;
 	margin-left: -199px;
 }
-body.sidebar-second.eq .colright {
+.sidebar-second.eq .colright {
 	width: 199px;
 	margin-right: -199px;
 }
