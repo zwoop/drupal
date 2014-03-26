@@ -8,19 +8,13 @@
  */
 
 /**
- * Include css unconditionally.
- */
-function flickrfield_init() {
-  drupal_add_css(drupal_get_path('module', 'flickr') . '/flickr.css');
-}
-
-/**
  * Implements hook_help().
  */
-function flickrfield_help($section, $arg) {
-  switch ($section) {
+function flickrfield_help($path, $arg) {
+  switch ($path) {
     case 'admin/help#flickrfield':
-      return t('Flickrfields display Flickr photos or photosets. Input the user id of the photo owner and the photo or photoset id. The id is visible in the url when you view the photo or photoset on Flickr.');
+      // Return a line-break version of the README.txt.
+      return _filter_autop(file_get_contents(dirname(__FILE__) . '/README.txt'));
   }
 }
 
@@ -227,7 +221,11 @@ function flickrfield_field_formatter_info() {
     );
   }
   $formatters['photoset_flickrcomslideshow'] = array(
-    'label' => 'Embedded Flickr.com flash slideshow',
+    'label' => 'Embedded Flickr.com slideshow (Flash)',
+    'field types' => array('flickrfield_photoset'),
+  );
+  $formatters['photoset_flickrcomslideshow_simple'] = array(
+    'label' => 'Embedded Flickr.com slideshow (non Flash)',
     'field types' => array('flickrfield_photoset'),
   );
   $formatters['photoset_flickrcomsetlink'] = array(
@@ -319,6 +317,9 @@ function flickrfield_theme() {
     'flickrfield_formatter_photoset_flickrcomslideshow' => array(
       'variables' => array('element'),
     ),
+    'flickrfield_formatter_photoset_flickrcomslideshow_simple' => array(
+      'variables' => array('element'),
+    ),
     'flickrfield_formatter_photoset_flickrcomsetlink' => array(
       'variables' => array('element'),
     ),
@@ -397,7 +398,7 @@ function theme_flickrfield_formatter_photoset_primaryphoto($element) {
 }
 
 /**
- * Theme a Flickr photo set as an embedded Flickr.com flash slideshow.
+ * Theme a Flickr photo set as an embedded Flickr.com slideshow (Flash).
  */
 function theme_flickrfield_formatter_photoset_flickrcomslideshow($variables) {
   require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'flickr') . '/flickr.inc';
@@ -405,9 +406,31 @@ function theme_flickrfield_formatter_photoset_flickrcomslideshow($variables) {
     return;
   }
   $set_id = $variables['#item']['flickrid'];
-  $src = 'http://www.flickr.com/slideShow/index.gne?set_id=' . $set_id;
+  $info = flickr_photoset_get_info($set_id);
+  $user_id = $info['owner'];
   return '<div class="flickr-photoset-slideshow">'
-    . '<iframe align="center" src="' . $src . '" frameBorder="0" width="500" scrolling="no" height="500"></iframe>'
+    . '<object type="application/x-shockwave-flash" data="https://www.flickr.com/apps/slideshow/show.swf?v=71649">
+  <param name="movie" value="https://www.flickr.com/apps/slideshow/show.swf?v=71649" />
+  <param name="allowFullScreen" value="true" />
+  <param name="wmode" value="opaque" />
+  <param name="flashvars" value="offsite=true&amp;lang=en-us&amp;page_show_url=/photos/' . $user_id . '/sets/' . $set_id . '/show/&amp;page_show_back_url=/photos/' . $user_id . '/sets/' . $set_id . '/&amp;set_id=' . $set_id . '" /></object>'
+    . '</div>';
+}
+
+/**
+ * Theme a Flickr photo set as an embedded Flickr.com slideshow (non Flash).
+ */
+function theme_flickrfield_formatter_photoset_flickrcomslideshow_simple($variables) {
+  require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'flickr') . '/flickr.inc';
+  if (empty($variables['#item']['flickrid'])) {
+    return;
+  }
+  $set_id = $variables['#item']['flickrid'];
+  $info = flickr_photoset_get_info($set_id);
+  $user_id = $info['owner'];
+  $src = 'https://www.flickr.com/slideShow/index.gne?group_id=&user_id=' . $user_id . '&set_id=' . $set_id . '&text=';
+  return '<div class="flickr-photoset-slideshow">'
+    . '<object type="text/html" data="' . $src . '"></object>'
     . '</div>';
 }
 
@@ -428,20 +451,66 @@ function theme_flickrfield_formatter_photoset_flickrcomsetlink($variables) {
  * add a link back to the Flickr page.
  */
 function theme_flickrfield_photo($variables) {
+  $class = variable_get('flickr_class');
+  $rel = variable_get('flickr_rel');
   $img = $variables['0'];
   $photo_url = $variables['1'];
   $formatter = $variables['2'];
   $photo_data = $variables['3'];
   $node = $variables['4'];
+  $url = flickr_photo_img($photo_data, variable_get('flickr_opening_size', ''), $formatter);
+  $img_url = flickr_photo_img($photo_data, $formatter);
+  // If the image is a square we know the width (avoids to make a request).
+  switch ($formatter) {
+    case 's':
+      $width = '75';
+      break;
+
+    case 'q':
+      $width = '150';
+      break;
+  }
+  // If it is not a square.
+  if (!isset($width)) {
+    // Get the real width of the image.
+    list($width) = getimagesize($img_url);
+  }
   $title = is_array($photo_data['title']) ? $photo_data['title']['_content'] : $photo_data['title'];
+  // Image width < 100 px is too small for most titles. Can be set differently.
+  if ($width < variable_get('flickr_title_suppress_on_small', '100')) {
+    $credit = t('Flickr');
+  }
+  else {
+    $credit = $title;
+  }
   if (arg(0) == 'node' && arg(1) == $node->nid) {
-    $output = '<div class="flickr-photo-img">' . $img . '</div>';
+    if (variable_get('flickr_class') == NULL && variable_get('flickr_rel') == NULL) {
+      $output = '<div class="flickr-photo-img">' . $img . '</div>';
+    }
+    else {
+      // Final step that generates the image with a link to the bigger version
+      // and a link to the Flickr page under it to comply with Flickr's TOS.
+      return '<span class="flickr-wrap">' . l($img, $url, array(
+        'attributes' => array(
+          'title' => $title,
+          'class' => array($class),
+          'rel' => $rel,
+        ),
+        'absolute' => TRUE,
+        'html' => TRUE,
+        )) . '<span class="flickr-credit" style="width: ' . ($width - variable_get('flickr_caption_padding', '0')) . 'px;">' . l($credit, $photo_url, array(
+          'attributes' => array(
+            'title' => t('View on Flickr. To enlarge click image.'),
+            'target' => '_blank',
+          ),
+        )) . '</span></span>';
+    }
   }
   else {
     $output = '<div class="flickr-photo-img">' . l($img, 'node/' . $node->nid, array(
       'attributes' => array('title' => $title),
       'absolute' => TRUE, 'html' => TRUE,
-    )) . '</div>';
+      )) . '</div>';
   }
   $output .= '<div class="flickr-citation"><cite>' . l(t('Source: Flickr'), $photo_url) . '</cite></div>';
   return $output;
@@ -451,28 +520,72 @@ function theme_flickrfield_photo($variables) {
  * Theme function for showing a photo set.
  */
 function theme_flickrfield_photoset($variables) {
+  $class = variable_get('flickr_class');
+  $rel = variable_get('flickr_rel');
   $img = $variables['0'];
   $photo_url = $variables['1'];
   $formatter = $variables['2'];
   $photo_data = $variables['3'];
   $node = $variables['4'];
   $output = '<div class="flickr-photoset">';
+  // If the image is a square we know the width (avoids to make a request).
+  switch ($formatter) {
+    case 's':
+      $width = '75';
+      break;
 
+    case 'q':
+      $width = '150';
+      break;
+  }
   if (module_exists('flickr_sets')) {
     $photos = flickr_set_load($photo_data['id']);
-
     foreach ((array) $photos['photoset']['photo'] as $photo) {
+      $url = flickr_photo_img($photo, variable_get('flickr_opening_size', ''), $formatter);
+      $img_url = flickr_photo_img($photo, $formatter);
+      // If it is not a square.
+      if ($formatter != 's' && $formatter != 'q') {
+        // Get the real width of the image.
+        list($width) = getimagesize($img_url);
+      }
       // Insert owner into $photo because theme_flickr_photo needs it.
       $photo['owner'] = $photos['photoset']['owner'];
       $title = is_array($photo['title']) ? $photo['title']['_content'] : $photo['title'];
+      // An mage width less than 100 px is too small for most titles.
+      // Can be set differently on the settings page.
+      if ($width < variable_get('flickr_title_suppress_on_small', '100')) {
+        $credit = t('Flickr');
+      }
+      else {
+        $credit = $title;
+      }
       $img = flickr_img($photo, $formatter);
       $original = flickr_photo_img($photo);
 
       if (arg(0) == 'node' && arg(1) == $node->nid) {
-        $output .= '<div class="flickr-photoset-img flickr-photoset-img-' . $formatter . '">' . l($img, $original, array(
-          'attributes' => array('title' => $title),
-          'absolute' => TRUE, 'html' => TRUE,
-        )) . '</div>';
+        if (variable_get('flickr_class') == NULL && variable_get('flickr_rel') == NULL) {
+          $output .= '<span class="flickr-wrap">' . $img . '</span>';
+        }
+        else {
+          // Final step that generates the image with a link to the bigger
+          // version and a link to the Flickr page under it to comply with the
+          // TOS of Flickr.
+          $output .= '<span class="flickr-wrap">' . l($img, $url, array(
+            'attributes' => array(
+              'title' => $title,
+              'class' => array($class),
+              'rel' => $rel,
+            ),
+            'absolute' => TRUE,
+            'html' => TRUE,
+           )) . '<span class="flickr-credit" style="width: ' . ($width - variable_get('flickr_caption_padding', '0')) . 'px;">' . l($credit, $photo_url, array(
+               'attributes' => array(
+                 'title' => t('View on Flickr. To enlarge click image.'),
+                 'target' => '_blank',
+               ),
+             )
+           ) . '</span></span>';
+        }
       }
       else {
         $output .= '<div class="flickr-photoset-img flickr-photoset-img-' . $formatter . '">' . l($img, 'node/' . $node->nid, array(
@@ -509,6 +622,8 @@ function theme_flickrfield_photoset($variables) {
  * Also includes a link to Flickr.com photo set page to comply with terms of
  * service.
  *
+ * @param array $variables
+ *   Holds the values to assign.
  * @param string $img
  *   HTML code for image.
  * @param string $link
