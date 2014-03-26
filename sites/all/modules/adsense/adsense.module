@@ -20,7 +20,6 @@ define('ADSENSE_ACCESS_PAGES_DEFAULT', '');
 define('ADSENSE_BASIC_ID_DEFAULT', '');
 define('ADSENSE_DISABLE_DEFAULT', 0);
 define('ADSENSE_ID_MODULE_DEFAULT', 'adsense_basic');
-define('ADSENSE_OVER_HTTPS_DEFAULT', 0);
 define('ADSENSE_PLACEHOLDER_DEFAULT', 1);
 define('ADSENSE_PLACEHOLDER_TEXT_DEFAULT', 'Google AdSense');
 define('ADSENSE_SECTION_TARGETING_DEFAULT', 1);
@@ -52,21 +51,22 @@ define('ADSENSE_SECRET_LANGUAGE_DEFAULT', '');
  */
 function adsense_ad_formats($key = NULL) {
   $ads = array(
-    '120x240'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Vertical banner'),  'code' => '120x240_as',       'width' => 120, 'height' => 240),
-    '120x600'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Skyscraper'),       'code' => '120x600_as',       'width' => 120, 'height' => 600),
-    '125x125'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Button'),           'code' => '125x125_as',       'width' => 125, 'height' => 125),
-    '160x600'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Wide Skyscraper'),  'code' => '160x600_as',       'width' => 160, 'height' => 600),
-    '180x150'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Small Rectangle'),  'code' => '180x150_as',       'width' => 180, 'height' => 150),
-    '200x200'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Small Square'),     'code' => '200x200_as',       'width' => 200, 'height' => 200),
-    '234x60'   =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Half Banner'),      'code' => '234x60_as',        'width' => 234, 'height' =>  60),
-    '250x250'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Square'),           'code' => '250x250_as',       'width' => 250, 'height' => 250),
-    '300x250'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Medium Rectangle'), 'code' => '300x250_as',       'width' => 300, 'height' => 250),
-    '300x600'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Large Skyscraper'), 'code' => '300x600_as',       'width' => 300, 'height' => 600),
-    '320x50'   =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Mobile Banner'),    'code' => '320x50_as',        'width' => 320, 'height' =>  50),
-    '336x280'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Large Rectangle'),  'code' => '336x280_as',       'width' => 336, 'height' => 280),
-    '468x60'   =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Banner'),           'code' => '468x60_as',        'width' => 468, 'height' =>  60),
-    '728x90'   =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Leaderboard'),      'code' => '728x90_as',        'width' => 728, 'height' =>  90),
-    '970x90'   =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Large Leaderboard'),'code' => '970x90_as',        'width' => 970, 'height' =>  90),
+    '120x240'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Vertical Banner'),           'code' => '120x240_as',       'width' => 120, 'height' => 240),
+    '120x600'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Skyscraper'),                'code' => '120x600_as',       'width' => 120, 'height' => 600),
+    '125x125'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Button'),                    'code' => '125x125_as',       'width' => 125, 'height' => 125),
+    '160x600'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Wide Skyscraper'),           'code' => '160x600_as',       'width' => 160, 'height' => 600),
+    '180x150'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Small Rectangle'),           'code' => '180x150_as',       'width' => 180, 'height' => 150),
+    '200x200'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Small Square'),              'code' => '200x200_as',       'width' => 200, 'height' => 200),
+    '234x60'   =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Half Banner'),               'code' => '234x60_as',        'width' => 234, 'height' =>  60),
+    '250x250'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Square'),                    'code' => '250x250_as',       'width' => 250, 'height' => 250),
+    '300x250'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Medium Rectangle'),          'code' => '300x250_as',       'width' => 300, 'height' => 250),
+    '300x600'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Large Skyscraper'),          'code' => '300x600_as',       'width' => 300, 'height' => 600),
+    '320x50'   =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Mobile Banner'),             'code' => '320x50_as',        'width' => 320, 'height' =>  50),
+    '320x100'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Large Mobile Banner'),       'code' => '320x100_as',       'width' => 320, 'height' => 100),
+    '336x280'  =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Large Rectangle'),           'code' => '336x280_as',       'width' => 336, 'height' => 280),
+    '468x60'   =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Banner'),                    'code' => '468x60_as',        'width' => 468, 'height' =>  60),
+    '728x90'   =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Leaderboard'),               'code' => '728x90_as',        'width' => 728, 'height' =>  90),
+    '970x90'   =>  array('type' => ADSENSE_TYPE_AD,   'desc' => t('Large Leaderboard'),         'code' => '970x90_as',        'width' => 970, 'height' =>  90),
     '120x90'   =>  array('type' => ADSENSE_TYPE_LINK, 'desc' => t('4-links Vertical Smal'),     'code' => '120x90_0ads_al',   'width' => 120, 'height' =>  90),
     '160x90'   =>  array('type' => ADSENSE_TYPE_LINK, 'desc' => t('4-links Vertical Medium'),   'code' => '160x90_0ads_al',   'width' => 160, 'height' =>  90),
     '180x90'   =>  array('type' => ADSENSE_TYPE_LINK, 'desc' => t('4-links Vertical Large'),    'code' => '180x90_0ads_al',   'width' => 180, 'height' =>  90),
@@ -638,18 +638,6 @@ function _adsense_can_insert_another($type = ADSENSE_TYPE_AD) {
  *   TRUE if can render, FALSE if not allowed.
  */
 function _adsense_page_match() {
-  // Do not show ads on secure pages.
-  // This is for two reasons:
-  // Google would most probably not have indexed secure pages
-  // and it also prevents warnings about mixed-content
-  // Thanks to Brad Konia http://drupal.org/node/29585
-  // Should be restricted when running on Apache only
-  if (isset($_SERVER['SERVER_SOFTWARE']) && (stristr($_SERVER['SERVER_SOFTWARE'], 'Apache') !== FALSE) &&
-      isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on') &&
-      (!variable_get('adsense_over_https', ADSENSE_OVER_HTTPS_DEFAULT))) {
-    return FALSE;
-  }
-
   $pages = variable_get('adsense_access_pages', ADSENSE_ACCESS_PAGES_DEFAULT);
   $visibility = variable_get('adsense_visibility', ADSENSE_VISIBILITY_DEFAULT);
 

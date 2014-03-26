@@ -1,4 +1,4 @@
-<div id="jcv <?php print str_replace('adsense', '', $block_html_id); ?>" class="<?php print str_replace('adsense', '', $classes); ?>"<?php print $attributes; ?>>
+<div id="<?php print str_replace('adsense', '', $block_html_id); ?>" class="<?php print str_replace('adsense', '', $classes); ?>"<?php print $attributes; ?>>
 
   <?php print render($title_prefix); ?>
 <?php if ($block->subject): ?>

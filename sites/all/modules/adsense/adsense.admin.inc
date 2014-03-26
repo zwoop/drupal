@@ -75,13 +75,6 @@ function adsense_main_settings() {
     '#description' => t("EXPERIMENTAL! Enabling this feature will add a mechanism that tries to detect when adblocker software is in use, displaying a polite request to the user to enable ads on this site. [!moreinfo]", array('!moreinfo' => l(t('More information'), 'http://easylist.adblockplus.org/blog/2013/05/10/anti-adblock-guide-for-site-admins'))),
   );
 
-  $form['advanced']['adsense_over_https'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Enable ads on secure pages?'),
-    '#default_value' => variable_get('adsense_over_https', ADSENSE_OVER_HTTPS_DEFAULT),
-    '#description' => t("Enabling this option will cause the module to display ads on pages served over HTTPS. However, since Google doesn't serve a secure version of the ad, the browser will request the user to confirm the display of non-secure page elements. [!moreinfo]", array('!moreinfo' => l(t('Help article'), 'https://support.google.com/adsense/answer/10528'))),
-  );
-
   $form['advanced']['adsense_test_mode'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable test mode?'),
