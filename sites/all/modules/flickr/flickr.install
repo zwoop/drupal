@@ -18,6 +18,9 @@ function flickr_uninstall() {
   variable_del('flickr_opening_size');
   variable_del('flickr_photos_per_page');
   variable_del('flickr_rel');
+  variable_del('flickr_title_suppress_on_small');
+  variable_del('flickr_caption_padding');
+  variable_del('flickr_license');
 }
 
 /**
@@ -50,3 +53,20 @@ function flickr_schema() {
   return $schema;
 }
 
+/**
+ * Implements hook_update().
+ */
+function flickr_update_7001() {
+  // Create new index on variable 'flickr_info_overlay' without altering others.
+  $overlay = variable_get('flickr_info_overlay', array(
+    'title' => 'title',
+    'metadata' => 'metadata',
+    'description' => 'description',
+  ));
+  variable_set('flickr_info_overlay', array(
+    'title' => $overlay['title'],
+    'metadata' => $overlay['metadata'],
+    'description' => $overlay['description'],
+    'license' => 0,
+  ));
+}

@@ -7,6 +7,17 @@
 require_once(drupal_get_path('module', 'flickr') . '/flickr.inc');
 
 /**
+ * Implements hook_help().
+ */
+function flickr_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#flickr':
+      // Return a line-break version of the README.txt.
+      return _filter_autop(file_get_contents(dirname(__FILE__) . '/README.txt'));
+  }
+}
+
+/**
  * Implements hook_init().
  */
 function flickr_init() {
@@ -100,19 +111,6 @@ function flickr_theme() {
       ),
     ),
   );
-}
-
-/**
- * Implements hook_help().
- */
-function flickr_help($section, $arg) {
-  switch ($section) {
-    case 'admin/settings/flickr':
-      return t("You will need a Flickr API key to use this module. You can apply for one at <a href='@link'>@link</a>", array('@link' => url('http://www.flickr.com/services/apps/create/apply')));
-
-    case 'admin/help#flickr':
-      return t("The flickr module uses XML-RPC to connect to Flickr's API and retreive photo information.");
-  }
 }
 
 /**
@@ -234,7 +232,7 @@ function flickr_user_presave(&$edit, $account, $category) {
         ->execute();
     }
     /*
-    else if ($user_affected) {
+    elseif ($user_affected) {
       //Flickr account deleted
       drupal_set_message(t("%username's Flickr page has been deleted.", array('%username' => $account->name)));
     }
@@ -306,40 +304,116 @@ function theme_flickr_photo($variables) {
   $format = $variables['format'];
   $attribs = $variables['attribs'];
   $url = flickr_photo_img($photo, variable_get('flickr_opening_size', ''), $format);
+  $img = flickr_img($photo, $size, $attribs);
+  $img_url = flickr_photo_img($photo, $size);
+  // If the image is a square we know the width (avoids to make a request).
   switch ($size) {
     case 's':
       $width = '75';
       break;
 
-    case 't':
-      $width = '100';
-      break;
-
     case 'q':
       $width = '150';
       break;
-
-    case 'm':
-      $width = '240';
-      break;
-
-    case 'n':
-      $width = '320';
-      break;
-
-    default:
-      $width = '500';
   }
-  $img = flickr_img($photo, $size, $attribs);
+  // If it is not a square.
+  if (!isset($width)) {
+    // Get the real width of the image.
+    list($width) = getimagesize($img_url);
+  }
   $photo_url = flickr_photo_page_url($photo['owner'], $photo['id']);
   $title = is_array($photo['title']) ? $photo['title']['_content'] : $photo['title'];
-  if ($size == 's') {
-    // The size is too small to add a title.
+  // Image width < 100 px is too small for most titles. Can be set differently.
+  if ($width < variable_get('flickr_title_suppress_on_small', '100')) {
     $credit = t('Flickr');
   }
   else {
     $credit = $title;
   }
+  // Get the Flickr image title for set data or the photo itself. Sanatize.
+  $title = is_array($photo['title']) ? str_replace('"', "'", strip_tags($photo['title']['_content'])) : $photo['title'];
+  $info = flickr_photo_get_info($photo['id']);
+  // Use title if description does not exist, else sanitize the description.
+  $description = !empty($info['description']['_content']) ? str_replace('"', "'", htmlspecialchars_decode(strip_tags($info['description']['_content']))) : $title;
+  // Real name if it exists or go with the username. Link to Flickr user page.
+  $username = !empty($info['owner']['realname']) ? l($info['owner']['realname'], 'https://www.flickr.com/photos/' . $info['owner']['nsid'], array('attributes' => array('title' => t('View user on Flickr.'), 'target' => '_blank'))) : l($info['owner']['username'], 'https://www.flickr.com/photos/' . $info['owner']['nsid'], array('attributes' => array('title' => t('View user on Flickr.'), 'target' => '_blank')));
+  // The date an image was taken formatted as 'time ago'.
+  $taken = isset($info['dates']['taken']) ? format_interval(time() - strtotime($info['dates']['taken']), 1) . ' ' . t('ago') : '';
+  // A bunch of geo data.
+  $neighbourhood = isset($info['location']['neighbourhood']['_content']) ? strip_tags($info['location']['neighbourhood']['_content']) . ', ' : '';
+  $locality = isset($info['location']['locality']['_content']) ? strip_tags($info['location']['locality']['_content']) . ', ' : '';
+  $region = isset($info['location']['region']['_content']) ? strip_tags($info['location']['region']['_content']) . ', ' : '';
+  $country = isset($info['location']['country']['_content']) ? strip_tags($info['location']['country']['_content']) : '';
+  $location = !empty($country) ? ' ' . t('at') . ' ' . $neighbourhood . $locality . $region . $country : '';
+  switch ($info['license']) {
+    case '0':
+      $license = '<br />&copy; ' . t('All Rights Reserved');
+      $licenselong = '&copy; ' . t('All Rights Reserved');
+      break;
+
+    case '1':
+      $license = ' <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/" title="' . t('Creative Commons — Attribution-NonCommercial-ShareAlike 2.0 Generic — CC BY-NC-SA 2.0') . '" target="_blank"><span class="flickr-cc">cna</span></a>';
+      $licenselong = t('Creative Commons, Attribution, Non Commercial, ShareAlike');
+      break;
+
+    case '2':
+      $license = ' <a href="https://creativecommons.org/licenses/by-nc/2.0/" title="' . t('Creative Commons — Attribution-NonCommercial 2.0 Generic — CC BY-NC 2.0') . '" target="_blank"><span class="flickr-cc">cn</span></a>';
+      $licenselong = t('Creative Commons, Attribution, Non Commercial');
+      break;
+
+    case '3':
+      $license = ' <a href="https://creativecommons.org/licenses/by-nc-nd/2.0/" title="' . t('Creative Commons — Attribution-NonCommercial-NoDerivs 2.0 Generic — CC BY-NC-ND 2.0') . '" target="_blank"><span class="flickr-cc">cnd</span></a>';
+      $licenselong = t('Creative Commons, Attribution, Non Commercial, No Derivs');
+      break;
+
+    case '4':
+      $license = ' <a href="https://creativecommons.org/licenses/by/2.0/" title="' . t('Creative Commons — Attribution 2.0 Generic — CC BY 2.0') . '" target="_blank"><span class="flickr-cc">c</span></a>';
+      $licenselong = t('Creative Commons, Attribution');
+      break;
+
+    case '5':
+      $license = ' <a href="https://creativecommons.org/licenses/by-sa/2.0/" title="' . t('Creative Commons — Attribution-ShareAlike 2.0 Generic — CC BY-SA 2.0') . '" target="_blank"><span class="flickr-cc">cs</span></a>';
+      $licenselong = t('Creative Commons, Attribution, Share Alike');
+      break;
+
+    case '6':
+      $license = ' <a href="https://creativecommons.org/licenses/by-nd/2.0/" title="' . t('Creative Commons — Attribution-NoDerivs 2.0 Generic — CC BY-ND 2.0') . '" target="_blank"><span class="flickr-cc">cd</span></a>';
+      $licenselong = t('Creative Commons, Attribution, No Derivs');
+      break;
+
+    case '7':
+      $license = '<br /><a href="https://flickr.com/commons/usage/" title="' . t('Flickr: The Commons') . '" target="_blank">No known copyright restrictions</a>';
+      $licenselong = t('No known copyright restrictions');
+      break;
+
+    case '8':
+      $license = '<br /><a href="http://www.usa.gov/copyright.shtml" title="' . t('Copyright and Other Rights Pertaining to U.S. Government Works | USA.gov') . '" target="_blank">United States Government Work</a>';
+      $licenselong = t('Copyright and Other Rights Pertaining to U.S. Government Works | USA.gov');
+      break;
+  }
+  if (variable_get('flickr_license', 0) == 0) {
+    $license = '';
+  }
+  // Compose extra Flickr info as HTML to render.
+  $metadata = '<br />' . $taken . $location . ' ' . t('by') . ' ' . $username;
+  // Image width < 100 px is too small for most titles. Can be set differently.
+  $credit = $width < variable_get('flickr_title_suppress_on_small', '100') ? t('Flickr') : $title;
+  // Image width < 150 px is too small for extra info. Can be set differently.
+  $metadatacaption = $width < variable_get('flickr_metadata_suppress_on_small', '150') ? '' : $metadata . $license;
+  // Determine what info goes with the enlarged version of the image.
+  $overlay = variable_get('flickr_info_overlay', array(
+    'title' => 'title',
+    'metadata' => 'metadata',
+    'description' => 'description',
+    'license' => 0,
+  ));
+  $overlaytitle = (gettype($overlay['title']) == 'integer') ? '' : $title . ' - ';
+  $metadata = (gettype($overlay['metadata']) == 'integer') ? '' : $metadata . ' - ';
+  $description = (gettype($overlay['description']) == 'integer' || $overlaytitle == $description . ' - ') ? '' : $description . ' - ';
+  $licenselong = (gettype($overlay['license']) == 'integer') ? '' : $licenselong;
+  $overlayhtml = $overlaytitle . $metadata . $description . $licenselong;
+  // Final step when NO overlay browser is used that generates the image that
+  // links to the Flickr page to comply with the TOS of Flickr.
   if (variable_get('flickr_class') == NULL && variable_get('flickr_rel') == NULL) {
     return l($img, $photo_url, array(
       'attributes' => array(
@@ -350,21 +424,24 @@ function theme_flickr_photo($variables) {
     ));
   }
   else {
+    // If 'class' or 'rel' attribute are defined (overlay browser), use a
+    // caption.
     // Final step that generates the image with a link to the bigger version and
     // a link to the Flickr page under it to comply with the TOS of Flickr.
     return '<span class="flickr-wrap">' . l($img, $url, array(
       'attributes' => array(
-        'title' => $title,
+        'title' => $overlayhtml,
         'class' => array($class),
-        'rel' => $rel),
+        'rel' => $rel,
+      ),
       'absolute' => TRUE,
       'html' => TRUE,
-    )) . '<span class="flickr-credit" style="max-width: ' . $width . 'px;">' . l($credit, $photo_url, array(
+    )) . '<span class="flickr-credit" style="width: ' . ($width - variable_get('flickr_caption_padding', '0')) . 'px;">' . l($credit, $photo_url, array(
       'attributes' => array(
-        'title' => t('View on Flickr. To enlarge click pic.'),
+        'title' => t('View on Flickr. To enlarge click image.'),
         'target' => '_blank',
       ),
-    )) . '</span></span>';
+    )) . $metadatacaption . '</span></span>';
   }
 }
 
@@ -384,7 +461,7 @@ function theme_flickr_photo_box($variables) {
   $output = "<div class='flickr-photo-box'>\n";
   $output .= "<a href='$photo_url'>$img</a>";
   $output .= "<a href='$photo_url'>";
-  $output .= '<div class="flickr-photo-title">' . check_plain($title) . "</div>\n";
+  $output .= '<div class="flickr-photo-title">' . strip_tags($title) . "</div>\n";
   $output .= "</a>";
   $output .= "</div>\n";
   return $output;
@@ -446,4 +523,3 @@ function theme_flickr_photoset($variables) {
       ));
   }
 }
-

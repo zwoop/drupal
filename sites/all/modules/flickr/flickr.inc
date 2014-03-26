@@ -4,7 +4,8 @@
  * The Flickr API functions.
  */
 
-define('FLICKR_REST_ENDPOINT', 'http://api.flickr.com/services/rest/');
+define('FLICKR_REST_ENDPOINT', 'https://api.flickr.com/services/rest/');
+require_once(drupal_get_path('module', 'flickr') . '/flickr.api.inc');
 
 /**
  * A list of possible photo sizes with description and label.
@@ -229,7 +230,11 @@ function flickr_img($photo, $size = NULL, $attributes = NULL) {
       $img_url = flickr_photo_img($photo, $size);
     }
   }
-  $title = is_array($photo['title']) ? $photo['title']['_content'] : $photo['title'];
+  $info = !is_array($photo['title']) ? flickr_photo_get_info($photo['id']) : '';
+  $title = is_array($photo['title']) ? str_replace('"', "'", htmlspecialchars_decode(strip_tags($photo['description']['_content']))) : str_replace('"', "'", htmlspecialchars_decode(strip_tags($info['description']['_content'])));
+  if (empty($title) == 'title') {
+    $title = $photo['title'];
+  }
   if (module_exists('jcaption') && (variable_get('flickr_class') != NULL || variable_get('flickr_rel') != NULL)) {
     $title = '';
   }
@@ -264,7 +269,7 @@ function flickr_photo_img($photo, $size = NULL, $format = NULL) {
   $id = isset($photo['primary']) ? $photo['primary'] : $photo['id'];
   $secret = $photo['secret'];
 
-  return "http://farm{$farm}.static.flickr.com/{$server}/{$id}_{$secret}" . ($size ? "_$size." : '.') . ($size == 'o' ? $format : 'jpg');
+  return "https://farm{$farm}.static.flickr.com/{$server}/{$id}_{$secret}" . ($size ? "_$size." : '.') . ($size == 'o' ? $format : 'jpg');
 }
 
 /**
@@ -284,7 +289,7 @@ function flickr_photo_page_url($owner, $id = NULL) {
     return $person['photosurl']['_content'] . $id;
   }
   else {
-    return "http://flickr.com/photos/$nsid/$id";
+    return "https://flickr.com/photos/$nsid/$id";
   }
 }
 
@@ -305,114 +310,8 @@ function flickr_photoset_page_url($owner, $id = NULL) {
     return $person['photosurl']['_content'] . 'sets/' . $id;
   }
   else {
-    return "http://flickr.com/photos/$nsid/sets/$id";
+    return "https://flickr.com/photos/$nsid/sets/$id";
   }
-}
-
-/**
- * Get information about a photo.
- *
- * @param string $photo_id
- *   ID of the photo to get info about.
- *
- * @return array
- *   Response from the flickr method flickr.photos.getInfo.
- *   (http://www.flickr.com/services/api/flickr.photos.getInfo.html)
- */
-function flickr_photo_get_info($photo_id) {
-  $response = flickr_request(
-    'flickr.photos.getInfo',
-    array('photo_id' => $photo_id)
-  );
-  if ($response) {
-    return $response['photo'];
-  }
-  return FALSE;
-}
-
-/**
- * Returns the available sizes for a photo.
- *
- * @param string $photo_id
- *   ID of the photo to get the available sizes of.
- *
- * @return array
- *   Response from the flickr method flickr.photos.getSizes.
- *   (http://www.flickr.com/services/api/flickr.photos.getSizes.html)
- */
-function flickr_photo_get_sizes($photo_id) {
-  $response = flickr_request(
-    'flickr.photos.getSizes',
-    array('photo_id' => $photo_id)
-  );
-  if ($response) {
-    return $response['sizes']['size'];
-  }
-  return FALSE;
-}
-
-/**
- * Gets information about a photoset.
- *
- * @param string $photoset_id
- *   ID of the photoset to get information about.
- *
- * @return array
- *   Response from the flickr method flickr.photosets.getInfo.
- *   (http://www.flickr.com/services/api/flickr.photosets.getInfo.html)
- */
-function flickr_photoset_get_info($photoset_id) {
-  $response = flickr_request(
-    'flickr.photosets.getInfo',
-    array('photoset_id' => $photoset_id)
-  );
-  if ($response) {
-    return $response['photoset'];
-  }
-  return FALSE;
-}
-
-/**
- * Returns the photosets belonging to the specified user.
- *
- * @param string $nsid
- *   NSID of the user whose photoset list you want.
- *
- * @return array
- *   Response from the flickr method flickr.photosets.getList.
- *   (http://www.flickr.com/services/api/flickr.photosets.getList.html)
- */
-function flickr_photoset_get_list($nsid) {
-  $response = flickr_request(
-    'flickr.photosets.getList',
-    array('user_id' => $nsid)
-  );
-  if ($response) {
-    return $response['photosets']['photoset'];
-  }
-  return FALSE;
-}
-
-/**
- * Get information about a user.
- *
- * @param string $nsid
- *   The Flickr user's NSID.
- *
- * @return array
- *   Array with person's info from flickr.people.getInfo.
- *   (http://www.flickr.com/services/api/flickr.people.getInfo.html)
- *   or FALSE on error.
- */
-function flickr_people_get_info($nisd) {
-  $response = flickr_request(
-    'flickr.people.getInfo',
-    array('user_id' => $nisd)
-  );
-  if ($response) {
-    return $response['person'];
-  }
-  return FALSE;
 }
 
 /**
@@ -453,115 +352,6 @@ function flickr_user_find_by_identifier($identifier) {
  */
 function flickr_is_nsid($id) {
   return preg_match('/^\d+@N\d+$/', $id);
-}
-
-/**
- * Return a user's NSID, given their username.
- *
- * @param string $username
- *   Username to look for.
- *
- * @return array
- *   Response from the flickr method flickr.people.findByUsername.
- *   (http://www.flickr.com/services/api/flickr.people.findByUsername.html)
- */
-function flickr_user_find_by_username($username) {
-  $response = flickr_request(
-    'flickr.people.findByUsername',
-    array('username' => $username)
-  );
-  if ($response) {
-    return $response['user'];
-  }
-  return FALSE;
-}
-
-/**
- * Return a user's NSID, given their email address.
- *
- * @param string $email
- *   Email to look for.
- *
- * @return array
- *   Response from the flickr method flickr.people.findByEmail.
- *   (http://www.flickr.com/services/api/flickr.people.findByEmail.html)
- */
-function flickr_user_find_by_email($email) {
-  $response = flickr_request(
-    'flickr.people.findByEmail',
-    array('find_email' => $email)
-  );
-  if ($response) {
-    return $response['user'];
-  }
-  return FALSE;
-}
-
-/**
- * Get the popular tags for a given user.
- *
- * @param string $nsid
- *   NSID of the user whose tags will be returned.
- * @param string $count
- *   Number of tags to return.
- *
- * @return array
- *   Response from the flickr method flickr.tags.getListUserPopular.
- *   (http://www.flickr.com/services/api/flickr.tags.getListUserPopular.html)
- */
-function flickr_tags_get_list_user_popular($nsid, $count = NULL) {
-  $args = array('user_id' => $nsid);
-  if ($count != NULL) {
-    $args['count'] = $count;
-  }
-  $response = flickr_request('flickr.tags.getListUserPopular', $args);
-  if ($response) {
-    return $response['who']['tags']['tag'];
-  }
-  return FALSE;
-}
-
-/**
- * Get the tag list for a given user.
- *
- * @param string $nsid
- *   NSID of the user whose photoset tags will be returned.
- *
- * @return array
- *   Response from the flickr method flickr.tags.getListUser.
- *   (http://www.flickr.com/services/api/flickr.tags.getListUser.html)
- */
-function flickr_tags_get_list_user($nsid) {
-  $response = flickr_request(
-    'flickr.tags.getListUser',
-    array('user_id' => $nsid)
-  );
-  if ($response) {
-    return $response['who']['tags']['tag'];
-  }
-  return FALSE;
-}
-
-
-/**
- * Flickr photos search.
- */
-function flickr_photos_search($nsid, $page = 1, $other_args = array()) {
-  $args = array(
-    'user_id' => $nsid,
-    'page' => $page,
-  );
-
-  // Set per_page to flickr module default if not specified in $other_args.
-  if (!isset($other_args['per_page'])) {
-    $args['per_page'] = variable_get('flickr_photos_per_page', 20);
-  }
-
-  $response = flickr_request('flickr.photos.search', array_merge($args, $other_args));
-  if ($response) {
-    return $response['photos'];
-  }
-  return FALSE;
 }
 
 /**
@@ -611,62 +401,3 @@ function flickr_set_error($message_or_response) {
   }
   watchdog('flickr', $message, array(), WATCHDOG_WARNING);
 }
-
-/**
- * Returns the photosets belonging to the specified user.
- *
- * @param string $nsid
- *   NSID of the group whose photos you want.
- *
- * @return array
- *   Response from the flickr method flickr.photosets.getList.
- *   (http://www.flickr.com/services/api/flickr.photosets.getList.html)
- */
-function flickr_get_group_photos($nsid, $page = 1, $other_args = array()) {
-  $args = array(
-    'group_id' => $nsid,
-    'page' => $page,
-  );
-
-  // Set per_page to flickr module default if not specified in $other_args.
-  if (!isset($other_args['per_page'])) {
-    $args['per_page'] = variable_get('flickr_photos_per_page', 20);
-  }
-
-  $response = flickr_request('flickr.groups.pools.getPhotos', array_merge($args, $other_args));
-  if ($response) {
-    return $response['photos'];
-  }
-  return FALSE;
-}
-
-/**
- * Returns a list of favorite public photos for the given user.
- *
- * @param string $nsid
- *   NSID of the user whose photoset tags will be returned.
- * @param string $page
- *   Page of results to return.
- *
- * @return array
- *   response from the flickr method flickr.favorites.getPublicList
- *   (http://www.flickr.com/services/api/flickr.favorites.getPublicList.html)
- */
-function flickr_favorites_get_public_list($nsid, $page = 1, $other_args = array()) {
-  $args = array(
-    'user_id' => $nsid,
-    'page' => $page,
-  );
-
-  // Set per_page to flickr module default if not specified in $other_args.
-  if (!isset($other_args['per_page'])) {
-    $args['per_page'] = variable_get('flickr_photos_per_page', 20);
-  }
-
-  $response = flickr_request('flickr.favorites.getPublicList', array_merge($args, $other_args));
-  if ($response) {
-    return $response['photos'];
-  }
-  return FALSE;
-}
-

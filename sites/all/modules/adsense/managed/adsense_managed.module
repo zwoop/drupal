@@ -9,6 +9,7 @@
  */
 
 define('ADSENSE_MANAGED_AD_BLOCK_DEFAULT', '');
+define('ADSENSE_MANAGED_ASYNC_DEFAULT', 0);
 define('ADSENSE_MANAGED_NUMBER_BLOCKS_DEFAULT', 3);
 
 /**
@@ -183,7 +184,23 @@ function _adsense_managed_get_ad($format, $client, $slot) {
       $secret .= "google_language = '$lang';";
     }
 
-    $output = <<<MANAGED_TXT
+    if (variable_get('adsense_managed_async', ADSENSE_MANAGED_ASYNC_DEFAULT)) {
+      // Asynchronous code
+      $output = <<<MANAGED_ASYNC_TXT
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- $format -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:${ad['width']}px;height:${ad['height']}px"
+     data-ad-client="ca-$client"
+     data-ad-slot="$slot"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+MANAGED_ASYNC_TXT;
+    }
+    else {
+      // Synchronous code
+      $output = <<<MANAGED_SYNC_TXT
 <script type="text/javascript"><!--
 google_ad_client = "ca-$client";
 /* $format */
@@ -194,9 +211,10 @@ $secret
 //-->
 </script>
 <script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+src="//pagead2.googlesyndication.com/pagead/show_ads.js">
 </script>
-MANAGED_TXT;
+MANAGED_SYNC_TXT;
+    }
   }
 
   return $output;

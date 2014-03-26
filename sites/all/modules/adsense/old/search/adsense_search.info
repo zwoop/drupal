@@ -14,9 +14,9 @@ files[] = adsense_search.install
 files[] = adsense_search.module
 files[] = adsense_search.results.inc
 
-; Information added by drupal.org packaging script on 2013-07-04
-version = "7.x-1.1"
+; Information added by Drupal.org packaging script on 2014-02-21
+version = "7.x-1.2"
 core = "7.x"
 project = "adsense"
-datestamp = "1372970151"
+datestamp = "1392941133"
 

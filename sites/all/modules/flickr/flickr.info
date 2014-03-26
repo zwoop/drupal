@@ -2,11 +2,11 @@ name = Flickr
 description = Flickr and Drupal integration.
 core = 7.x
 package = Flickr
+configure = admin/config/media/flickr
 
-
-; Information added by Drupal.org packaging script on 2013-12-11
-version = "7.x-1.2"
+; Information added by Drupal.org packaging script on 2014-03-26
+version = "7.x-1.4"
 core = "7.x"
 project = "flickr"
-datestamp = "1386791908"
+datestamp = "1395826443"
 

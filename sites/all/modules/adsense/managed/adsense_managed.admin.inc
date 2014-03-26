@@ -27,6 +27,20 @@ function adsense_managed_settings() {
     '#markup' => adsense_managed_help_text(),
   );
 
+  $form['code'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+    '#title' => t('Code type'),
+  );
+
+  $form['code']['adsense_managed_async'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use asynchronous code?'),
+    '#default_value' => variable_get('adsense_managed_async', ADSENSE_MANAGED_ASYNC_DEFAULT),
+    '#description' => t('This will enable the new Asynchronous (BETA) code type. [!moreinfo]', array('!moreinfo' => l(t('More information'), 'https://support.google.com/adsense/answer/3221666'))),
+  );
+
   $form['blocks'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
