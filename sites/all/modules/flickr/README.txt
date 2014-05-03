@@ -1,3 +1,7 @@
+The content of this file is based on the online documentation that can be found
+at https://drupal.org/node/2170535
+It is recommended to read it there, as it is more detailed.
+
 NAME
 ====
 Flickr
@@ -14,6 +18,7 @@ corresponding Flickr page.
 
 - Flickr images can be displayed in blocks, within content or as fields.
 - Open Flickr photos in Colorbox, Lightbox or alike.
+- Show user/group photostreams and sets as responsive slideshows.
 - Image caption with the Flickr title, date taken, where  and by who.
 - Show the longer Flickr description on hover if it exists.
 
@@ -32,7 +37,7 @@ to take effect on existing content at '/admin/config/development/performance'.
 
 API Key
 -------
-Get an API Key at http://www.flickr.com/services/apps/create/apply.
+Get an API Key at https://www.flickr.com/services/apps/create/apply
 
 API Shared Secret
 -----------------
@@ -76,9 +81,26 @@ Small images have little space for a title caption. Replaces it with the text
 Defaults to 100 px. Set it to 0 px to always include or 999 px to always
 exclude.
 
+The presence of a caption is solely reliant on the values of the configuration
+fields:
+- Minimum image width to display a title caption * (default: '100 px')
+- Minimum image width to display date, location, photographer and optionally
+  license info under the caption * (default: '150 px') (see point below)
+
+The text 'Flickr' gets added as a caption that links to the correspondend Flickr
+photo page if:
+- clicking the image links to a bigger version of it, using lightbox/colorbox or
+  not, AND
+- the title caption that links to the Flickr photo page is suppressed (depending
+on the size).
+
+Setting a 'class' or 'rel' value in the 'overlay browser settings'
+(colorbox/lightbox), even one that is not valid, always links the image to a
+bigger version of it.
+
 Minimum image width to display date, location, photographer and optionally
 license info under the caption
---------------------------------------------------------------------------------
+--------------------------------------------------------------------------
 Suppress extra info on small images. After saving the configuration clear the
 cache.
 Defaults to 150 px. Set it to 0 px to always include or 999 px to always
@@ -90,14 +112,19 @@ Flickr.
 
 License info in caption
 -----------------------
+To include to follow the Creative Commons Guidelines. See:
+  https://creativecommons.org/licenses/by/2.0/#deed-conditions
 Depending on 'Minimum image width' above.
 Checkbox (not selected by default).
-Used is the nonintrusive icons font that can be found at
-http://creativecommons.org/about/downloads. It links to the corresponding
-Creative Commons human friendly info page.
-It is not necessary, but if desired you can download it, put it in your theme
-folder and substitute the default used remote source that can be found in the
-module's 'flickr.css' file.
+Used is the nonintrusive icons font that can be found at:
+  http://creativecommons.org/about/downloads
+It links to the corresponding Creative Commons human friendly info page.
+It is recommended to download it, put it in your theme folder and substitute the
+default used remote source that can be found in the module's 'flickr.css' file.
+
+What horizontal inside spacing is applied on the caption? (padding/border)
+--------------------------------------------------------------------------
+See https://drupal.org/node/2174131#caption
 
 Info to include when enlarging the image in Colorbox, Lightbox or alike
 -----------------------------------------------------------------------
@@ -121,10 +148,9 @@ OVERLAY BROWSER SETTINGS (field group)
 --------------------------------------
 Colorbox, Lightbox (use the dev version) or alike.
 Leave these fields empty to link directly to the Flickr photo page instead of
-opening the bigger version of the image. It also omits the caption in that case.
-This is only done to not alter the behaviour on previous installs of the Flickr
-module. The best way of giving attribution is by using a full version of the
-caption (default settings).
+opening the bigger version of the image.
+The best way of giving attribution is by using a full version of the caption
+(default settings + license info).
 
 class
 -----
@@ -148,6 +174,86 @@ The image size to open in the overlay browser when clicking the image. Larger
 sizes make navigating to next and previous pictures slower. TAKE CARE, n (320px)
 and c (800px) sizes are missing on many "older" Flickr images!
 Defaults to -: 500 px on longest side.
+
+BLOCK SETTINGS (field group)
+--------------------------------------
+Only if the submodule Flickr Block is enabled.
+See the README.txt there.
+
+SIZES
+=====
+The size parameter can be one of the following:
+
+Suffix: Label:  Size:
+s Square  small square 75x75
+t Thumbnail thumbnail, 100 on longest side
+q Large Square  big square 150x150
+m Small small, 240 on longest side
+n Small 320 small, 320 on longest side
+[none]  Medium  medium, 500 on longest side
+z Medium 640  medium 640, 640 on longest side
+c Medium 800  medium 800,
+b Large large, 1024 on longest side
+o Original  original image, either a jpg, gif or png, depending on source format
+x Flash Full featured responsive slideshow (for group, set and user IDs only)
+y Non-Flash Basic responsive slideshow (for set and user IDs only)
+
+Notes
+-----
+For square images ('s': 75px and 'q': 150px) no real width needs to be fetched,
+giving it a performance advantage over other sizes. Recommended if you include
+many images.
+
+If the wrong size is applied, check if it exists on the Flickr photo page >
+Actions > View all sizes.
+
+The slideshow allows for videos to be played. Put the desired videos to show
+together in a set.
+
+RECOMMENDED
+===========
+If you use the Flickr Filter submodule, you might find the AutoFloat
+module useful. See https://drupal.org/project/autofloat
+
+Flickr module Style Guide. See https://drupal.org/node/2174131
+
+TROUBLESHOOTING
+===============
+Try clearing both your site (https://drupal.org/node/42055) and browser cache
+(http://www.wikihow.com/Clear-Your-Browser's-Cache).
+Use http://idgettr.com/ to find your Flickr user or group id.
+
+BEFORE posting a support request related to configuration, check the necessary
+settings in the demo at http://simplytest.me/project/demo_flickr/7.x-1.x
+Complete the installation process there (just hit Save and continue on each
+step). If at the end of the install process you get a white screen, just reload
+the page.
+
+Flickr error 100: Invalid API Key (Key has invalid format)
+----------------------------------------------------------
+Fill in some valid Flickr credentials at
+admin/config/media/flickr.
+
+Unexpected display problems occur
+---------------------------------
+It should be noted that the cascading stylesheets defined by modules are by
+default loaded before theme CSS.See Drupal API:
+http://api.drupal.org/api/drupal/includes%21common.inc/function/drupal_add_css/7
+Flickr module's style might be overwritten by the theme stylesheets. Copy and
+paste the CSS code in the flickr.css file to the bottom of your theme's custom
+CSS file or use this solution: http://k-it.ca/comment/14#comment-14
+
+'Undefined index' error after upgrade from 7.x-1.0 to a later version
+---------------------------------------------------------------------
+Re-save your block settings. See https://drupal.org/node/2089575: Undefined
+index error after upgrade.
+
+Uninstalling Flickr Field - module is not selectable because Drupal says the
+fields implemented by it are being used
+----------------------------------------------------------------------------
+First delete all Flickr fields in use on your content types at
+admin/structure/types 'Manage fields'.
+Then run cron at admin/reports/status/run-cron
 
 MORE INFO
 =========
