@@ -63,6 +63,14 @@ function flickr_photo_sizes() {
       'label' => 'Original',
       'description' => t('o: Original image'),
     ),
+    'x' => array(
+      'label' => 'Flash slideshow',
+      'description' => t('x: Full featured responsive slideshow (for group, set and user IDs only)'),
+    ),
+    'y' => array(
+      'label' => 'Simple slideshow',
+      'description' => t('y: Basic responsive slideshow (for set and user IDs only)'),
+    ),
   );
 };
 
@@ -163,7 +171,7 @@ function flickr_request($method, $args, $cacheable = TRUE, $return_errors = FALS
 }
 
 /**
- * This function will try to create a html image tag referencing the Flickr
+ * This function will try to create an html image tag referencing the Flickr
  * photo with the desired size if that size is available for this photo.
  *
  * @param string $photo
@@ -400,4 +408,44 @@ function flickr_set_error($message_or_response) {
     drupal_set_message($message, 'error');
   }
   watchdog('flickr', $message, array(), WATCHDOG_WARNING);
+}
+
+/**
+ * Returns Flickr detialed data based on nsid.
+ * An elaboration of flickr_people_get_info.
+ *
+ * @param string $nsid
+ *   A valid Flickr numerical user ID. Should be validated before arriving here.
+ *
+ * @return array $people
+ *   HTML with a Flickr user's name that links to their Flickr profile.
+ *   Real name if it exists, if not the username.
+ */
+function flickr_get_user_info($nsid) {
+  $info = flickr_people_get_info($nsid);
+  $people = array();
+  $people['name'] = !empty($info['realname']['_content']) ? l($info['realname']['_content'], $info['profileurl']['_content'], array(
+    'attributes' => array(
+      'title' => t('View user on Flickr.'),
+      'target' => '_blank',
+    ),
+  )) : l($info['username']['_content'], $info['profileurl']['_content'], array(
+    'attributes' => array(
+      'title' => t('View user on Flickr.'),
+      'target' => '_blank',
+    ),
+  ));
+  $username = strip_tags($people['name']);
+  $people['photostream'] = l(t("!user on Flickr", array('!user' => $username)), $info['photosurl']['_content'], array(
+    'attributes' => array(
+      'title' => t('View Flickr photostream.'),
+      'target' => '_blank',
+    ),
+    'html' => TRUE,
+  ));
+
+  $people['photosurl'] = $info['photosurl']['_content'];
+  $people['profileurl'] = $info['profileurl']['_content'];
+  $people['count'] = $info['photos']['count']['_content'];
+  return $people;
 }

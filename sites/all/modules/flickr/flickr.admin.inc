@@ -8,12 +8,18 @@
  * Implements hook_settings().
  */
 function flickr_admin_settings() {
+  $apply = l(t('https://www.flickr.com/services/apps/create/apply'), 'https://www.flickr.com/services/apps/create/apply', array(
+      'attributes' => array(
+        'title' => t('Flickr Services'),
+        'target' => '_blank',
+      ),
+  ));
   $form['flickr_api_key'] = array(
     '#type' => 'textfield',
     '#title' => t('API Key'),
     '#required' => TRUE,
     '#default_value' => variable_get('flickr_api_key', ''),
-    '#description' => t('API Key from Flickr'),
+    '#description' => t("API Key from Flickr. Get an API Key at !apply.", array('!apply' => $apply)),
   );
   $form['flickr_api_secret'] = array(
     '#type' => 'textfield',
@@ -82,22 +88,34 @@ function flickr_admin_settings() {
       '#description' => t('A default Flickr size to use. This will be used when no size is specified, for example [flickr-photo:id=3711935987].<br />After saving the configuration <a href="?q=admin/config/development/performance">clear the cache</a>.<br />!: TAKE CARE, n (320px) and c (800px) sizes are missing on many "older" Flickr images!'),
     );
   }
+  $style_doc = l(t('Flickr module Style Guide'), 'https://drupal.org/node/2174131', array(
+      'attributes' => array(
+        'title' => t('Flickr Style Guide documentation | Drupal.org'),
+        'target' => '_blank',
+      ),
+  ));
   $form['flickr_css'] = array(
     '#type' => 'checkbox',
     '#title' => t('Use flickr.css'),
     '#default_value' => variable_get('flickr_css', 1),
-    '#description' => t('Uncheck to take care of the styling yourself in custom CSS.'),
+    '#description' => t("Uncheck to take care of the styling yourself in custom CSS.<br />Side note: Extend CSS even further with the !style_doc. If you use Flickr Filter, you might find the <a href='https://drupal.org/project/autofloat'>AutoFloat module</a> useful.", array('!style_doc' => $style_doc)),
   );
   $form['info_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('Flickr info to use'),
   );
+  $attribution = l(t('proper attribution'), 'https://www.flickr.com/services/developer/attributions/', array(
+      'attributes' => array(
+        'title' => t('Flickr: The Flickr Developer Guide - Attributions'),
+        'target' => '_blank',
+      ),
+  ));
   $form['info_settings']['flickr_title_suppress_on_small'] = array(
     '#type' => 'textfield',
     '#title' => t('Minimum image width to display a title caption'),
     '#required' => TRUE,
     '#default_value' => variable_get('flickr_title_suppress_on_small', '100'),
-    '#description' => t('Small images have liitle space for a title caption. Replace it with the text "Flickr" that links to the photo page on Flickr to comply with their <a href="https://www.flickr.com/guidelines.gne" title="Flickr Community Guidelines">Guidelines</a>.<br />After saving the configuration <a href="?q=admin/config/development/performance">clear the cache</a>.'),
+    '#description' => t("Small images have liitle space for a title caption. Replace it with the text 'Flickr' that links to the photo page on Flickr to comply with their <a href='https://www.flickr.com/guidelines.gne' title='Flickr Community Guidelines' target='_blank'>Guidelines</a>.<br />Set it to '0 px' to always include or '999 px' to always exclude. To give !attribution this should be included (space allowing). After saving the configuration <a href='?q=admin/config/development/performance'>clear the cache</a>.", array('!attribution' => $attribution)),
     '#field_suffix' => t('px'),
     '#size' => 3,
     '#maxlength' => 3,
@@ -107,7 +125,7 @@ function flickr_admin_settings() {
     '#title' => t('Minimum image width to display date, location, photographer and optionally license info under the caption'),
     '#required' => TRUE,
     '#default_value' => variable_get('flickr_metadata_suppress_on_small', '150'),
-    '#description' => t('Suppress extra info on small images. After saving the configuration <a href="?q=admin/config/development/performance">clear the cache</a>.'),
+    '#description' => t("Suppress extra info on small images. Set it to '0 px' to always include or '999 px' to always exclude. To give !attribution this should be included (space allowing). After saving the configuration <a href='?q=admin/config/development/performance'>clear the cache</a>.", array('!attribution' => $attribution)),
     '#field_suffix' => t('px'),
     '#size' => 3,
     '#maxlength' => 3,
@@ -116,14 +134,14 @@ function flickr_admin_settings() {
     '#type' => 'checkbox',
     '#title' => t('License info in caption'),
     '#default_value' => variable_get('flickr_license', 0),
-    '#description' => t("Depending on 'Minimum image width' above."),
+    '#description' => t("To give !attribution. Depends on 'Minimum image width' above. After saving the configuration <a href='?q=admin/config/development/performance'>clear the cache</a>.", array('!attribution' => $attribution)),
   );
   $form['info_settings']['flickr_caption_padding'] = array(
     '#type' => 'textfield',
     '#title' => t('What horizontal inside spacing is applied on the caption? (padding/border)'),
     '#required' => TRUE,
     '#default_value' => variable_get('flickr_caption_padding', '0'),
-    '#description' => t('By default the caption is as wide as the image. If you add padding to a boxed caption with CSS, set a value here to make sure the caption will remain of the same width of the image. See <a href="https://drupal.org/node/2174131#caption" title="Flickr module documentation on Drupal.org" target="_blank">Style Guide</a>.<br />Only padding: 1 x horizontal caption value.<br />Padding AND border: 2 x caption value + 1x border-width.'),
+    '#description' => t('By default the caption is as wide as the image. If you add padding to a boxed caption with CSS, set a value here to make sure the caption will remain of the same width of the image. See <a href="https://drupal.org/node/2174131#caption" title="Flickr module documentation on Drupal.org" target="_blank">Style Guide</a>.<br />Only padding: 1 x horizontal padding value.<br />Padding AND border: 2 x padding value + 1 x border-width.'),
     '#field_suffix' => t('px'),
     '#size' => 2,
     '#maxlength' => 2,
@@ -137,11 +155,12 @@ function flickr_admin_settings() {
       'description' => 'description',
       'license' => 0,
     )),
+    '#description' => t("To give !attribution all marked * should be checked. After saving the configuration <a href='?q=admin/config/development/performance'>clear the cache</a>.", array('!attribution' => $attribution)),
     '#options' => array(
-      'title' => t('Title'),
-      'metadata' => t('Date, location and photographer'),
+      'title' => t('Title *'),
+      'metadata' => t('Date, location and photographer *'),
       'description' => t('Description'),
-      'license' => t('License info'),
+      'license' => t('License info *'),
     ),
   );
   $form['overlay_settings'] = array(
@@ -175,10 +194,48 @@ function flickr_admin_settings() {
     ),
     '#description' => t('The image size to open in the overlay browser when clicking the image. Larger sizes make navigating to next and previous pictures slower.<br />After saving the configuration <a href="?q=admin/config/development/performance">clear the cache</a>.<br />!: TAKE CARE, n (320px) and c (800px) sizes are missing on many "older" Flickr images!'),
   );
+  if (module_exists('flickr_block')) {
+    $form['block_settings'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Block settings'),
+      '#description' => t('After saving the configuration <a href="?q=admin/config/development/performance">clear the cache</a>.'),
+    );
+    $form['block_settings']['flickr_block_counter'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show a Flickr counter'),
+      '#default_value' => variable_get('flickr_block_counter', 1),
+      '#description' => t('Shows under the block title how many photos are displayed out of the total number available for a user, group or set on Flickr.'),
+    );
+    $form['block_settings']['flickr_block_maps'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Extra links to Flickr maps'),
+      '#default_value' => variable_get('flickr_block_maps', 1),
+      '#description' => t('Include extra links to maps available for a user, group or set on Flickr. Locations mentioned (if displayed) under individual images in any case link to corresponding Flickr user maps.'),
+    );
+    $form['block_settings']['flickr_block_refresh_random'] = array(
+      '#type' => 'textfield',
+      '#field_prefix' => t('Refresh random blocks every'),
+      '#required' => TRUE,
+      '#default_value' => variable_get('flickr_block_refresh_random', 23),
+      '#field_suffix' => t('hours.'),
+      '#size' => 3,
+      '#maxlength' => 3,
+    );
+    $form['block_settings']['flickr_block_refresh_others'] = array(
+      '#type' => 'textfield',
+      '#field_prefix' => t('Refresh other blocks every'),
+      '#required' => TRUE,
+      '#default_value' => variable_get('flickr_block_refresh_others', 31),
+      '#description' => t('It is recommended to set two different refresh values to avoid all blocks refresh together. Lower values impact performance negatively. Consider to use <a href="https://drupal.org/node/1576686" title="Load Page Cache after cron Runs | Drupal.org">cache warming</a>.'),
+      '#field_suffix' => t('hours.'),
+      '#size' => 3,
+      '#maxlength' => 3,
+    );
+  }
   // We need an api key before we can verify usernames.
   if (!$form['flickr_api_key']['#default_value']) {
     $form['flickr_default_userid']['#disabled'] = TRUE;
-    $form['flickr_default_userid']['#description'] .= t('Disabled until a valid API Key is set.');
+    $form['flickr_default_userid']['#description'] .= ' ' . t('Disabled until a valid API Key is set.');
   }
   // Call submit_function() on form submission.
   $form['#submit'][] = 'flickr_admin_settings_submit';
@@ -197,7 +254,10 @@ function flickr_admin_settings_validate($form, &$form_state) {
   $limit2 = trim($form_state['values']['flickr_title_suppress_on_small']);
   $limit3 = trim($form_state['values']['flickr_metadata_suppress_on_small']);
   $limit4 = trim($form_state['values']['flickr_caption_padding']);
-
+  if (module_exists('flickr_block')) {
+    $limit5 = trim($form_state['values']['flickr_block_refresh_random']);
+    $limit6 = trim($form_state['values']['flickr_block_refresh_others']);
+  }
   if ($key && (preg_match('/^[A-Fa-f\d]{32}$/', $key) != 1)) {
     form_set_error('flickr_api_key', t('This does not appear to be a Flickr API key.'));
   }
@@ -225,6 +285,16 @@ function flickr_admin_settings_validate($form, &$form_state) {
   // Validate the minimum width to suppress metadata caption.
   if (!is_numeric($limit4) || $limit4 < 0) {
     form_set_error('flickr_caption_padding', t('Set a padding from 0 to 99 px.'));
+  }
+  if (module_exists('flickr_block')) {
+    // Validate refresh rate random blocks.
+    if (!is_numeric($limit5) || $limit5 < 2) {
+      form_set_error('flickr_block_refresh_random', t('Set a number from 2 to 999.'));
+    }
+    // Validate refresh rate other blocks.
+    if (!is_numeric($limit6) || $limit6 < 2) {
+      form_set_error('flickr_block_refresh_others', t('Set a number from 2 to 999.'));
+    }
   }
 }
 

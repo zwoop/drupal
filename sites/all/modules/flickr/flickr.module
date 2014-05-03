@@ -90,7 +90,6 @@ function flickr_theme() {
     ),
     'flickr_photo_box' => array(
       'variables' => array(
-        'photo',
         'size' => NULL,
         'format' => NULL,
         'attribs' => NULL,
@@ -104,10 +103,17 @@ function flickr_theme() {
     ),
     'flickr_photoset' => array(
       'variables' => array(
-        'photoset',
-        'owner',
-        'size',
         'attribs' => NULL,
+      ),
+    ),
+    'flickr_flickrcomslideshow' => array(
+      'variables' => array(
+        'id' => NULL,
+      ),
+    ),
+    'flickr_flickrcomslideshow_simple' => array(
+      'variables' => array(
+        'id' => NULL,
       ),
     ),
   );
@@ -303,6 +309,21 @@ function theme_flickr_photo($variables) {
   $size = $variables['size'];
   $format = $variables['format'];
   $attribs = $variables['attribs'];
+  // If we have a class or style containing the term 'float', prepare if so it
+  // can be applied to the 'flickr-wrapper' span element later on that includes
+  // also the caption.
+  if (isset($attribs['class'])) {
+    $class_float = (stripos($attribs['class'], 'float') !== FALSE) ? ' ' . $attribs['class'] : '';
+  }
+  else {
+    $class_float = '';
+  }
+  if (isset($attribs['style'])) {
+    $style_float = (stripos($attribs['style'], 'float') !== FALSE) ? ' style="' . $attribs['style'] . '"' : '';
+  }
+  else {
+    $style_float = '';
+  }
   $url = flickr_photo_img($photo, variable_get('flickr_opening_size', ''), $format);
   $img = flickr_img($photo, $size, $attribs);
   $img_url = flickr_photo_img($photo, $size);
@@ -322,6 +343,7 @@ function theme_flickr_photo($variables) {
     list($width) = getimagesize($img_url);
   }
   $photo_url = flickr_photo_page_url($photo['owner'], $photo['id']);
+  $info = flickr_photo_get_info($photo['id']);
   $title = is_array($photo['title']) ? $photo['title']['_content'] : $photo['title'];
   // Image width < 100 px is too small for most titles. Can be set differently.
   if ($width < variable_get('flickr_title_suppress_on_small', '100')) {
@@ -330,9 +352,10 @@ function theme_flickr_photo($variables) {
   else {
     $credit = $title;
   }
-  // Get the Flickr image title for set data or the photo itself. Sanatize.
+  // Get the Flickr image title for set data or the photo itself. Sanitize.
   $title = is_array($photo['title']) ? str_replace('"', "'", strip_tags($photo['title']['_content'])) : $photo['title'];
-  $info = flickr_photo_get_info($photo['id']);
+  // For videos add the '(VIDEO)' to the title if it not already contains it.
+  $title .= (($info['media'] !== 'video') || (stripos($title, 'video') !== FALSE)) ? '' : ' ' . t('(VIDEO)');
   // Use title if description does not exist, else sanitize the description.
   $description = !empty($info['description']['_content']) ? str_replace('"', "'", htmlspecialchars_decode(strip_tags($info['description']['_content']))) : $title;
   // Real name if it exists or go with the username. Link to Flickr user page.
@@ -344,7 +367,13 @@ function theme_flickr_photo($variables) {
   $locality = isset($info['location']['locality']['_content']) ? strip_tags($info['location']['locality']['_content']) . ', ' : '';
   $region = isset($info['location']['region']['_content']) ? strip_tags($info['location']['region']['_content']) . ', ' : '';
   $country = isset($info['location']['country']['_content']) ? strip_tags($info['location']['country']['_content']) : '';
-  $location = !empty($country) ? ' ' . t('at') . ' ' . $neighbourhood . $locality . $region . $country : '';
+  $loc = $neighbourhood . $locality . $region . $country;
+  $location = !empty($country) ? ' ' . t('at') . ' ' . l($loc, 'https://www.flickr.com/photos/' . $info['owner']['nsid'] . '/map?&location=' . $neighbourhood . $locality . $region . $country, array(
+    'attributes' => array(
+      'title' => t('View photo on Flickr map.'),
+      'target' => '_blank',
+    ),
+  )) : '';
   switch ($info['license']) {
     case '0':
       $license = '<br />&copy; ' . t('All Rights Reserved');
@@ -395,11 +424,12 @@ function theme_flickr_photo($variables) {
     $license = '';
   }
   // Compose extra Flickr info as HTML to render.
-  $metadata = '<br />' . $taken . $location . ' ' . t('by') . ' ' . $username;
+  $metadata = $taken . $location . ' ' . t('by') . ' ' . $username;
   // Image width < 100 px is too small for most titles. Can be set differently.
-  $credit = $width < variable_get('flickr_title_suppress_on_small', '100') ? t('Flickr') : $title;
+  $notitle = (variable_get('flickr_class') == NULL && variable_get('flickr_rel') == NULL) ? '' : '<span class="flickr-no-title">' . t('Flickr') . '</span><br />';
+  $credit = $width < variable_get('flickr_title_suppress_on_small', '100') ? $notitle : '<span class="flickr-title">' . $title . '</span><br />';
   // Image width < 150 px is too small for extra info. Can be set differently.
-  $metadatacaption = $width < variable_get('flickr_metadata_suppress_on_small', '150') ? '' : $metadata . $license;
+  $metadatacaption = $width < variable_get('flickr_metadata_suppress_on_small', '150') ? '' : '<span class="flickr-metadata">' . $metadata . $license . '</span>';
   // Determine what info goes with the enlarged version of the image.
   $overlay = variable_get('flickr_info_overlay', array(
     'title' => 'title',
@@ -414,25 +444,30 @@ function theme_flickr_photo($variables) {
   $overlayhtml = $overlaytitle . $metadata . $description . $licenselong;
   // Final step when NO overlay browser is used that generates the image that
   // links to the Flickr page to comply with the TOS of Flickr.
-  if (variable_get('flickr_class') == NULL && variable_get('flickr_rel') == NULL) {
-    return l($img, $photo_url, array(
+  if (variable_get('flickr_class') == NULL && variable_get('flickr_rel') == NULL && $width < variable_get('flickr_title_suppress_on_small', '100') && $width < variable_get('flickr_metadata_suppress_on_small', '150')) {
+    return '<span class="flickr-wrap' . $class_float . '"' . $style_float . '>' . l($img, $photo_url, array(
       'attributes' => array(
         'title' => $title,
+        'target' => '_blank',
       ),
       'absolute' => TRUE,
       'html' => TRUE,
-    ));
+    )) . '</span>';
   }
   else {
     // If 'class' or 'rel' attribute are defined (overlay browser), use a
     // caption.
     // Final step that generates the image with a link to the bigger version and
     // a link to the Flickr page under it to comply with the TOS of Flickr.
-    return '<span class="flickr-wrap">' . l($img, $url, array(
+    if (variable_get('flickr_class') == NULL && variable_get('flickr_rel') == NULL) {
+      $url = $photo_url;
+    }
+    return '<span class="flickr-wrap' . $class_float . '"' . $style_float . '>' . l($img, $url, array(
       'attributes' => array(
         'title' => $overlayhtml,
         'class' => array($class),
         'rel' => $rel,
+        'target' => '_blank',
       ),
       'absolute' => TRUE,
       'html' => TRUE,
@@ -441,6 +476,7 @@ function theme_flickr_photo($variables) {
         'title' => t('View on Flickr. To enlarge click image.'),
         'target' => '_blank',
       ),
+      'html' => TRUE,
     )) . $metadatacaption . '</span></span>';
   }
 }
@@ -493,18 +529,24 @@ function theme_flickr_photoset($variables) {
   $photoset = $variables['photoset'];
   $owner = $variables['owner'];
   $size = $variables['size'];
+  $media = isset($variables['media']) ? $variables['media'] : 'photos';
   $attribs = $variables['attribs'];
 
   if (module_exists('flickr_sets')) {
     $output = "<div class='flickr-photoset'>\n";
-    $photos = flickr_set_load($photoset['id']);
-    foreach ((array) $photos['photoset']['photo'] as $photo) {
-      // Insert owner into $photo because theme_flickr_photo needs it.
-      $photo['owner'] = $owner;
-      $output .= theme('flickr_photo', array(
-        'photo' => $photo,
-        'size' => $size,
-        ));
+    $photos = flickr_photosets_getphotos($photoset['id'], array('media' => $media));
+    if ($photos['photoset']['total']) {
+      foreach ((array) $photos['photoset']['photo'] as $photo) {
+        // Insert owner into $photo because theme_flickr_photo needs it.
+        $photo['owner'] = $owner;
+        $output .= theme('flickr_photo', array(
+          'photo' => $photo,
+          'size' => $size,
+          ));
+      }
+    }
+    else {
+      $output .= t('No media in this set.');
     }
     $output .= '</div>';
     return $output;
@@ -522,4 +564,65 @@ function theme_flickr_photoset($variables) {
       'html' => TRUE,
       ));
   }
+}
+
+/**
+ * Theme a Flickr photo set as an embedded Flickr.com slideshow (Flash).
+ */
+function theme_flickr_flickrcomslideshow($variables) {
+  require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'flickr') . '/flickr.inc';
+  $id = $variables['id'];
+  if (empty($id)) {
+    return;
+  }
+  if (strpos($id, '@') !== FALSE) {
+    // Check if it is a group ID.
+    $info = flickr_groups_getinfo($id);
+    if ($info['stat'] == 'ok') {
+      return '<div class="flickr-slideshow"><object  type="application/x-shockwave-flash" data="https://www.flickr.com/apps/slideshow/show.swf?v=140556"><param name="movie" value="https://www.flickr.com/apps/slideshow/show.swf?v=140556"></param><param name="flashvars" value="offsite=true&lang=en-us&page_show_url=%2Fgroups%2F' . $id . '%2Fpool%2Fshow%2F&page_show_back_url=%2Fgroups%2F' . $id . '%2Fpool%2F&group_id=' . $id . '&jump_to=&start_index="></param><param name="allowFullScreen" value="true"><param name="wmode" value="opaque" /></param></object></div>';
+    }
+    else {
+      return '<div class="flickr-slideshow"><object type="application/x-shockwave-flash" data="https://www.flickr.com/apps/slideshow/show.swf?v=71649">
+      <param name="movie" value="https://www.flickr.com/apps/slideshow/show.swf?v=71649" />
+      <param name="allowFullScreen" value="true" />
+      <param name="wmode" value="opaque" />
+      <param name="flashvars" value="offsite=tru&amp;lang=en-us&amp;page_show_url=%2Fphotos%2F' . $id . '%2Fshow&amp;user_id=' . $id . '" /></object></div>';
+    }
+  }
+  else {
+    $info = flickr_photoset_get_info($id);
+    $user_id = $info['owner'];
+    return '<div class="flickr-slideshow"><object type="application/x-shockwave-flash" data="https://www.flickr.com/apps/slideshow/show.swf?v=71649">
+    <param name="movie" value="https://www.flickr.com/apps/slideshow/show.swf?v=71649" />
+    <param name="allowFullScreen" value="true" />
+    <param name="wmode" value="opaque" />
+    <param name="flashvars" value="offsite=true&amp;lang=en-us&amp;page_show_url=/photos/' . $user_id . '/sets/' . $id . '/show/&amp;page_show_back_url=/photos/' . $user_id . '/sets/' . $id . '/&amp;set_id=' . $id . '" /></object></div>';
+  }
+}
+
+/**
+ * Theme a Flickr photo set as an embedded Flickr.com slideshow (non Flash).
+ */
+function theme_flickr_flickrcomslideshow_simple($variables) {
+  require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'flickr') . '/flickr.inc';
+  $id = $variables['id'];
+  if (empty($id)) {
+    return;
+  }
+  if (strpos($id, '@') !== FALSE) {
+    // Check if it is a group ID.
+    $info = flickr_groups_getinfo($id);
+    if ($info['stat'] == 'ok') {
+      $src = 'https://www.flickr.com/slideShow/index.gne?group_id=' . $id . '&user_id=&set_id=&text=';
+    }
+    else {
+      $src = 'https://www.flickr.com/slideShow/index.gne?group_id=&user_id=' . $id . '&set_id=&text=';
+    }
+  }
+  else {
+    $info = flickr_photoset_get_info($id);
+    $user_id = $info['owner'];
+    $src = 'https://www.flickr.com/slideShow/index.gne?group_id=&user_id=' . $user_id . '&set_id=' . $id . '&text=';
+  }
+  return '<div class="flickr-slideshow"><object type="text/html" data="' . $src . '"></object></div>';
 }

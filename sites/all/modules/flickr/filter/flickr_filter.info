@@ -6,9 +6,9 @@ configure = admin/config/content/formats
 dependencies[] = flickr
 
 
-; Information added by Drupal.org packaging script on 2014-03-26
-version = "7.x-1.4"
+; Information added by Drupal.org packaging script on 2014-04-19
+version = "7.x-1.5"
 core = "7.x"
 project = "flickr"
-datestamp = "1395826443"
+datestamp = "1397910528"
 

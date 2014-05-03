@@ -66,7 +66,6 @@ function flickr_photos_search($nsid, $page = 1, $other_args = array()) {
     'user_id' => $nsid,
     'page' => $page,
   );
-
   // Set per_page to flickr module default if not specified in $other_args.
   if (!isset($other_args['per_page'])) {
     $args['per_page'] = variable_get('flickr_photos_per_page', 20);
@@ -95,6 +94,7 @@ function flickr_favorites_get_public_list($nsid, $page = 1, $other_args = array(
   $args = array(
     'user_id' => $nsid,
     'page' => $page,
+    'extras' => 'media',
   );
 
   // Set per_page to flickr module default if not specified in $other_args.
@@ -166,13 +166,19 @@ function flickr_photoset_get_list($nsid, $page = NULL) {
  *   Response from the flickr method flickr.photosets.getPhotos.
  *   (http://www.flickr.com/services/api/flickr.photosets.getPhotos.html)
  */
-function flickr_photoset_get_photos($photoset_id) {
-  $response = flickr_request('flickr.photosets.getPhotos',
-  array(
+function flickr_photosets_getphotos($photoset_id, $other_args = array(), $page = 1) {
+  $args = array(
     'photoset_id' => $photoset_id,
-    'per_page' => 500,
-    'extras' => 'owner',
-  ));
+    'page' => $page,
+  );
+
+  // Set per_page to flickr module default if not specified in $other_args.
+  if (!isset($other_args['per_page'])) {
+    $args['per_page'] = variable_get('flickr_photos_per_page', 20);
+  }
+
+  $response = flickr_request('flickr.photosets.getPhotos', array_merge($args, $other_args));
+
   if ($response) {
     return $response;
   }
@@ -190,10 +196,10 @@ function flickr_photoset_get_photos($photoset_id) {
  *   (http://www.flickr.com/services/api/flickr.people.getInfo.html)
  *   or FALSE on error.
  */
-function flickr_people_get_info($nisd) {
+function flickr_people_get_info($nsid) {
   $response = flickr_request(
     'flickr.people.getInfo',
-    array('user_id' => $nisd)
+    array('user_id' => $nsid)
   );
   if ($response) {
     return $response['person'];
@@ -288,7 +294,7 @@ function flickr_tags_get_list_user($nsid) {
   return FALSE;
 }
 
-// TODO: Change name to flickr_groups_pools_get_photos()?
+// TODO: Change name to flickr_groups_pools_getphotos()?
 /**
  * Returns a list of pool photos for a given group.
  *
@@ -307,12 +313,61 @@ function flickr_get_group_photos($nsid, $page = 1, $other_args = array()) {
 
   // Set per_page to flickr module default if not specified in $other_args.
   if (!isset($other_args['per_page'])) {
-    $args['per_page'] = variable_get('flickr_photos_per_page', 20);
+//    $args['per_page'] = variable_get('flickr_photos_per_page', 20);
   }
 
   $response = flickr_request('flickr.groups.pools.getPhotos', array_merge($args, $other_args));
   if ($response) {
-    return $response['photos'];
+    return $response;
   }
   return FALSE;
+}
+
+/**
+ * Returns a list of public photos for the given user.
+ *
+ * @param string $nsid
+ *   NSID of the user whose photos you want.
+ *
+ * @return array $response
+ *   Response from the flickr method flickr.people.getPublicPhotos.
+ *   (https://www.flickr.com/services/api/flickr.people.getPublicPhotos.html)
+ */
+function flickr_people_getpublicphotos($nsid, $page = 1, $other_args = array()) {
+  $args = array(
+    'user_id' => $nsid,
+    'page' => $page,
+  );
+
+  // Set per_page to flickr module default if not specified in $other_args.
+  if (!isset($other_args['per_page'])) {
+    $args['per_page'] = variable_get('flickr_photos_per_page', 20);
+  }
+
+  $response = flickr_request('flickr.people.getPublicPhotos', array_merge($args, $other_args));
+  if ($response) {
+    return $response;
+  }
+  return FALSE;
+}
+
+/**
+ * Returns info about a given group.
+ *
+ * @param string $nsid
+ *   NSID of the group whose photos you want.
+ *
+ * @return array $response
+ *   Response from the flickr method flickr.groups.getInfo.
+ *   (https://www.flickr.com/services/api/flickr.groups.getInfo.html)
+ */
+function flickr_groups_getinfo($nsid, $other_args = array()) {
+  $args = array(
+    'group_id' => $nsid,
+  );
+
+  $response = flickr_request('flickr.groups.getInfo', array_merge($args, $other_args));
+  if ($response) {
+    return $response;
+  }
 }
