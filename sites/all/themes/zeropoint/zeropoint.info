@@ -1,5 +1,5 @@
 name = 0 Point
-description = 0 Point theme is ideal for a wide range of sites. It has been optimized for e-commerce with <a href="http://www.ubercart.org">Ubercart</a>. <br /> <em>By <a href="http://www.radut.net">Dr. Radut</a>.<em>
+description = 0 Point theme is ideal for a wide range of sites. <br /> <em>Developed by <a href="http://www.radut.net">Dr. Radut</a>.</em>
 
 core = 7.x
 
@@ -50,9 +50,9 @@ scripts[] = /js/jquery.hoverIntent.minified.js
 scripts[] = /js/dropdown.js
 
 
-; Information added by drupal.org packaging script on 2013-10-22
-version = "7.x-1.12"
+; Information added by Drupal.org packaging script on 2014-05-12
+version = "7.x-1.13"
 core = "7.x"
 project = "zeropoint"
-datestamp = "1382473430"
+datestamp = "1399939133"
 

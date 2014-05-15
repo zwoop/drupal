@@ -1,5 +1,12 @@
 CHANGELOG - 0 Point for Drupal 7
 
+0 Point (May 12, 2014)
+-------------------------
+  Bug fixes:
+    o #2034055: Collapsible fieldsets cannot be expanded as title is not displayed as a link.
+    o #2243649: Vertical tabs layout issue
+    o #2030687: node.tpl.php - Missing double quote
+
 0 Point (Oct 22, 2013)
 -------------------------
   Bug fixes:
