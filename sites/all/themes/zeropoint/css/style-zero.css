@@ -1,4 +1,4 @@
-/* style.css, v4.2 2013/10/22
+/* style.css, v4.3 20114/05/10
  *
  * ZERO POINT theme for Drupal 7
  * Dr. Florian Radut, florian@radut.net
@@ -307,6 +307,10 @@ td.section {
 .block .content ul {
 	margin: 0;
 	padding: 0 10px;
+}
+.block .content .vertical-tabs ul.vertical-tabs-list {
+	padding: 0;
+	margin: -1px 0 -1px -15em;
 }
 .themed-block {
 	padding: 5px;
