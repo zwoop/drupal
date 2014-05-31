@@ -63,11 +63,13 @@ FileETag None
   # Enable expirations.
   ExpiresActive On
 
-  # Cache CSS and JS for a week
+  # Cache CSS, JS and PNG/GIF for a week
   ExpiresByType text/css A604800
   ExpiresByType application/javascript A604800
+  ExpiresByType image/png A604800
+  ExpiresByType image/gif A604800
 
-  # Cache all files for 1 day after access (A).
+  # Cache all other files for 1 day after access (A).
   ExpiresDefault A86400
 
   <FilesMatch \.php$>
