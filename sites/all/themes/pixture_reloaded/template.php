@@ -1,6 +1,41 @@
 <?php
 // Pixture Reloaded by Adaptivethemes.com
 
+function pixture_reloaded_js_alter(&$js) {
+  if (arg(0) === 'admin' || strpos($_GET['q'], 'search/google') === 0) {
+    return;
+  }
+
+  uasort($js, 'drupal_sort_css_js');
+  $weight = 0;
+
+  foreach ($js as $name => $javascript) {
+    $js[$name]['group'] = -100;
+    $js[$name]['weight'] = ++$weight;
+    $js[$name]['every_page'] = 1;
+    $js[$name]['scope'] = 'footer';
+  }
+}
+
+function pixture_reloaded_css_alter(&$css) {
+  uasort($css, 'drupal_sort_css_js');
+
+  $print = array();
+  $weight = 0;
+  foreach ($css as $name => $style) {
+    $css[$name]['group'] = 0;
+    $css[$name]['weight'] = ++$weight;
+    $css[$name]['every_page'] = TRUE;
+
+    if ($css[$name]['media'] == 'print') {
+      $print[$name] = $css[$name];
+      unset($css[$name]);
+    }
+  }
+
+  $css = array_merge($css, $print);
+}
+
 /**
  * Override or insert variables into the html template.
  */
