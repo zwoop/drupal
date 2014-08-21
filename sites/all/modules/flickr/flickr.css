@@ -22,7 +22,7 @@
   height: 130px;
 }
 
-span.flickr-wrap {
+span.flickr-wrap, span.flickr-photoset-single {
   display: inline-block;
   vertical-align: top;
   margin: 0 5px 5px 0;
@@ -41,9 +41,7 @@ span.flickr-credit {
     font-weight: normal;
     src: url('http://mirrors.creativecommons.org/presskit/cc-icons.ttf') format('truetype');
   }
-  span.flickr-cc {
-    /*Creative commons icon font*/
-    font-family: 'CC-ICONS';
+  span.flickr-cc, span.flickr-copyright {
     /*The normal size is not well recognizable*/
     font-size: large;
     float: right;
@@ -51,6 +49,15 @@ span.flickr-credit {
     position: relative;
     top: .20em;
     margin-bottom: 5px;
+  }
+  span.flickr-cc {
+    /*Creative commons icon font*/
+    font-family: 'CC-ICONS';
+  }
+  /* Necessary to make the copyright symbol most similar to the cc-icons.*/
+  span.flickr-copyright {
+    font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
+    font-weight: bold;
   }
 }
 
@@ -85,3 +92,25 @@ span.floatright {
   float: right; /* LTR */
   margin: 5px 0 0 10px; /* LTR */
 }
+
+span.flickr-tags {
+  font-style: italic;
+}
+
+.flickr-wrap, .flickr-wrap img, .flickr-wrap .flickr-credit {
+  max-width: 100%;
+}
+
+div.flickr-photoset {
+  clear: both;
+}
+
+span.flickr-empty {
+  margin: 10px;
+  display: inline-block;
+}
+
+.page-flickr-sets h1#page-title {
+  display: none;
+}
+
