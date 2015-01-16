@@ -72,6 +72,8 @@ function magic_dev_preprocess_html(&$vars) {
   if (theme_get_setting('magic_viewport_indicator', $theme_key) || theme_get_setting('magic_modernizr_debug', $theme_key)) {
     drupal_add_css(drupal_get_path('module', 'magic_dev') . '/css/magic.debug.css');
     drupal_add_js(drupal_get_path('module', 'magic_dev') . '/js/magic.debug.js');
+    // Adding a class to the body element.
+    $vars['classes_array'][] = 'magic-indicator';
   }
 }
 
@@ -102,4 +104,24 @@ function magic_dev_process_html(&$vars) {
       $vars['page_bottom'] = $debug_output;
     }
   }
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function magic_dev_requirements($phase) {
+  $requirements = array();
+  // Ensure translations don't break during installation.
+  $t = get_t();
+
+  if ($phase == 'runtime') {
+    $requirements['magic_dev'] = array(
+      'title' => $t('Magic Development'),
+      'value' => $t('Enabled'),
+      'description' => $t('Magic development module should never be enabled on production sites. Please disable for production environments.'),
+      'severity' => REQUIREMENT_WARNING,
+    );
+  }
+
+  return $requirements;
 }

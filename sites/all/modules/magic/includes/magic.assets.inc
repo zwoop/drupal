@@ -173,7 +173,7 @@ function magic_assets_exclude(&$elements, $steps) {
 function magic_assets_generate_mapping($elements) {
   $mapping = array();
   foreach ($elements as $key => $item) {
-    if ($item['type'] == 'inline') {
+    if ($item['type'] == 'inline' || $item['type'] == 'setting') {
       // Naturally, in-line CSS is not supported.
       continue;
     }
