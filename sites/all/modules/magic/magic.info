@@ -5,9 +5,9 @@ package = Frontend
 testing_api = 2.x
 files[] = magic.test
 
-; Information added by Drupal.org packaging script on 2014-11-03
-version = "7.x-2.0"
+; Information added by Drupal.org packaging script on 2014-12-22
+version = "7.x-2.1"
 core = "7.x"
 project = "magic"
-datestamp = "1414980231"
+datestamp = "1419257582"
 
