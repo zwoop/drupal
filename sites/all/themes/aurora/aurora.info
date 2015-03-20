@@ -11,17 +11,13 @@ regions[footer]         = Footer
 plugins[panels][layouts] = layouts
 
 ; Theme Settings
-
-; Chrome Frame Options
-settings[aurora_enable_chrome_frame] = 1
 settings[aurora_min_ie_support] = 9
-
-; Miscelaneous Options
 settings[aurora_html_tags] = 1
 settings[aurora_typekit_id] =
-; Information added by Drupal.org packaging script on 2014-06-16
-version = "7.x-3.4"
+
+; Information added by Drupal.org packaging script on 2015-02-11
+version = "7.x-3.5"
 core = "7.x"
 project = "aurora"
-datestamp = "1402957729"
+datestamp = "1423684983"
 
