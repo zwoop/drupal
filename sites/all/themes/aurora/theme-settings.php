@@ -83,7 +83,7 @@ function aurora_form_system_theme_settings_alter(&$form, &$form_state, $form_id 
       6 => t('Internet Explorer 6'),
     ),
     '#default_value' => theme_get_setting('aurora_min_ie_support'),
-    '#description' => t('The minimum version number of Internet Explorer that you actively support. The Chrome Frame prompt will display for any version below this version number.'),
+    '#description' => t('The minimum version number of Internet Explorer that you actively support. This will only change the ie class added to the body.'),
     '#prefix' => '<span id="cf-settings">',
     '#suffix' => '</span>',
     '#ajax' => array(
