@@ -1,5 +1,25 @@
 CHANGELOG - 0 Point for Drupal 7
 
+0 Point 7.x-4.1 (Apr 28, 2015)
+-------------------------
+    o Fully responsive Zero Point branch using Yahoo Pure.css Framework
+    o A complete theme redesign made with mobile in mind: compatible, light and fast.
+
+0 Point (May 24, 2014)
+-------------------------
+    o Zero Point validates HTML5 and CSS3 with no errors
+    o Addressed some Drupal bugs which prevent HTML5 validation
+    o Search result preprocessing excluded
+
+  New features:
+    o Font size setting
+    o Social links
+
+0 Point (May 21, 2014)
+-------------------------
+    o Zero Point validates HTML5 with no errors
+    o jQuery CSS image preload excluded
+
 0 Point (May 12, 2014)
 -------------------------
   Bug fixes:

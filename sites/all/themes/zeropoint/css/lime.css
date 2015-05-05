@@ -1,6 +1,6 @@
-/****************/
-/* GENERAL CSS  */
-/****************/
+/***************/
+/* GENERAL CSS */
+/***************/
 
 #body_bg {
 	border-bottom: 1px solid #ddd;
@@ -15,7 +15,7 @@
 ul.links li {
 	border-left: 1px solid #d3d3d3; /* LTR */
 }
-td.section.divider {
+.divider {
 	border-left: 1px dashed #ddd; /* LTR */
 }
 .node.teaser {
@@ -39,9 +39,6 @@ blockquote, .messages {
 }
 #site-slogan {
 	color: #000;
-}
-#search .form-text, #search .form-submit {
-	border: 1px solid #555;
 }
 #mission {
 	color: #535353;
@@ -94,18 +91,18 @@ ul li.collapsed {
 	list-style-image: url(../images/all/menu-collapsed.png); /* LTR */
 }
 
-#subnavlist a {
+#submenu a {
 	border: 1px solid #ddd;
 	color: #444 !important;
 	background-color: #eee;
 }
-#subnavlist li a:hover {
+#submenu li a:hover {
 	background-color: #dbdbdb;
 }
-#navlist2 a {
+#menu2 a {
 	color: #888 !important;
 }
-#navlist2 a:hover, #navlist2 a.active, 
+#menu2 a:hover, #menu2 a.active, 
 #footer a:hover, #footer a.active {
 	color: #333 !important;
 }
@@ -166,47 +163,64 @@ a, a:link,
 }
 
 
-#navlinks ul li a, #navlist a {
-	background-color: #5a7d4f;
-	color: #fff !important;
-	text-transform: uppercase;
-	font-family: "times new roman", sans-serif, Arial, Verdana, Helvetica;
+/* pure buttons */
+
+.pure-button {
+	border: 1px solid #ccc;
 }
-#navlinks ul li a:hover, #navlist li a:hover {
-	color: #fff !important;
-	background-color: #6f9861;
+.form-actions .pure-button {
+	background-color: #ffffdd;
+}
+#edit-preview.pure-button {
+	background-color: #D3EDA3;
+}
+#edit-delete.pure-button {
+	background-color: #F5AB9E;
+}
+.pure-button-primary,
+.pure-button-selected,
+a.pure-button-primary,
+a.pure-button-selected {
+	background-color: #5a7d4f;
+	color: #fff;
 }
 
-/* DROP DOWN LI */
-/* set li width & color */
-#navlinks ul li.expanded ul li {
+/* Dropdown */
+
+.menu-toggle {
+	background-color: #ddd !important;
+}
+.menu-toggle .bars {
+	background-color: #777;
+}
+
+.pure-menu-heading {
+	color: #5a7d4f;
+}
+.pure-menu-link {
+	color: #fff !important;
+	background-color: #5a7d4f;
+}
+.pure-menu-link:hover,
+.pure-menu-link:focus {
+	background-color: #6f9861;
+}
+.pure-menu-children .pure-menu-link {
+	background-color: #6f9861;
 	border-left: 1px solid #8eaf83;
 	border-top: 1px solid #8eaf83;
 	border-right: 1px solid #5a7d4f;
 	border-bottom: 1px solid #5a7d4f;
 }
-
-/* DROP DOWN Anchors */
-/* first level */
-#navlinks ul li.expanded a.expandfirst {
-	background: #5a7d4f url(../images/nav-down.png) no-repeat 7px 50%;
-}
-#navlinks ul li.expanded a.expandfirst:hover {
-	background: #6f9861 url(../images/nav-down.png) no-repeat 7px 50%;
+.pure-menu-children a:hover,
+.pure-menu-children a:focus {
+	background-color: #5a7d4f;
 }
 
-/* sublevels */
-#navlinks ul li.expanded a {
-	background: #6f9861;
-}
-#navlinks ul li ul li a:hover {
-	color: #fff !important;
-	background: #5a7d4f;
-}
-#navlinks ul li.expanded a.expand,
-#navlinks ul li.expanded ul li a.expand {
-	background: #6f9861 url(../images/nav-right.png) no-repeat 95% 9px;
-}
-#navlinks ul li ul li.expanded a.expand:hover {
-	background: #5a7d4f url(../images/nav-right.png) no-repeat 95% 9px;
+
+@media screen and (max-width: 48em) {
+	.menuband {
+		min-height: 2.3em;
+		border-bottom: 1px solid #ddd;
+	}
 }

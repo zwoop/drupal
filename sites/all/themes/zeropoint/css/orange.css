@@ -1,6 +1,6 @@
-/****************/
-/* GENERAL CSS  */
-/****************/
+/***************/
+/* GENERAL CSS */
+/***************/
 
 #body_bg {
 	border-bottom: 1px solid #ddd;
@@ -15,7 +15,7 @@
 ul.links li {
 	border-left: 1px solid #d3d3d3; /* LTR */
 }
-td.section.divider {
+.divider {
 	border-left: 1px dashed #ddd; /* LTR */
 }
 .node.teaser {
@@ -39,9 +39,6 @@ blockquote, .messages {
 }
 #site-slogan {
 	color: #000;
-}
-#search .form-text, #search .form-submit {
-	border: 1px solid #555;
 }
 #mission {
 	color: #535353;
@@ -94,18 +91,18 @@ ul li.collapsed {
 	list-style-image: url(../images/all/menu-collapsed.png); /* LTR */
 }
 
-#subnavlist a {
+#submenu a {
 	border: 1px solid #ddd;
 	color: #555 !important;
 	background-color: #eee;
 }
-#subnavlist li a:hover {
+#submenu li a:hover {
 	background-color: #dbdbdb;
 }
-#navlist2 a {
+#menu2 a {
 	color: #888 !important;
 }
-#navlist2 a:hover, #navlist2 a.active, 
+#menu2 a:hover, #menu2 a.active, 
 #footer a:hover, #footer a.active {
 	color: #f60 !important;
 }
@@ -166,76 +163,64 @@ a, a:link,
 }
 
 
-#navlinks ul li a, #navlist a {
-	background: #fd8b0c;
-	color: #fff !important;
-	text-transform: uppercase;
-	font-family: "times new roman", sans-serif, Arial, Verdana, Helvetica;
+/* pure buttons */
+
+.pure-button {
+	border: 1px solid #666;
 }
-#navlinks ul li a:hover, #navlist li a:hover {
-	color: #fff !important;
+.form-actions .pure-button {
 	background-color: #fa0;
 }
+#edit-preview.pure-button {
+	background-color: #D3EDA3;
+}
+#edit-delete.pure-button {
+	background-color: #F5AB9E;
+}
+.pure-button-primary,
+.pure-button-selected,
+a.pure-button-primary,
+a.pure-button-selected {
+	background-color: #fd8b0c;
+	color: #fff;
+}
 
-/* DROP DOWN LI */
-/* set li width & color */
-#navlinks ul li.expanded ul li {
+/* Dropdown */
+
+.menu-toggle {
+	background-color: #ddd !important;
+}
+.menu-toggle .bars {
+	background-color: #777;
+}
+
+.pure-menu-heading {
+	color: #fd8b0c;
+}
+.pure-menu-link {
+	color: #fff !important;
+	background-color: #fd8b0c;
+}
+.pure-menu-link:hover,
+.pure-menu-link:focus {
+	background-color: #fa0;
+}
+.pure-menu-children .pure-menu-link {
+	background-color: #fd8b0c;
 	border-left: 1px solid #fda039;
 	border-top: 1px solid #fda039;
 	border-right: 1px solid #f28102;
 	border-bottom: 1px solid #f28102;
 }
-
-/* DROP DOWN Anchors */
-/* first level */
-#navlinks ul li.expanded a.expandfirst {
-	background: #fd8b0c url(../images/orange/nav-down.png) no-repeat 7px 50%;
-}
-#navlinks ul li.expanded a.expandfirst:hover {
-	background: #fa0 url(../images/orange/nav-down.png) no-repeat 7px 50%;
-}
-
-/* sublevels */
-#navlinks ul li.expanded a {
-	background: #fd8b0c;
-}
-#navlinks ul li ul li a:hover {
-	color: #fff !important;
-	background: #fa0;
-}
-#navlinks ul li.expanded a.expand,
-#navlinks ul li.expanded ul li a.expand {
-	background: #fd8b0c url(../images/orange/nav-right.png) no-repeat 95% 9px;
-}
-#navlinks ul li ul li.expanded a.expand:hover {
-	background: #fa0 url(../images/orange/nav-right.png) no-repeat 95% 9px;
+.pure-menu-children a:hover,
+.pure-menu-children a:focus {
+	background-color: #fa0;
 }
 
 
-/* Form Button */
-.form-submit {
-  /*-moz-transition: all 0.2s ease-in-out 0s;
-  border-radius: 5px;*/
-  cursor: pointer;
-  background: none repeat scroll 0 0  #fd8b0c;
-  border:  1px outset  #000000;
-  color: #000;
-  padding: 4px 8px;
-  /*text-shadow: 1px 1px 1px #fff;*/
-  margin-right: 1px;
-  margin-bottom: 1px;
-  font-weight: normal;
-}
-.form-submit:hover {
-	background: none repeat scroll 0 0  #fa0;
-}
-.form-text {
-  /*border-radius: 3px;*/
-  border: 1px solid #acacac;
-  padding: 4px 5px;
-  background-color: #dfdfdf;
-}
-.form-text:focus {
-  background-color: #FFFFFF;
-  border:   1px  outset #FF6600;
+@media screen and (max-width: 48em) {
+	.menuband {
+		min-height: 2.3em;
+		border-bottom: 1px solid #ddd;
+	}
 }
