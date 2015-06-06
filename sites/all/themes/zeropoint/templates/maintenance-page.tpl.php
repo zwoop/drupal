@@ -11,15 +11,6 @@
 <?php print $head ?>
 <?php print $styles ?>
 <?php print $scripts ?>
-<?php if (theme_get_setting('html5_respond')): ?>
-<!--[if lt IE 9]>
-<?php if (theme_get_setting('grid_responsive') == '1'): ?>
-<script src="<?php print $base_path . $path_to_zeropoint; ?>/js/html5-respond.js"></script>
-<?php else: ?>
-<script src="<?php print $base_path . $path_to_zeropoint; ?>/js/html5.js"></script>
-<?php endif; ?>
-<![endif]-->
-<?php endif; ?>
 </head>
 
 <body id="<?php print $body_id; ?>" class="<?php print $classes; ?>" <?php print $attributes;?>>
@@ -34,11 +25,6 @@
 
 <div id="header">
 <div class="clearfix">
-<?php if (theme_get_setting('loginlinks') || $page['topreg']): ?>
-  <div id="top-elements">
-    <?php if (theme_get_setting('loginlinks')): ?><div id="user_links"><?php print zeropoint_login() ?></div><?php endif; ?>
-  </div>
-<?php endif; ?>
   <?php if ($logo): ?><a href="<?php print check_url($front_page); ?>" title="<?php print t('Home'); ?>"><img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" class="logoimg" /></a><?php endif; ?>
   <div id="name-and-slogan">
   <?php if ($site_name): ?>

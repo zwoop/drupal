@@ -8,7 +8,7 @@
 <div class="clearfix">
 <?php if (theme_get_setting('loginlinks') || $page['topreg']): ?>
   <div id="top-elements">
-    <?php if (theme_get_setting('loginlinks')): ?><div id="user_links"><?php print zeropoint_login() ?></div><?php endif; ?>
+    <?php if (theme_get_setting('loginlinks')): ?><div id="user_links"><?php print login_links() ?></div><?php endif; ?>
     <?php if ($page['topreg']): ?><div id="topreg"><?php print render ($page['topreg']); ?></div><?php endif; ?>
   </div>
 <?php endif; ?>
@@ -137,12 +137,8 @@
 <div id="bottom_right">
 
 <div id="footer" class="pure-g">
-<div class="<?php print resp_class(); ?>1-5">
-  <?php if (theme_get_setting('social_links_display')): ?><div id="soclinks"><?php print zeropoint_social_links(); ?></div><?php endif; ?>
-</div>
-<div class="<?php print resp_class(); ?>3-5">
-  <?php if ($page['footer']): ?><?php print render ($page['footer']); ?><?php endif; ?>
-</div>
+<div class="<?php print resp_class(); ?>1-5"><?php if (theme_get_setting('social_links_display')): ?><div id="soclinks"><?php print zeropoint_social_links(); ?></div><?php endif; ?></div>
+<div class="<?php print resp_class(); ?>3-5"><?php if ($page['footer']): ?><?php print render ($page['footer']); ?><?php endif; ?></div>
 <div class="<?php print resp_class(); ?>1-5"></div>
 </div>
 <div id="brand"></div>

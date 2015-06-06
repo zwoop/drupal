@@ -24,7 +24,7 @@ function zeropoint_form_system_theme_settings_alter(&$form, &$form_state) {
   );
   $form['tnt_container']['puregrid']['css_zone'] = array(
     '#type'          => 'checkbox',
-    '#title'         => t('<b>Use Yahoo CDN</b> to serve the responsive CSS files. Enabling this setting will prevent the theme from attempting to load any responsive CSS files locally.'),
+    '#title'         => t('<b>Use Yahoo CDN</b> to serve the responsive CSS files. If you use https leave this option unchecked to load any responsive CSS files locally.'),
     '#description'   => t(''),
     '#default_value' => theme_get_setting('css_zone')
   );
@@ -135,7 +135,7 @@ function zeropoint_form_system_theme_settings_alter(&$form, &$form_state) {
   );
   $form['tnt_container']['layout_settings']['navpos'] = array(
     '#type' => 'select',
-    '#title' => t('Drop-down menu position'),
+    '#title' => t('Drop-down and secondary menus position'),
     '#default_value' => theme_get_setting('navpos'),
     '#options' => array(
       0 => t('Left'),
@@ -390,7 +390,7 @@ function zeropoint_form_system_theme_settings_alter(&$form, &$form_state) {
   $form['tnt_container']['themedev']['siteid'] = array(
     '#type' => 'textfield',
     '#title' => t('Site ID bodyclass.'),
-   	'#description' => t('In order to have different styles of Zero Point in a multisite environment you may find usefull to choose a "one word" site ID and customize the look of each site in custom-style.css file.'),
+   	'#description' => t('In order to have different styles of Zero Point in a multisite/multi-theme environment you may find usefull to choose an "ID" and customize the look of each site/theme in custom-style.css file.'),
     '#default_value' => theme_get_setting('siteid'),
     '#size' => 10,
 	);
@@ -398,7 +398,7 @@ function zeropoint_form_system_theme_settings_alter(&$form, &$form_state) {
 // Info
   $form['tnt_container']['info'] = array(
     '#type' => 'fieldset',
-    '#description'   => t('<div class="messages">All Zero Point settings are <b>multilingual variables</b>. You may have different settings for each language.</div>'),
+    '#description'   => t('<div class="messages info">All the theme settings are <b>multilingual variables</b>. You may have different settings for each language.</div>'),
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,
   );

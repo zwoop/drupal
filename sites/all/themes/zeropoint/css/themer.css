@@ -1,7 +1,7 @@
 /**************/
 /* THEMER CSS */
 /**************/
- 
+
 /* If you delete this file you will see the native behaviour of Zero Point. 
  * The below lines only help to look better :)*/
 
@@ -17,10 +17,10 @@ ul.links li {
 #submenu a {
 	border: 1px solid #ddd;
 	color: #444 !important;
-	background-color: #eee;
+	background: #eee;
 }
 #submenu li a:hover {
-	background-color: #dbdbdb;
+	background: #dbdbdb;
 }
 #menu2 a {
 	color: #888 !important;
@@ -34,17 +34,17 @@ ul.links li {
 /* Dropdown */
 
 .menu-toggle {
-	background-color: #ddd !important;
+	background: #ddd !important;
 }
 .menu-toggle .bars {
-	background-color: #777;
+	background: #777;
 }
 
 .pure-menu-heading {
 	color: #777;
 }
 .pure-menu-link {
-	background-color: #fff;
+	background: #fff;
 	border: 1px solid #eee;
 }
 

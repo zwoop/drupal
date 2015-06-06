@@ -31,7 +31,7 @@ ul.links li {
 	background: transparent url(../images/all/icon-comment.png) left center no-repeat; /* LTR */
 }
 blockquote, .messages {
-	background-color: #eee;
+	background: #eee;
 	border: 1px solid #ccc;
 }
 .form-item label, .item-list .title {
@@ -57,14 +57,14 @@ blockquote, .messages {
 	color: #ddd !important;
 }
 #aggregator .feed-source {
-	background-color: #eee;
+	background: #eee;
 	border: 1px solid #ccc;
 }
 #forum td.forum, #forum td.posts {
-	background-color: #eee;
+	background: #eee;
 }
 #forum td.topics, #forum td.last-reply {
-	background-color: #ddd;
+	background: #ddd;
 }
 #forum td.statistics, #forum td.settings, #forum td.pager {
 	border: 1px solid #bbb;
@@ -94,10 +94,10 @@ ul li.collapsed {
 #submenu a {
 	border: 1px solid #ddd;
 	color: #555 !important;
-	background-color: #eee;
+	background: #eee;
 }
 #submenu li a:hover {
-	background-color: #dbdbdb;
+	background: #dbdbdb;
 }
 #menu2 a {
 	color: #888 !important;
@@ -126,7 +126,7 @@ ul li.collapsed {
 .category-grid-products td {
 	border-right: 1px dashed #ddd !important;
 	border-bottom: 1px dashed #ddd !important;
-	background-color: transparent !important;
+	background: transparent !important;
 }
 
 
@@ -165,33 +165,30 @@ a, a:link,
 
 /* pure buttons */
 
-.pure-button {
-	border: 1px solid #666;
-}
 .form-actions .pure-button {
-	background-color: #fa0;
+	background: #fa0;
 }
 #edit-preview.pure-button {
-	background-color: #D3EDA3;
+	background: #D3EDA3;
 }
 #edit-delete.pure-button {
-	background-color: #F5AB9E;
+	background: #F5AB9E;
 }
 .pure-button-primary,
 .pure-button-selected,
 a.pure-button-primary,
 a.pure-button-selected {
-	background-color: #fd8b0c;
+	background: #fd8b0c;
 	color: #fff;
 }
 
 /* Dropdown */
 
 .menu-toggle {
-	background-color: #ddd !important;
+	background: #fa0;
 }
 .menu-toggle .bars {
-	background-color: #777;
+	background: #555;
 }
 
 .pure-menu-heading {
@@ -199,14 +196,14 @@ a.pure-button-selected {
 }
 .pure-menu-link {
 	color: #fff !important;
-	background-color: #fd8b0c;
+	background: #fd8b0c;
 }
 .pure-menu-link:hover,
 .pure-menu-link:focus {
-	background-color: #fa0;
+	background: #fa0;
 }
 .pure-menu-children .pure-menu-link {
-	background-color: #fd8b0c;
+	background: #fd8b0c;
 	border-left: 1px solid #fda039;
 	border-top: 1px solid #fda039;
 	border-right: 1px solid #f28102;
@@ -214,11 +211,24 @@ a.pure-button-selected {
 }
 .pure-menu-children a:hover,
 .pure-menu-children a:focus {
-	background-color: #fa0;
+	background: #fa0;
 }
 
 
 @media screen and (max-width: 48em) {
+	.pure-menu-link, .pure-menu-children,
+	.pure-menu-children .pure-menu-link {
+		border: none;
+		color: #fd8b0c !important;
+		background: #eee;
+	}
+	.pure-menu-link:hover,
+	.pure-menu-link:focus,
+	.pure-menu-children a:hover,
+	.pure-menu-children a:focus {
+		color: #333 !important;
+		background: #fa0;
+	}
 	.menuband {
 		min-height: 2.3em;
 		border-bottom: 1px solid #ddd;
