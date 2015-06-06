@@ -31,7 +31,7 @@ ul.links li {
 	background: transparent url(../images/all/icon-comment.png) left center no-repeat; /* LTR */
 }
 blockquote, .messages {
-	background-color: #eee;
+	background: #eee;
 	border: 1px solid #ccc;
 }
 .form-item label, .item-list .title {
@@ -57,14 +57,14 @@ blockquote, .messages {
 	color: #ddd !important;
 }
 #aggregator .feed-source {
-	background-color: #eee;
+	background: #eee;
 	border: 1px solid #ccc;
 }
 #forum td.forum, #forum td.posts {
-	background-color: #eee;
+	background: #eee;
 }
 #forum td.topics, #forum td.last-reply {
-	background-color: #ddd;
+	background: #ddd;
 }
 #forum td.statistics, #forum td.settings, #forum td.pager {
 	border: 1px solid #bbb;
@@ -94,10 +94,10 @@ ul li.collapsed {
 #submenu a {
 	border: 1px solid #ddd;
 	color: #444 !important;
-	background-color: #eee;
+	background: #eee;
 }
 #submenu li a:hover {
-	background-color: #dbdbdb;
+	background: #dbdbdb;
 }
 #menu2 a {
 	color: #888 !important;
@@ -126,7 +126,7 @@ ul li.collapsed {
 .category-grid-products td {
 	border-right: 1px dashed #ddd !important;
 	border-bottom: 1px dashed #ddd !important;
-	background-color: transparent !important;
+	background: transparent !important;
 }
 
 
@@ -169,29 +169,29 @@ a, a:link,
 	border: 1px solid #ccc;
 }
 .form-actions .pure-button {
-	background-color: #E6E6E6;
+	background: #E6E6E6;
 }
 #edit-preview.pure-button {
-	background-color: #D3EDA3;
+	background: #D3EDA3;
 }
 #edit-delete.pure-button {
-	background-color: #F5AB9E;
+	background: #F5AB9E;
 }
 .pure-button-primary,
 .pure-button-selected,
 a.pure-button-primary,
 a.pure-button-selected {
-	background-color: #777;
+	background: #777;
 	color: #fff;
 }
 
 /* Dropdown */
 
 .menu-toggle {
-	background-color: #ddd !important;
+	background: #E6E6E6;
 }
 .menu-toggle .bars {
-	background-color: #777;
+	background: #777;
 }
 
 .pure-menu-heading {
@@ -199,15 +199,15 @@ a.pure-button-selected {
 }
 .pure-menu-link {
 	color: #fff !important;
-	background-color: #777;
+	background: #777;
 }
 .pure-menu-link:hover,
 .pure-menu-link:focus {
 	color: #777 !important;
-	background-color: #dbdbdb;
+	background: #dbdbdb;
 }
 .pure-menu-children .pure-menu-link {
-	background-color: #aaa;
+	background: #aaa;
 	border-left: 1px solid #c4c4c4;
 	border-top: 1px solid #c4c4c4;
 	border-right: 1px solid #959595;
@@ -216,11 +216,24 @@ a.pure-button-selected {
 .pure-menu-children a:hover,
 .pure-menu-children a:focus {
 	color: #fff !important;
-	background-color: #999;
+	background: #999;
 }
 
 
 @media screen and (max-width: 48em) {
+	.pure-menu-link, .pure-menu-children,
+	.pure-menu-children .pure-menu-link {
+		border: none;
+		color: #777 !important;
+		background: #E6E6E6;
+	}
+	.pure-menu-link:hover,
+	.pure-menu-link:focus,
+	.pure-menu-children a:hover,
+	.pure-menu-children a:focus {
+		color: #555 !important;
+		background: #ccc;
+	}
 	.menuband {
 		min-height: 2.3em;
 		border-bottom: 1px solid #ddd;

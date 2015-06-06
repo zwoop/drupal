@@ -57,23 +57,12 @@ function zeropoint_preprocess_html(&$vars) {
   }
 
 // Build array of additional body classes and retrieve custom theme settings
-if(theme_get_setting('roundcorners')) {
-  $vars['classes_array'][] = 'rnd';
-}
 $blockicons = theme_get_setting('blockicons');
   if ($blockicons == '1'){
     $vars['classes_array'][] = 'bi32';
   }
   if ($blockicons == '2'){
     $vars['classes_array'][] = 'bi48';
-  }
-$pageicons = theme_get_setting('pageicons');
-  if ($pageicons == '1'){
-    $vars['classes_array'][] = 'pi';
-  }
-$headerimg = theme_get_setting('headerimg');
-  if ($headerimg == '1'){
-    $vars['classes_array'][] = 'himg';
   }
 $navpos = theme_get_setting('navpos');
   if ($navpos == '0'){
@@ -110,6 +99,15 @@ $mob = theme_get_setting('mobile_blocks');
 	  $vars['classes_array'][] = 'nb1 nb2 nbl nbr';
   }
 }
+if(theme_get_setting('roundcorners')) {
+  $vars['classes_array'][] = 'rnd';
+}
+if(theme_get_setting('pageicons')) {
+  $vars['classes_array'][] = 'pi';
+}
+if(theme_get_setting('headerimg')) {
+  $vars['classes_array'][] = 'himg';
+}
 
 // Add language and site ID classes
   $vars['classes_array'][] = ($vars['language']->language) ? 'lg-'. $vars['language']->language : '';        // Page has lang-x
@@ -122,18 +120,21 @@ $siteid = check_plain(theme_get_setting('siteid'));
   $vars['body_id'] = 'pid-' . strtolower(preg_replace('/[^a-zA-Z0-9-]+/', '-', drupal_get_path_alias(check_plain($_GET['q']))));
 
 // Set grids responsive stylesheets
+  drupal_add_css(drupal_get_path('theme','zeropoint').'/css/drupal/drupal-system-min.css', array('group' => CSS_SYSTEM, 'every_page' => TRUE, 'weight' => -1));
+  drupal_add_css(drupal_get_path('theme','zeropoint').'/css/drupal/drupal-default-min.css', array('group' => CSS_DEFAULT, 'every_page' => TRUE, 'weight' => -1));
+
   if(theme_get_setting('css_zone')) {
-    drupal_add_css('http://yui.yahooapis.com/pure/0.6.0/pure-min.css', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => 1, 'preprocess' => FALSE));
+    drupal_add_css('http://yui.yahooapis.com/pure/0.6.0/pure-min.css', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => -2, 'preprocess' => FALSE));
   } else {
-    drupal_add_css(drupal_get_path('theme','zeropoint').'/css/yui/pure-min.css', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => 1));
+    drupal_add_css(drupal_get_path('theme','zeropoint').'/css/yui/pure-min.css', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => -2));
   }
   if(theme_get_setting('grid_responsive') == '1') {
     if(theme_get_setting('css_zone')) {
-      drupal_add_css('http://yui.yahooapis.com/pure/0.6.0/grids-responsive-old-ie-min.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'IE 8', '!IE' => FALSE), 'every_page' => TRUE, 'weight' => 2, 'preprocess' => FALSE));
-      drupal_add_css('http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'gt IE 8'), 'every_page' => TRUE, 'weight' => 2, 'preprocess' => FALSE));
+      drupal_add_css('http://yui.yahooapis.com/pure/0.6.0/grids-responsive-old-ie-min.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'IE 8', '!IE' => FALSE), 'every_page' => TRUE, 'weight' => -1, 'preprocess' => FALSE));
+      drupal_add_css('http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'gt IE 8'), 'every_page' => TRUE, 'weight' => -1, 'preprocess' => FALSE));
     } else {
-      drupal_add_css(drupal_get_path('theme','zeropoint').'/css/yui/grids-responsive-old-ie-min.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'IE 8', '!IE' => FALSE), 'every_page' => TRUE, 'weight' => 2));
-      drupal_add_css(drupal_get_path('theme','zeropoint').'/css/yui/grids-responsive-min.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'gt IE 8'), 'every_page' => TRUE, 'weight' => 2));
+      drupal_add_css(drupal_get_path('theme','zeropoint').'/css/yui/grids-responsive-old-ie-min.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'IE 8', '!IE' => FALSE), 'every_page' => TRUE, 'weight' => -1));
+      drupal_add_css(drupal_get_path('theme','zeropoint').'/css/yui/grids-responsive-min.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'gt IE 8'), 'every_page' => TRUE, 'weight' => -1));
     }
   }
   drupal_add_css(drupal_get_path('theme','zeropoint').'/css/style-zero.css', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => 3));
@@ -371,19 +372,6 @@ function wrapper_width() {
   $wrapper = check_plain(theme_get_setting('wrapper'));
     return ' style="max-width:' . $wrapper . ';"';
 }
-/*
-function section_class($page, $onefour=true){
-  if($onefour) {
-    $cols = (bool) $page['user1'] + (bool) $page['user2'] + (bool) $page['user3'] + (bool) $page['user4'];
-  } else {
-    $cols = (bool) $page['user5'] + (bool) $page['user6'] + (bool) $page['user7'] + (bool) $page['user8'];
-  }
-  if((theme_get_setting('grid_responsive') == '1') && ((preg_match('/(?i)msie [2-7]/',$_SERVER['HTTP_USER_AGENT']))) == FALSE){
-    return 'pure-u-1 pure-u-md-1-'.$cols;
-  } else {
-    return 'pure-u-1-'.$cols;
-  }
-}*/
 
 function section_class($page, $onefour=true){
   if($onefour) {
@@ -572,32 +560,20 @@ function zeropoint_menu_tree($vars) {
 }*/
 
 
-/**
-* Add unique class (mlid) to all menu items.
-*/
-/*
-function zeropoint_menu_link(array $vars) {
-  $element = $vars['element'];
-  $sub_menu = '';
-
-  $element['#attributes']['class'][] = 'menu-' . $element['#original_link']['mlid'];
-
-  if ($element['#below']) {
-    $sub_menu = drupal_render($element['#below']);
-  }
-  $output = l($element['#title'], $element['#href'], $element['#localized_options']);
-  return '<li' . drupal_attributes($element['#attributes']) . '>' . $output . $sub_menu . "</li>\n";
-}*/
-
 /*
 * Theme's main navigation menu
 */
-function zeropoint_links__system_main_menu($tree, $is_child=false){
+function zeropoint_links__system_main_menu($vars, $is_child=false){
 
-  $tree['#attributes']['class'][] = $is_child ? 'pure-menu-children': 'pure-menu-list';
-  $html = '<ul '.drupal_attributes($tree['#attributes']).'>';
+  $vars['#attributes']['class'][] = $is_child ? 'pure-menu-children': 'pure-menu-list';
+  $html = '<ul '.drupal_attributes($vars['#attributes']).'>';
 
-  foreach($tree['links'] as $link){
+  foreach($vars['links'] as $link){
+    // Test for localization options and apply them if they exist.
+    if (isset($link['#localized_options']['attributes']) && is_array($link['#localized_options']['attributes'])) {
+      $link['#attributes'] = array_merge_recursive($link['#attributes'], $link['#localized_options']['attributes']);
+    }
+    // Output html for drop-down menu.
     if(empty($link['#title']))
       continue;
     else{
@@ -623,15 +599,15 @@ function zeropoint_links__system_main_menu($tree, $is_child=false){
 /**
  * Other theme settings
  */
-function zeropoint_login(){
+function login_links(){
   global $user;
   $loginlinks = theme_get_setting('loginlinks');
   if ($loginlinks == '1'){
     if ($user->uid != 0) {
-      print '<h2 class="element-invisible">'.t('Login links').'</h2><ul class="links inline"><li class="first"><a href="' .url('user/'.$user->uid). '">' .$user->name. '</a></li><li><a href="' .url('user/logout'). '">' .t('Logout'). '</a></li></ul>';
+      print '<h2 class="element-invisible">'.t('Login links').'</h2><ul class="links inline"><li class="uin first"><a href="' .url('user/'.$user->uid). '">' .$user->name. '</a></li><li class="uout"><a href="' .url('user/logout'). '">' .t('Logout'). '</a></li></ul>';
     }
     else {
-      print '<h2 class="element-invisible">'.t('Login links').'</h2><ul class="links inline"><li class="first"><a href="' .url('user'). '" rel="nofollow">' .t('Login'). '</a></li><li><a href="' .url('user/register'). '" rel="nofollow">' .t('Register'). '</a></li></ul>';
+      print '<h2 class="element-invisible">'.t('Login links').'</h2><ul class="links inline"><li class="ulog first"><a href="' .url('user'). '" rel="nofollow">' .t('Login'). '</a></li><li class="ureg"><a href="' .url('user/register'). '" rel="nofollow">' .t('Register'). '</a></li></ul>';
     }
   }
 }
@@ -643,3 +619,43 @@ function divider() {
   }
 }
 
+function zeropoint_css_alter(&$css) {
+  $exclude = array(
+  // drupal-system.css
+    'modules/system/system.base.css' => FALSE,
+    'modules/system/system.menus.css' => FALSE,
+    'modules/system/system.messages.css' => FALSE,
+    'modules/system/system.theme.css' => FALSE,
+    'modules/contextual/contextual.css' => FALSE,
+  // drupal-system-rtl.css
+    'modules/system/system.base-rtl.css' => FALSE,
+    'modules/system/system.menus-rtl.css' => FALSE,
+    'modules/system/system.messages-rtl.css' => FALSE,
+    'modules/system/system.theme-rtl.css' => FALSE,
+    'modules/contextual/contextual-rtl.css' => FALSE,
+  // drupal-default.css
+    'modules/aggregator/aggregator.css' => FALSE,
+    'modules/book/book.css' => FALSE,
+    'modules/comment/comment.css' => FALSE,
+    'modules/field/theme/field.css' => FALSE,
+    'modules/node/node.css' => FALSE,
+    'modules/poll/poll.css' => FALSE,
+    'modules/search/search.css' => FALSE,
+    'modules/user/user.css' => FALSE,
+    'modules/forum/forum.css' => FALSE,
+    'modules/shortcut/shortcut.css' => FALSE,
+  // drupal-default-rtl.css
+    'modules/aggregator/aggregator-rtl.css' => FALSE,
+    'modules/book/book.css' => FALSE,
+    'modules/comment/comment-rtl.css' => FALSE,
+    'modules/field/theme/field-rtl.css' => FALSE,
+    'modules/node/node-rtl.css' => FALSE,
+    'modules/poll/poll-rtl.css' => FALSE,
+    'modules/search/search-rtl.css' => FALSE,
+    'modules/user/user-rtl.css' => FALSE,
+    'modules/forum/forum-rtl.css' => FALSE,
+    'modules/shortcut/shortcut-rtl.css' => FALSE,
+
+  );
+  $css = array_diff_key($css, $exclude);
+}

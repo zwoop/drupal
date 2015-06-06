@@ -44,10 +44,10 @@ ul.links li {
 .pure-menu-heading { float: right; }
 .menu-toggle { float: left; }
 .menu-toggle .bars { right: .5em; }
-.pure-menu-children { box-shadow: none; }
 .pure-menu-children .pure-menu-children {
 	left: auto;
 	right: 100%;
+	box-shadow: -1px 5px 5px #999;
 }
 .pure-menu-has-children > .pure-menu-link:after {
 	margin: 0 0 0 -1em !important;
@@ -74,76 +74,93 @@ ul.links li {
 
 /* PAGE ICONS */
 
-.links ul.links a { padding-left: 5px; }
-.pi .upload_attachments a {
-	background: url(../images/all/icons/attach.png) no-repeat right;
-	padding-right: 20px;
+.pi .print-page, .pi .print-mail, .pi .print-pdf {
+	margin: 0 5px 0 0;
+	padding: 0 20px 0 0;
 }
-.pi .comment-comments a {
-	background: url(../images/all/icons/comments.png) no-repeat right;
-	padding-right: 20px;
+.pi .print-page {
+	background: url(../images/all/icons/printer.png) no-repeat right center;
 }
-.pi li.comment-delete a {
-	background: url(../images/all/icons/trash.png) no-repeat right;
-	padding-right: 15px;
+.pi .print-mail {
+	background: url(../images/all/icons/email.png) no-repeat right center;
 }
-.pi li.comment-edit a {
-	background: url(../images/all/icons/edit.png) no-repeat right;
-	padding-right: 15px;
-}
-.pi li.comment-reply a {
-	background: url(../images/all/icons/reply.png) no-repeat right;
-	padding-right: 15px;
-}
-.pi .book_add_child a {
-	background: url(../images/all/icons/page-add.png) no-repeat right center;
-	padding-right: 20px;
-}
-.pi .comment-add a {
-	background: url(../images/all/icons/comment.png) no-repeat right center;
-	padding-right: 20px;
-}
-.pi .print_html a, .pi .book_printer a {
-	background: url(../images/all/icons/print.png) no-repeat right center;
-	padding-right: 20px;
-}
-.pi .print_mail a, .pi .book_mail a {
-	background: url(../images/all/icons/mail.png) no-repeat right center;
-	padding-right: 20px;
-}
-.pi .print_pdf a, .pi .book_pdf a {
+.pi .print-pdf {
 	background: url(../images/all/icons/pdf.png) no-repeat right center;
-	padding-right: 20px;
-}
-.pi .print_html, .pi .book_printer,
-.pi .print_mail, .pi .book_mail,
-.pi .print_pdf, .pi .book_pdf {
-	padding-left: 0;
 }
 .pi .field-type-taxonomy-term-reference {
 	background: url(../images/all/icons/tag.png) no-repeat right top;
-	padding-right: 20px;
+	padding: 0 20px 0 0;
 }
-.pi #sidebar-left a.active, .pi #sidebar-right a.active {
+.pi .region-sidebar-first a.active, .pi .region-sidebar-second a.active {
 	background: url(../images/all/icons/check_rtl.png) no-repeat left center;
 	padding-left: 20px !important;
 	padding-right: 0;
 }
+.pi .region-sidebar-first .block-title a.active , .pi .region-sidebar-second .block-title a.active	{
+	padding-left: 0 !important;
+}
+.pi li.comment-approve a {
+	background: url(../images/all/icons/check_rtl.png) no-repeat left center;
+	padding: 0 20px 0 0;
+}
+.pi .comment-add a {
+	background: url(../images/all/icons/comment.png) no-repeat right center;
+	padding: 0 20px 0 0;
+}
+.pi .comment-comments a {
+	background: url(../images/all/icons/comments.png) no-repeat right center;
+	padding: 0 20px 0 0;
+}
+.pi li.comment-delete a {
+	background: url(../images/all/icons/trash.png) no-repeat right center;
+	padding: 0 20px 0 0;
+}
+.pi li.comment-edit a {
+	background: url(../images/all/icons/edit.png) no-repeat right center;
+	padding: 0 20px 0 0;
+}
+.pi li.comment-reply a {
+	background: url(../images/all/icons/reply.png) no-repeat right center;
+	padding: 0 20px 0 0;
+}
+.pi .book_add_child a {
+	background: url(../images/all/icons/page-add.png) no-repeat right center;
+	padding: 0 20px 0 0;
+}
 .pi .node-readmore a {
-	background: url(../images/all/icons/read_more_rtl.png) no-repeat right center;
-	padding-right: 15px;
+	background: url(../images/all/icons/read_more_rtl.png) no-repeat right center; /* LTR */
+	padding: 0 17px 0 0; /* LTR */
 }
 .pi .more-link a {
-	background: url(../images/all/icons/more.png) no-repeat right center;
-	padding-right: 15px;
+	background: url(../images/all/icons/more_rtl.png) no-repeat right -1px; /* LTR */
+	padding: 0 20px 0 0;
 }
-.pi .blog_usernames_blog a {
+.pi .blog_usernames_blog a,
+.pi #block-system-user-menu li.first, .pi li.uin {
 	background: url(../images/all/icons/user_green.png) no-repeat right center;
-	padding-right: 20px;
+	padding: 0 20px 0 4px;
+}
+.pi #block-system-user-menu li.last, .pi li.uout {
+	background: url(../images/all/icons/key_delete.png) no-repeat right center;
+	padding: 0 20px 0 4px;
+}
+.pi li.ulog, .pi li.comment_forbidden a {
+	background: url(../images/all/icons/key_add.png) no-repeat right center;
+	padding: 0 20px 0 4px;
+}
+.pi li.ureg {
+	background: url(../images/all/icons/user-multiple.png) no-repeat right center;
+	padding: 0 20px 0 4px;
 }
 
 
 @media screen and (max-width: 48em) {
+	.ml #submenu,	.mc #submenu {
+		text-align: right;
+	}
+	.pure-menu-allow-hover:hover > .pure-menu-children {
+		right: 0;
+	}
 	.logomob {
 		float: right;
 		margin: -0.4em 0 0 .5em;

@@ -21,15 +21,16 @@ regions[user8] = User 8
 regions[footer] = Footer
 regions[page_bottom] = Page bottom
 
-settings[css_zone] = 1
-settings[wrapper_width] = '80em'
+settings[css_zone] = 0
+settings[wrapper] = '85em'
 settings[first_width] = 5
 settings[second_width] = 5
 settings[grid_responsive] = 1
 settings[mobile_blocks] = 1
 
 settings[style] = ink
-settings[blockicons] = 1
+settings[themedblocks] = 0
+settings[blockicons] = 2
 settings[pageicons] = 1
 settings[navpos] = 1
 settings[menu2] = 1
@@ -44,9 +45,9 @@ settings[social_links_display] = 0
 settings[rebuild_registry] = 0
 settings[siteid] = ''
 
-; Information added by Drupal.org packaging script on 2015-04-28
-version = "7.x-4.1"
+; Information added by Drupal.org packaging script on 2015-05-29
+version = "7.x-4.2"
 core = "7.x"
 project = "zeropoint"
-datestamp = "1430190784"
+datestamp = "1432870386"
 
