@@ -1,74 +1,76 @@
-README.TXT // 0 Point theme for Drupal 7.
+README.TXT // ZERO POINT responsive theme for Drupal 7.
 
 Thank you for downloading this theme!
 
 
 ABOUT THE 0 POINT THEME:
 -------------------------------------------------------------------------+
-0 Point is an advanced HTML5 theme, with layout and style configuration options built 
-in that you can control through Drupal's UI, to be ideal for a wide range of sites.
-It is a RTL ready theme having features that fully support right to left languages. 
+Zero Point is an advanced responsive, "mobile first", with layout and style configuration 
+options built in that you can control through Drupal's UI. It uses Yahoo Pure.css, a powerful 
+responsive CSS framework and also fully supports right to left languages. Pure is 
+ridiculously tiny. The entire set of modules clocks in at 4.0KB minified and gzipped.
 
-The theme validates XHTML+RDFa, CSS 2/CSS 3, it is cross-browser compatible (including IE6 :)), 
-and it passes WAVE and FAE.
+The theme validates HTML5, it is cross-browser compatible (including IE6), it passes WAVE 
+(http://wave.webaim.org/) and FAE (http://fae.cita.uiuc.edu/).
+7.x-4.x is a complete redesign made with mobile in mind: compatible, light and fast.
 
-Starting with version 7.x-3.x Zero Point is the only theme which validates HTML5/CSS3 with no errors.
-
-Layout features
-===============
-- 1, 2, or 3 column layout with adaptive width (min. 1040px max.1200px at 1440px 
-	disply width) based on "The Jello Mold Piefecta Layout" 
-	(http://www.positioniseverything.net/articles/jello.html); 
-- 17+1 collapsible block regions; 
-- 8 colour styles + themer setting; 
-- Advanced SEO optimization; 
-- built-in IE transparent PNG fix; 
-- Fixed / Variable width sidebars (more customization in /_custom/custom-style.css); 
-- Round corners for page elements and main menu items;
-- Page and block icons;
-- jQuery Drop-down menu; 
-- Main menu position (left, center or right); 
-- Helpful body classes (unique classes for each page, term, website section, 
-	browser, etc.). Everything can be controlled via CSS, including each menu
-	item (for static menu), how colours and other items will be displayed in
-	different browsers, or by terms, sections, etc.; 
-- Full breadcrumb; 
+|==================|
+| Theme's features |
+|==================|
+- 1, 2, or 3 column layout with customizable widths using Yahoo Pure.css Framework (http://purecss.io);
+- 15 block regions;
+- 8 colour styles + themer setting;
+- Advanced SEO optimization;
+- Round corners for page elements and menus;
+- Block icons;
+- Page icons;
+- Drop-down primary links menu;
+- Primary/secondary links menu position (center, left, right);
+- Helpful body classes (unique classes for each page, term, website section, browser, etc.);
+- Full breadcrumb;
 - Possibility to change "Submitted by" display on all nodes;
-- Bi-directional right to left (RTL) theming; 
-- Works perfect in multilingual installations. 
+- Bi-directional right to left (RTL) theming;
+- Works perfect in Multilingual installations.
 
-Advanced theme settings features
-===============================
-Layout settings
-- Style - Choose a colour palette from 9 options: 0 Point (Grey), Sky, Nature, 
-  Ivy, Ink, Orange, Sangue, Lime and Themer. More colour options to come.
-- Layout width - adaptive, fluid and fixed width;
-- Sidebars layout - Fixed width sidebars or variable width sidebars;
+|==================================|
+| Advanced theme settings features |
+|==================================|
+
+Pure grid settings
+==================
+- Responsive CSS files served from Yahoo CDN or locally;
+- Layout with fluid or fixed width;
+- Customizable width for First and Second sidebars;
+- Responsive or Non-responsive layout;
+- Feature to choose the blocks visible on mobile devices.
+
+Layout and other settings
+=========================
+- 9 color style options: Zero Point (gray), Sky, Nature, Ivy, Ink, Orange, Sangue, Lime and Themer;
 - Themed blocks;
-- Block icons - Choose between none, 32x32 pixel icons and 48x48 pixels icons;
-- Page icons - Choose a layout with or without page icons;
-- Menu type - Two-level Static or SuckerFish drop-down menu;
-- Menu position - Left, center or right;
+- Block icons - 32x32 pixel or 48x48 pixels icons for the themed blocks;
+- Page icons - choose a layout with or without page icons;
+- Main Drop-down menu and secondary menu can be positioned (center, left, right);
+- Duplicate the Main Menu at the bottom of the page;
 - 2 font size settings;
-- Rounded corners - Option to have rounded corners in all browsers but IE;
+- Round corners for page elements and menus;;
 - Header image rotator;
-- No-followed login/register links.
-- No-followed social links;
+- No-followed login/register links;
 - Breadcrumb - display or not;
 - Change "Submitted by" display on all nodes, site-wide;
+- Social links - Display various social links at the bottom of the page.
 
 Theme development settings
+==========================
 - Rebuild theme registry on every page, during theme development;
-- Site ID body class - usefull in a multisite environment.
+- Site ID body class - useful in a multisite environment.
 
 To know more, read Zero Point handbook (http://drupal.org/node/507792).
-
 
 
 MODULE SUPPORT
 -------------------------------------------------------------------------+
 This theme can support virtualy any module.
-
 
   
 THEME MODIFICATION
@@ -77,53 +79,12 @@ If you feel like giving the theme a look of your own, I recommend to play
 with /_custom/custom-style.css; please read the comments in this file.
 
 
-
-SIDEBARS DIMMENSIONS
--------------------------------------------------------------------------+
-The maximum with available for sidebars is as follow:
-
-                                         | left | right | both
------------------------------------------------------------------
-Variable asyimmetrical sidebars (wide)   | 250  |  300  | 160-234
------------------------------------------------------------------
-Fixed asyimmetrical sidebars (wide)      | 160  |  234  | 160-234
------------------------------------------------------------------
-Variable asyimmetrical sidebars (narrow) | 230  |  280  | 140-214
------------------------------------------------------------------
-Fixed asyimmetrical sidebars (narrow)    | 140  |  214  | 140-214
------------------------------------------------------------------
-Equal width sidebars (narrow)            | 155  |  155  | 155-155
------------------------------------------------------------------
-
-NOTE: Do not exceed the available width (especially with images) or IE6 
-(for those who still use it) will not behave so the sidebars may drop.  
-
-
-
-USING THE jQuery DROP-DOWN MENU
--------------------------------------------------------------------------+
-The menu can either be a two-level static menu or a jQuery drop-down menu.
-
-Out of the box the theme will show the primary and secondary menu. If you select 
-(/admin/structure/menu/settings) the same menu as source for main links and secondary 
-links it will display the appropriate second level of your navigation hierarchy.
-
-To activate the drop-down menu put the Main menu block in the "Drop Down menu" 
-region and set the parent item to "expanded". 
-NOTE: Go to /admin/structure/menu and expand all parents in your primary menu.
-
-
-
 INSTALLATION INSTRUCTIONS
 -------------------------------------------------------------------------+
 
 1) Place the zeropoint directory into your themes directory (sites/all/themes/zeropoint).
 2) Enable the 0 Point theme (/admin/appearance).
 3) You can configure the theme's settings at /admin/appearance/settings/zeropoint. 
-
-NOTE: If you place the theme in a location other than /sites/all/themes/zeropoint you 
-should modify the path in /abc/css/ie6.css, accordingly.
-
 
 
 UPGRADING to a new version of 0 Point
@@ -145,6 +106,12 @@ NOTE: In some very rare cases, if after upgrading the theme can not be configure
 delete all the zeropoint records in the data base.
 
 
+RESOURCES
+-------------------------------------------------------------------------+
+- http://purecss.io
+- Github Project Page (https://github.com/yui/pure/)
+- Pure skin builder (http://yui.github.io/skinbuilder/?mode=pure)
+
 
 SITES USING "ZERO POINT" THEME
 -------------------------------------------------------------------------+
@@ -157,12 +124,13 @@ http://www.301.ro/
 http://www.mlnar.ro/
 
 
-
 RELATED THEMES
 -------------------------------------------------------------------------+
-- ABC (http://drupal.org/project/abc) - a very customizable HTML5 theme
-- Black Hole (http://drupal.org/project/black_hole) - a dark HTML5 theme
 
+- Yahoo Pure.CSS Framework (https://www.drupal.org/project/pure_css) - an advanced responsive, 
+  mobile-first, HTML5, base-theme, designed with mobile and SEO in mind: compatible, light and fast.
+- ABC (https://www.drupal.org/project/abc) - a very customizable HTML5 theme
+- Black Hole (https://www.drupal.org/project/black_hole) - a dark HTML5 theme
 
 
 CONTACT

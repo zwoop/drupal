@@ -25,7 +25,6 @@
   </div>
 </div>
 <?php if ($page['header']): ?><?php print render ($page['header']); ?><?php endif; ?>
-<?php if ($main_menu): ?>
 <div class="menuband clearfix">
   <div id="menu" class="menu-wrapper">
   <?php if ($logo || $site_name): ?>
@@ -34,14 +33,15 @@
       <?php if ($site_name) print $site_name; ?>
     </a>
   <?php endif; ?>
+  <?php if ($main_menu): ?>
     <a href="#" id="toggles" class="menu-toggle"><s class="bars"></s><s class="bars"></s></a>
     <div class="pure-menu pure-menu-horizontal menu-transform">
       <h2 class="element-invisible"><?php print t('Main menu'); ?></h2>
       <?php print theme('links__system_main_menu', array('links' => menu_tree('main-menu'))); ?>
     </div>
+  <?php endif; ?>
   </div>
 </div>
-<?php endif; ?>
 </div>
 
 </div></div></div></div></div>
@@ -79,6 +79,7 @@
 
 <div class="clearfix">
 <div id="middlecontainer" class="pure-g">
+
 <?php if ($page['sidebar_first']) { ?>
   <div class="<?php print first_class(); ?>">
     <div id="sidebar-left"><?php print render($page['sidebar_first']); ?></div>

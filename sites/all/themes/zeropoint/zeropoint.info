@@ -45,9 +45,9 @@ settings[social_links_display] = 0
 settings[rebuild_registry] = 0
 settings[siteid] = ''
 
-; Information added by Drupal.org packaging script on 2015-05-29
-version = "7.x-4.2"
+; Information added by Drupal.org packaging script on 2015-06-27
+version = "7.x-4.3"
 core = "7.x"
 project = "zeropoint"
-datestamp = "1432870386"
+datestamp = "1435365181"
 
