@@ -52,7 +52,7 @@ ul.links li {
 .pure-menu-has-children > .pure-menu-link:after {
 	margin: 0 0 0 -1em !important;
 	padding-left: 0;
-	padding-right: 0.5em;
+	padding-right: .5em;
 }
 .pure-menu-has-children .pure-menu-has-children > .pure-menu-link:after { content: "\25C2"; }
 
@@ -128,11 +128,11 @@ ul.links li {
 	padding: 0 20px 0 0;
 }
 .pi .node-readmore a {
-	background: url(../images/all/icons/read_more_rtl.png) no-repeat right center; /* LTR */
+	background: url(../images/all/icons/read_more_rtl.png) no-repeat right center;
 	padding: 0 17px 0 0; /* LTR */
 }
 .pi .more-link a {
-	background: url(../images/all/icons/more_rtl.png) no-repeat right -1px; /* LTR */
+	background: url(../images/all/icons/more_rtl.png) no-repeat right -1px;
 	padding: 0 20px 0 0;
 }
 .pi .blog_usernames_blog a,

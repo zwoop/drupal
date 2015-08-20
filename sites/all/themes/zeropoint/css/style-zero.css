@@ -42,8 +42,8 @@ h3 { font-size: 1.1em; }
 h4, h5, h6 { font-size: 1em; }
 
 p {
-	margin-top: 0.5em;
-	margin-bottom: 0.9em;
+	margin-top: .5em;
+	margin-bottom: .9em;
 }
 a {text-decoration: none;}
 a:hover {text-decoration: underline;}
@@ -52,7 +52,7 @@ fieldset {
 }
 pre {
 	background: #eee;
-	padding: 0.75em 1.5em;
+	padding: .75em 1.5em;
 	border: 1px solid #ddd;
 }
 .links {
@@ -84,10 +84,10 @@ tbody, ul.links li.first, ul.links li.taxonomy-term-reference-0 {
 	border: none;
 }
 tr.odd td, tr.even td {
-	padding: 0.3em;
+	padding: .3em;
 }
 #help {
-	font-size: 0.9em;
+	font-size: .9em;
 	margin-bottom: 1em;
 }
 .error {
@@ -97,7 +97,7 @@ tr.odd td, tr.even td {
 	margin: 0 auto;
 }
 .block {
-	padding-bottom: 0.75em;
+	padding-bottom: .75em;
 	margin-bottom: .5em;
 }
 .block .title {
@@ -157,7 +157,7 @@ tr.odd td, tr.even td {
 	margin: .5em 0;
 }
 .submitted {
-	font-size: 0.8em;
+	font-size: .8em;
 }
 .comment {
 	padding: .5em;
@@ -172,7 +172,7 @@ tr.odd td, tr.even td {
 .comment .new {
 	text-align: right;
 	font-weight: bold;
-	font-size: 0.8em;
+	font-size: .8em;
 	float: right; /* LTR */
 	color: red;
 }
@@ -199,7 +199,7 @@ blockquote {
 	font-style: italic;
 }
 .messages {
-	padding: 0.3em;
+	padding: .3em;
 	margin-bottom: 1em;
 }
 .form-item label {
@@ -289,7 +289,7 @@ h1#site-name a, h1#site-name a:hover {
 	text-decoration: none;
 }
 #forum td {
-	padding: 0.5em;
+	padding: .5em;
 }
 #forum td.container .name a {
 	padding: 10px 0 10px 40px; /* LTR */
@@ -310,20 +310,20 @@ h1#site-name a, h1#site-name a:hover {
 }
 .page-admin th,
 .page-admin td {
-	padding: 0.1em 0.3em;
+	padding: .1em .3em;
 }
-.pure-button/*, div.vertical-tabs*/ {
-	margin: 0.3em;
+.pure-button, .form-item {
+	margin: .2em;
 }
 .pure-form select {
-	padding: 0.4em 0.7em;
+	padding: .4em .7em;
 }
 #header .form-text,
 #header .pure-button {
 	display: inline-block;
 }
 #header .form-text {
-	margin: 0.3em 0;
+	margin: .3em 0;
 }
 
 /* MODULE SPECIFIC STYLES */
@@ -477,10 +477,10 @@ li.topic_reply {
 	position: relative;
 	top: 1.2em;
 	left: .5em; /* LTR */
-	-webkit-transition: all 0.5s;
-	-moz-transition: all 0.5s;
-	-ms-transition: all 0.5s;
-	transition: all 0.5s;
+	-webkit-transition: all .5s;
+	-moz-transition: all .5s;
+	-ms-transition: all .5s;
+	transition: all .5s;
 }
 .menu-toggle .bars:first-child {
 	top: 1.3em; /* bars' intersection correction */
@@ -508,7 +508,7 @@ li.topic_reply {
 	white-space: normal;
 }
 .pure-menu-link, .pure-menu-disabled {
-	padding: 0.35em 1.5em;
+	padding: .35em 1.5em;
 }
 .pure-menu-link {
 	text-decoration: none !important;
@@ -635,16 +635,14 @@ div.messages,
 .block-gallery_assist .block-icon { background-position: 0 -96px; }
 
 /*--- comments (icon_01) ---*/
-.bi32 .block-comment .block-icon, .bi32 .comments-block-icon .block-icon,
-.bi32 #block-views-comments_recent-block .block-icon { background-position: 0 0; }
-.bi48 .block-comment .block-icon, .bi48 .comments-block-icon .block-icon,
-.bi48 #block-views-comments_recent-block .block-icon { background-position: 0 0; }
+.bi32 .block-comment .block-icon, .bi32 .comments-block-icon .block-icon, .bi32 #block-views-comments_recent-block .block-icon,
+.bi48 .block-comment .block-icon, .bi48 .comments-block-icon .block-icon, .bi48 #block-views-comments_recent-block .block-icon { background-position: 0 0; }
 
 /*--- forums (icon_06) ---*/
 .bi32 .block-forum .block-icon,
-.bi32 #block-views-comments_recent-block h2.block-title { background-position: 0 -96px; }
+.bi32 #block-views-comments_recent-block .block-title { background-position: 0 -96px; }
 .bi48 .block-forum .block-icon,
-.bi48 #block-views-comments_recent-block h2.block-title { background-position: 0 -144px; }
+.bi48 #block-views-comments_recent-block .block-title { background-position: 0 -144px; }
 
 /*--- book (icon_22) ---*/
 .bi32 .block-book .block-icon { background-position: 0 -544px; }
@@ -658,13 +656,15 @@ div.messages,
 .bi32 #block-user-login .block-icon { background-position: 0 -288px; }
 .bi48 #block-user-login .block-icon { background-position: 0 -432px; }
 
-/*--- user (icon_08 icon_12 icon_34) ---*/
+/*--- user (icon_08, icon_12, icon_34) ---*/
 .bi32 #block-system-navigation .block-icon,
 .bi32 #block-system-user-menu .block-icon { background-position: 0 -160px; }
 .bi48 #block-system-navigation .block-icon,
 .bi48 #block-system-user-menu .block-icon { background-position: 0 -240px; }
+
 .bi32 #block-system-management .block-icon { background-position: 0 -224px; }
 .bi48 #block-system-management .block-icon { background-position: 0 -336px; }
+
 .bi32 .block-shortcut .block-icon { background-position: 0 -608px; }
 .bi48 .block-shortcut .block-icon { background-position: 0 -912px; }
 
@@ -714,6 +714,13 @@ div.messages,
 .bi32 .block-uc_cart .block-icon { background-position: 0 -576px; }
 .bi48 .block-uc_cart .block-icon { background-position: 0 -864px; }
 
+.bi32 .cart-block-icon-empty, .bi32 .cart-block-icon-full,
+.bi48 .cart-block-icon-empty, .bi48 .cart-block-icon-full {
+	background: none;
+	margin: 0;
+	width: 0;
+}
+
 
 /* PAGE ICONS */
 
@@ -746,7 +753,7 @@ div.messages,
 	background: url(../images/all/icons/check.png) no-repeat right center; /* LTR */
 	padding-right: 20px; /* LTR */
 }
-.pi .region-sidebar-first .block-title a.active , .pi .region-sidebar-second .block-title a.active	{
+.region-sidebar-first .block-title a.active , .region-sidebar-second .block-title a.active	{
 	background: none;
 	padding: 0;
 }
@@ -851,6 +858,7 @@ div.messages,
 	}
 	.pure-menu-link {
 		margin: 0;
+		border-top: 1px solid #eee !important;
 	}
 	.rnd .pure-menu-link, .rnd .pure-menu-link a:hover,	.rnd .pure-menu-link a:focus {
 		-webkit-border-radius: 0;
