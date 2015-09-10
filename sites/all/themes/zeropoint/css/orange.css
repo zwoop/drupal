@@ -165,18 +165,18 @@ a, a:link,
 
 /* pure buttons */
 
+.pure-button {
+	border: 1px solid #ccc;
+}
 .form-actions .pure-button {
-	background: #fa0;
 }
 #edit-preview.pure-button {
-	background: #D3EDA3;
+	background-color: #D3EDA3;
 }
 #edit-delete.pure-button {
-	background: #F5AB9E;
+	background-color: #F5AB9E;
 }
-.pure-button-primary,
 .pure-button-selected,
-a.pure-button-primary,
 a.pure-button-selected {
 	background: #fd8b0c;
 	color: #fff;
@@ -186,6 +186,8 @@ a.pure-button-selected {
 
 .menu-toggle {
 	background: #fa0;
+	border: 1px solid #ccc;
+	border-bottom: none;
 }
 .menu-toggle .bars {
 	background: #555;
@@ -220,7 +222,7 @@ a.pure-button-selected {
 	.pure-menu-children .pure-menu-link {
 		border: none;
 		color: #fd8b0c !important;
-		background: #eee;
+		background: none;
 	}
 	.pure-menu-link:hover,
 	.pure-menu-link:focus,
@@ -232,5 +234,8 @@ a.pure-button-selected {
 	.menuband {
 		min-height: 2.3em;
 		border-bottom: 1px solid #ddd;
+	}
+	.pure-menu-list {
+		background: #fff;
 	}
 }

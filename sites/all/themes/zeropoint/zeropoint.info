@@ -26,7 +26,7 @@ settings[wrapper] = '85em'
 settings[first_width] = 5
 settings[second_width] = 5
 settings[grid_responsive] = 1
-settings[mobile_blocks] = 1
+settings[mobile_blocks] = 2
 
 settings[style] = ink
 settings[themedblocks] = 0
@@ -45,9 +45,10 @@ settings[social_links_display] = 0
 settings[rebuild_registry] = 0
 settings[siteid] = ''
 
-; Information added by Drupal.org packaging script on 2015-06-27
-version = "7.x-4.3"
+
+; Information added by Drupal.org packaging script on 2015-09-06
+version = "7.x-4.5"
 core = "7.x"
 project = "zeropoint"
-datestamp = "1435365181"
+datestamp = "1441548549"
 

@@ -105,9 +105,6 @@ if(theme_get_setting('roundcorners')) {
 if(theme_get_setting('pageicons')) {
   $vars['classes_array'][] = 'pi';
 }
-if(theme_get_setting('headerimg')) {
-  $vars['classes_array'][] = 'himg';
-}
 
 // Add language and site ID classes
   $vars['classes_array'][] = ($vars['language']->language) ? 'lg-'. $vars['language']->language : '';        // Page has lang-x
@@ -137,6 +134,16 @@ $siteid = check_plain(theme_get_setting('siteid'));
       drupal_add_css(drupal_get_path('theme','zeropoint').'/css/yui/grids-responsive-min.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'gt IE 8'), 'every_page' => TRUE, 'weight' => -1));
     }
   }
+global $language;
+$lang_dir = $language->dir;
+if(theme_get_setting('headerimg')) {
+  $vars['classes_array'][] = 'himg';
+  if($lang_dir == 'rtl') {
+    drupal_add_css(drupal_get_path('theme','zeropoint').'/_custom/headerimg-rtl/rotate.php', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => 2, 'preprocess' => FALSE));
+  } else {
+    drupal_add_css(drupal_get_path('theme','zeropoint').'/_custom/headerimg/rotate.php', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => 2, 'preprocess' => FALSE));
+  }
+}
   drupal_add_css(drupal_get_path('theme','zeropoint').'/css/style-zero.css', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => 3));
   drupal_add_css(drupal_get_path('theme','zeropoint').'/css/'.get_zeropoint_style().'.css', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => 4));
   drupal_add_css(drupal_get_path('theme','zeropoint').'/_custom/custom-style.css', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => 5));
@@ -571,7 +578,7 @@ function zeropoint_links__system_main_menu($vars, $is_child=false){
   foreach($vars['links'] as $link){
     // Test for localization options and apply them if they exist.
     if (isset($link['#localized_options']['attributes']) && is_array($link['#localized_options']['attributes'])) {
-      $link['#attributes'] = array_merge_recursive($link['#attributes'], $link['#localized_options']['attributes']);
+      $link['#attributes'] = $link['#localized_options']['attributes'] + $link['#attributes'];
     }
     // Output html for drop-down menu.
     if(empty($link['#title']))

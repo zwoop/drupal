@@ -29,3 +29,21 @@ document.getElementById('toggles').addEventListener('click', function (e) {
 
 window.addEventListener(WINDOW_CHANGE_EVENT, closeMenu);
 })(this, this.document);
+
+
+
+/* fix for androids to work with menu nodes that have links */
+(function($){
+	if(/Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(window.navigator.userAgent)){
+		$('.pure-menu-has-children > a')
+			.attr('data-click', 'false').click(function(){
+				if($(this).attr('data-click')=='false'){
+					$(this).attr('data-click', 'true');
+					return false;
+				}
+			})
+			.mouseout(function(){
+				$(this).attr('data-click', 'false');
+			});
+	}
+})(jQuery);

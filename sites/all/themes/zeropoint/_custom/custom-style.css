@@ -9,7 +9,7 @@ Steps to customize your theme:
 1. Add your custom css to this file;
 2. Uncomment different examples below and modify data as you wish;
 3. Clear cached data at admin/settings/performance or, if you use Administration Menu module, "Flush all caches".
-   You can also check "Rebuild theme registry on every page" at /admin/appearance/settings/zeropoint during development;
+	 You can also check "Rebuild theme registry on every page" at /admin/appearance/settings/zeropoint during development;
 4. Don't forget to save a copy of this file with a different name to avoid loosing it after a theme update.
 */
 
@@ -24,6 +24,15 @@ Steps to customize your theme:
 	margin: 0 auto;
 	height: 50px;
 }
+
+
+/**********************/
+/* ROUND USER PICTURE */
+/**********************/
+/*
+.user-picture img {
+	border-radius: 100% !important;
+}*/
 
 
 /*************************/
@@ -50,12 +59,12 @@ Steps to customize your theme:
 /* INDIVIDUAL MENU COLORS */
 /**************************/
 /* Uncomment the following lines to have different colors for menu items. 
- * Change the values below accordingly: XXX=menu item number; YYY=background color. */
+ * Change the values below accordingly: XXX=menu item number; YYY=color. */
 
 /* Individual menu item */
 /*
 .menu-XXX {
-	background: #666;
+	background: #YYY;
 }*/
 
 /* First/last menu item */
@@ -73,8 +82,8 @@ Steps to customize your theme:
 /* Children color */
 /*
 .pure-menu-children .pure-menu-link {
-	color: #000 !important;
-	background: red;
+	color: #YYY !important;
+	background: YYY;
 }*/
 
 
@@ -100,10 +109,10 @@ Steps to customize your theme:
 /*******************************/
 /* UPDATE ICONS FOR NEW BLOCKS */
 /*******************************/
-/* where XXX is the block number */
+/* where ID is the block id */
 
 /*
-#block-block-XXX .block-icon {
+#ID .block-icon {
 	background: transparent url(../images/all/icons/blocks/icon_24_48.png) no-repeat;
 }
 */
@@ -118,13 +127,12 @@ Steps to customize your theme:
 }*/
 
 
-/************************/
-/* CHANGE HEADER IMAGES */
-/************************/
-/* Deactivate the image rotator in theme's settings, change the path to your image and uncomment the lines below */
+/*************************/
+/* CENTERED BLOCK IMAGES */
+/*************************/
 /*
-#headimg {
-	background: #fff url(path to your image) no-repeat 100% 100%;
+.block img {
+	margin: auto;
 }*/
 
 
@@ -135,3 +143,27 @@ Steps to customize your theme:
 	background: transparent url(myother-social-network_32.png) no-repeat scroll center center; 
 }
 
+
+/***********************/
+/* CHANGE HEADER IMAGE */
+/***********************/
+/* Deactivate the image rotator in theme's settings, change the path to your image and uncomment the lines below */
+/*
+#headimg {
+	background: #fff url(path to your image) no-repeat 100% 100%;
+}*/
+
+
+/***********************/
+/* CHANGEs for MOBILES */
+/***********************/
+
+@media screen and (max-width: 48em) {
+
+/* HEADER IMAGE */
+/* Comment or erase the lines below and images rotator will work on mobiles too.
+	 You can also change the image with "mobi-sq" or use your own. */
+	.himg #headimg, #headimg {
+		background: #fff url(../images/all/mobi-dot.png) repeat;
+	}
+}

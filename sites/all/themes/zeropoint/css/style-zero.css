@@ -1,4 +1,4 @@
-/* style.css, v5.00 2015/03/22
+/* style-zero.css, v5.01 2015/08/22
  *
  * ZERO POINT responsive theme for Drupal 7
  * Dr. Florian Radut, florian@radut.net
@@ -304,9 +304,14 @@ h1#site-name a, h1#site-name a:hover {
 	width: 85%;
 	margin: 50px auto;
 }
-.field-item img {
+.book-navigation ul.menu {
+	clear: both;
+	margin: .6em;
+	border: none;
+}
+.field-item .pure-img {
 	float: left; /* LTR */
-	margin: 0 10px 0 0; /* LTR */
+	margin: .6em .6em .6em 0; /* LTR */
 }
 .page-admin th,
 .page-admin td {
@@ -325,6 +330,13 @@ h1#site-name a, h1#site-name a:hover {
 #header .form-text {
 	margin: .3em 0;
 }
+.pure-form input, .pure-form select {
+	max-width: 100%;
+}
+.himg #headimg {
+	border-bottom: 1px solid #eee;
+}
+
 
 /* MODULE SPECIFIC STYLES */
 
@@ -335,14 +347,6 @@ h1#site-name a, h1#site-name a:hover {
 	text-align: center;
 	padding: 0 !important;
 	background: none !important;
-}
-ul.images li h3 {
-	display: none;
-}
-ul.galleries li, ul.images li {
-	background : none;
-	border : none;
-	list-style-type: none;
 }
 .mceContentBody {
 	background: #eee !important;
@@ -366,30 +370,6 @@ ul.galleries li, ul.images li {
 li.topic_reply {
 	list-style-type: none;
 }
-.cart-block-icon-full, .cart-block-icon-empty, .cart-block-title-bar .arrow-up, .cart-block-title-bar .arrow-down {
-	display: inline-block !important;
-}
-#continue-shopping-button {
-	margin-right: 50% !important; /* LTR */
-}
-.uc-store-admin-panel	{
-	margin: 0;
-	padding: 3px;
-}
-.uc-store-admin-panel .uc-store-icon	{
-	margin: 0;
-} 
-.uc-store-admin-panel .panel-title	{
-	font-size: 1em;
-	font-weight: bold;
-	line-height: 200%;
-} 
-.product-image {
-	padding: 7px 0 2px 5px;
-}
-.main-product-image {
-	padding-bottom: 2px;
-}
 .sitemap-box h2, .byy {
 	display: none;
 }
@@ -397,12 +377,6 @@ li.topic_reply {
 	font-size: 1.4em;
 }
 
-
-/* HEADER IMAGE ROTATOR */
-.himg #headimg {
-	background: #fff url(../_custom/headerimg/rotate.php) no-repeat 100% 100%; /* rotates images in the headerimg folder */
-	border-bottom: 1px solid #eee;
-}
 
 /* pager */
 .item-list .pager li {
@@ -419,6 +393,10 @@ li.topic_reply {
 .pure-paginator a {
 	text-decoration: none;
 }
+.block .content ul.pager {
+	padding: 10px 0 0 0;
+}
+
 
 /* MENU & link STYLES */
 
@@ -452,7 +430,6 @@ li.topic_reply {
 .menu-wrapper {
 	-webkit-font-smoothing: antialiased;
 	position: relative;
-	margin: 0 18px;
 }
 .pure-menu-heading {
 	padding: .4em 0 0 0;
@@ -461,12 +438,14 @@ li.topic_reply {
 	text-decoration: none !important;
 	white-space: normal;
 	float: left; /* LTR */
+	margin: 0 0 0 18px; /* LTR */
 	display: none;
 }
 .menu-toggle {
 	width: 2.3em;
 	height: 2.3em;
 	float: right; /* LTR */
+	margin: 0 18px 0 0; /* LTR */
 	display: none;
 }
 .menu-toggle .bars {
@@ -507,6 +486,9 @@ li.topic_reply {
 .pure-menu-horizontal {
 	white-space: normal;
 }
+.pure-menu-list {
+	padding: 0 18px;
+}
 .pure-menu-link, .pure-menu-disabled {
 	padding: .35em 1.5em;
 }
@@ -515,6 +497,7 @@ li.topic_reply {
 	text-transform: uppercase;
 	font-family: "times new roman", Verdana;
 	margin: 0 2px;
+	text-align: left; /* LTR */
 }
 .pure-menu-children {
 	box-shadow: 5px 5px 5px #999;
@@ -530,7 +513,7 @@ li.topic_reply {
 /* Dropdown arrows */
 .pure-menu-horizontal .pure-menu-has-children > .pure-menu-link:after {
 	content: "\25BE";
-	margin: 0 -1.3em 0 0; /* LTR */
+	margin: 0 -.6em 0 0; /* LTR */
 }
 .pure-menu-has-children .pure-menu-has-children > .pure-menu-link:after {
 	content: "\25B8";
@@ -570,10 +553,11 @@ div.messages,
 .rnd #submenu a,
 .rnd #mission,
 .rnd .comment,
+.rnd .user-picture img,
 .rnd blockquote {
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
-	border-radius: 5px !important;
+	border-radius: 5px;
 }
 .rnd .pure-menu-link,
 .rnd .pure-menu-link a:hover,
@@ -597,9 +581,6 @@ div.messages,
 }
 .rnd .pure-paginator .last .pure-button {
 	border-radius: 0px 6px 6px 0px; /* LTR */
-}
-.rnd .user-picture img {
-	border-radius: 100%;
 }
 
 
@@ -823,9 +804,15 @@ div.messages,
 	#top_right, #body_right {
 		padding: 0;
 	}
-	#top_left, #top_right, #top_bg, #body_left, #body_right, #middlecontainer, .himg #headimg {
+	#top_left, #top_right, #top_bg, #body_left, #body_right, #middlecontainer {
 		background: none !important;
 		border: none;
+	}
+	.himg #headimg, #headimg {
+		border: none;
+	}
+	.himg #headimg {
+		background-position: 100% 0;
 	}
 	.divider {
 		border: none !important;
@@ -841,6 +828,7 @@ div.messages,
 		display: block;
 		position: relative;
 		left: 0; /* LTR */
+		padding: 0 0 0 1em; /* LTR */
 	}
 	.pure-menu-has-children > .pure-menu-link:after, .pure-menu-has-children .pure-menu-has-children > .pure-menu-link:after {
 		content: "\25BE" !important;

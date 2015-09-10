@@ -169,17 +169,14 @@ a, a:link,
 	border: 1px solid #ccc;
 }
 .form-actions .pure-button {
-	background: #F4F2EE;
 }
 #edit-preview.pure-button {
-	background: #D3EDA3;
+	background-color: #D3EDA3;
 }
 #edit-delete.pure-button {
-	background: #F5AB9E;
+	background-color: #F5AB9E;
 }
-.pure-button-primary,
 .pure-button-selected,
-a.pure-button-primary,
 a.pure-button-selected {
 	background: #005a84;
 	color: #fff;
@@ -188,7 +185,9 @@ a.pure-button-selected {
 /* Dropdown */
 
 .menu-toggle {
-	background: #E6E6E6;
+	background: #F4F2EE;
+	border: 1px solid #ccc;
+	border-bottom: none;
 }
 .menu-toggle .bars {
 	background: #777;
@@ -223,17 +222,19 @@ a.pure-button-selected {
 	.pure-menu-children .pure-menu-link {
 		border: none;
 		color: #005a84 !important;
-		background: #E6E6E6;
+		background: none;
 	}
 	.pure-menu-link:hover,
 	.pure-menu-link:focus,
 	.pure-menu-children a:hover,
 	.pure-menu-children a:focus {
-		color: #fff !important;
-		background: #3f7494;
+		background: #F4F2EE;
 	}
 	.menuband {
 		min-height: 2.3em;
 		border-bottom: 1px solid #ddd;
+	}
+	.pure-menu-list {
+		background: #fff;
 	}
 }
