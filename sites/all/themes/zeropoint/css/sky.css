@@ -169,17 +169,14 @@ a, a:link,
 	border: 1px solid #ccc;
 }
 .form-actions .pure-button {
-	background: #DFE4E9;
 }
 #edit-preview.pure-button {
-	background: #D3EDA3;
+	background-color: #D3EDA3;
 }
 #edit-delete.pure-button {
-	background: #F5AB9E;
+	background-color: #F5AB9E;
 }
-.pure-button-primary,
 .pure-button-selected,
-a.pure-button-primary,
 a.pure-button-selected {
 	background: #2f71a2;
 	color: #fff;
@@ -189,6 +186,8 @@ a.pure-button-selected {
 
 .menu-toggle {
 	background: #DFE4E9;
+	border: 1px solid #ccc;
+	border-bottom: none;
 }
 .menu-toggle .bars {
 	background: #777;
@@ -235,5 +234,8 @@ a.pure-button-selected {
 	.menuband {
 		min-height: 2.3em;
 		border-bottom: 1px solid #ddd;
+	}
+	.pure-menu-list {
+		background: #fff;
 	}
 }

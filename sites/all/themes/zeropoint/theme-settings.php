@@ -25,7 +25,6 @@ function zeropoint_form_system_theme_settings_alter(&$form, &$form_state) {
   $form['tnt_container']['puregrid']['css_zone'] = array(
     '#type'          => 'checkbox',
     '#title'         => t('<b>Use Yahoo CDN</b> to serve the responsive CSS files. If you use https leave this option unchecked to load any responsive CSS files locally.'),
-    '#description'   => t(''),
     '#default_value' => theme_get_setting('css_zone')
   );
   $form['tnt_container']['puregrid']['wrapper'] = array(
@@ -62,7 +61,6 @@ function zeropoint_form_system_theme_settings_alter(&$form, &$form_state) {
   $form['tnt_container']['puregrid']['grid_responsive'] = array(
     '#type'          => 'select',
     '#title'         => t('Non-Responsive/Responsive Grid'),
-    '#description'   => t(''),
     '#default_value' => theme_get_setting('grid_responsive'),
     '#options' => array(
       0 => t('Non-Responsive'),
@@ -398,7 +396,7 @@ function zeropoint_form_system_theme_settings_alter(&$form, &$form_state) {
 // Info
   $form['tnt_container']['info'] = array(
     '#type' => 'fieldset',
-    '#description'   => t('<div class="messages info">All the theme settings are <b>multilingual variables</b>. You may have different settings for each language.</div>'),
+    '#description'   => t('<div class="messages info">Some of the theme settings are <b>multilingual variables</b>. You may have different settings for each language.</div>'),
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,
   );

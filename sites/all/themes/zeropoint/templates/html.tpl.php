@@ -29,10 +29,10 @@
 <?php print $page_b ?>
 
 <!--[if IE 9]>
-<script type="text/javascript" src="<?php print $base_path . $path_to_zeropoint ?>/js/classList.min.js"></script>
+<script type="text/javascript" async src="<?php print $base_path . $path_to_zeropoint ?>/js/classList.min.js"></script>
 <![endif]-->
 <!--[if gte IE 9]><!-->
-<script type="text/javascript" src="<?php print $base_path . $path_to_zeropoint ?>/js/toggles.js"></script>
+<script type="text/javascript" async src="<?php print $base_path . $path_to_zeropoint ?>/js/toggles.min.js"></script>
 <!--<![endif]-->
 </body>
 </html>

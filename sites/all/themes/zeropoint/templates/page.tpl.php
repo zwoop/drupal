@@ -34,10 +34,10 @@
     </a>
   <?php endif; ?>
   <?php if ($main_menu): ?>
-    <a href="#" id="toggles" class="menu-toggle"><s class="bars"></s><s class="bars"></s></a>
+    <a href="#" id="toggles" class="menu-toggle"><s class="bars"></s><s class="bars"></s><div class="element-invisible">toggle</div></a>
     <div class="pure-menu pure-menu-horizontal menu-transform">
       <h2 class="element-invisible"><?php print t('Main menu'); ?></h2>
-      <?php print theme('links__system_main_menu', array('links' => menu_tree('main-menu'))); ?>
+      <?php print theme('links__system_main_menu', array('links' => menu_tree(variable_get('menu_main_links_source', 'main-menu')))); ?>
     </div>
   <?php endif; ?>
   </div>
@@ -70,10 +70,10 @@
 
 <?php if($page['user1'] || $page['user2'] || $page['user3'] || $page['user4']) : ?>
 <div id="section1" class="sections pure-g">
-<?php if($page['user1']) : ?><div class="<?php print section_class($page); ?>"><div class="u1"><?php print render ($page['user1']); ?></div></div><?php endif; ?>  
+<?php if($page['user1']) : ?><div class="<?php print section_class($page); ?>"><div class="u1"><?php print render ($page['user1']); ?></div></div><?php endif; ?>
 <?php if($page['user2']) : ?><div class="<?php print section_class($page); ?>"><div class="u2 <?php print divider() ?>"><?php print render ($page['user2']); ?></div></div><?php endif; ?>
 <?php if($page['user3']) : ?><div class="<?php print section_class($page); ?>"><div class="u3 <?php print divider() ?>"><?php print render ($page['user3']); ?></div></div><?php endif; ?>
-<?php if($page['user4']) : ?><div class="<?php print section_class($page); ?>"><div class="u4 <?php print divider() ?>"><?php print render ($page['user4']); ?></div></div><?php endif; ?>  
+<?php if($page['user4']) : ?><div class="<?php print section_class($page); ?>"><div class="u4 <?php print divider() ?>"><?php print render ($page['user4']); ?></div></div><?php endif; ?>
 </div>
 <?php endif; ?>
 
@@ -109,10 +109,10 @@
 
 <?php if($page['user5'] || $page['user6'] || $page['user7'] || $page['user8']) : ?>
 <div id="section2" class="sections pure-g">
-<?php if($page['user5']) : ?><div class="<?php print section_class($page, false); ?>"><div class="u1"><?php print render ($page['user5']); ?></div></div><?php endif; ?>  
+<?php if($page['user5']) : ?><div class="<?php print section_class($page, false); ?>"><div class="u1"><?php print render ($page['user5']); ?></div></div><?php endif; ?>
 <?php if($page['user6']) : ?><div class="<?php print section_class($page, false); ?>"><div class="u2 <?php print divider() ?>"><?php print render ($page['user6']); ?></div></div><?php endif; ?>
 <?php if($page['user7']) : ?><div class="<?php print section_class($page, false); ?>"><div class="u3 <?php print divider() ?>"><?php print render ($page['user7']); ?></div></div><?php endif; ?>
-<?php if($page['user8']) : ?><div class="<?php print section_class($page, false); ?>"><div class="u4 <?php print divider() ?>"><?php print render ($page['user8']); ?></div></div><?php endif; ?>  
+<?php if($page['user8']) : ?><div class="<?php print section_class($page, false); ?>"><div class="u4 <?php print divider() ?>"><?php print render ($page['user8']); ?></div></div><?php endif; ?>
 </div>
 <?php endif; ?>
 
