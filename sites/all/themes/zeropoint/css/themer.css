@@ -25,9 +25,11 @@ ul.links li {
 #menu2 a {
 	color: #888 !important;
 }
-#menu2 a:hover, #menu2 a.active, 
-#footer a:hover, #footer a.active {
+#menu2 a:hover, #menu2 a.active {
 	color: #333 !important;
+}
+#footer a:hover, #footer a.active {
+	color: #333;
 }
 
 

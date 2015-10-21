@@ -1,5 +1,9 @@
 CHANGELOG - ZERO POINT responsive theme for Drupal 7
 
+0 Point 7.x-4.6 (Sep 26, 2015)
+------------------------------
+    o Minor bugs were addressed
+
 0 Point 7.x-4.5 (Sep 6, 2015)
 ------------------------------
     o Minor bugs were addressed

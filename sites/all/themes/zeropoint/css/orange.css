@@ -48,7 +48,7 @@ blockquote, .messages {
 	color: #1e201b !important;
 }
 #footer, #footer a {
-	color: #888 !important;
+	color: #888;
 }
 #footer ul.links li {
 	border-left: 1px solid #909090;
@@ -102,9 +102,11 @@ ul li.collapsed {
 #menu2 a {
 	color: #888 !important;
 }
-#menu2 a:hover, #menu2 a.active, 
-#footer a:hover, #footer a.active {
+#menu2 a:hover, #menu2 a.active {
 	color: #f60 !important;
+}
+#footer a:hover, #footer a.active {
+	color: #f60;
 }
 
 /* MODULE SPECIFIC STYLES */
@@ -163,7 +165,7 @@ a, a:link,
 }
 
 
-/* pure buttons */
+/* pure forms */
 
 .pure-button {
 	border: 1px solid #ccc;

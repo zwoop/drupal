@@ -226,7 +226,7 @@ function zeropoint_breadcrumb($vars) {
   if (!empty($breadcrumb)) {
 // Provide a navigational heading to give context for breadcrumb links to screen-reader users. Make the heading invisible with .element-invisible.
     $breadcrumb[] = drupal_get_title();
-    $output = '<h2 class="element-invisible">' . t('You are here') . '</h2>';
+    $output = '<div class="element-invisible">' . t('You are here') . '</div>';
     $lastitem = sizeof($breadcrumb);
     $output .= '<ul class="breadcrumb">';
     $a=1;
@@ -364,7 +364,7 @@ function zeropoint_social_links() {
         $url = check_url($link);
         $nofollow = 'nofollow';
         $classes = 'sociallinks ' . $key;
-        $social .= l('', $url, array('attributes' => array('class' => $classes, 'rel' => $nofollow, 'title' => $key)));
+        $social .= l('.', $url, array('attributes' => array('class' => $classes, 'rel' => $nofollow, 'title' => $key)));
       }
     }
   }
@@ -611,10 +611,10 @@ function login_links(){
   $loginlinks = theme_get_setting('loginlinks');
   if ($loginlinks == '1'){
     if ($user->uid != 0) {
-      print '<h2 class="element-invisible">'.t('Login links').'</h2><ul class="links inline"><li class="uin first"><a href="' .url('user/'.$user->uid). '">' .$user->name. '</a></li><li class="uout"><a href="' .url('user/logout'). '">' .t('Logout'). '</a></li></ul>';
+      print '<div class="element-invisible">'.t('Login links').'</div><ul class="links inline"><li class="uin first"><a href="' .url('user/'.$user->uid). '">' .$user->name. '</a></li><li class="uout"><a href="' .url('user/logout'). '">' .t('Logout'). '</a></li></ul>';
     }
     else {
-      print '<h2 class="element-invisible">'.t('Login links').'</h2><ul class="links inline"><li class="ulog first"><a href="' .url('user'). '" rel="nofollow">' .t('Login'). '</a></li><li class="ureg"><a href="' .url('user/register'). '" rel="nofollow">' .t('Register'). '</a></li></ul>';
+      print '<div class="element-invisible">'.t('Login links').'</div><ul class="links inline"><li class="ulog first"><a href="' .url('user'). '" rel="nofollow">' .t('Login'). '</a></li><li class="ureg"><a href="' .url('user/register'). '" rel="nofollow">' .t('Register'). '</a></li></ul>';
     }
   }
 }
