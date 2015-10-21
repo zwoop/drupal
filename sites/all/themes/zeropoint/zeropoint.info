@@ -1,5 +1,5 @@
 name = 0 Point
-description = Responsive 0 Point theme is ideal for a wide range of sites. It uses <a href="http://purecss.io/">Yahoo Pure.css</a>, a powerful responsive CSS framework. <br /> <em>Developed by <a href="http://www.radut.net">Dr. Radut</a>.</em>
+description = <b>0 Point responsive theme</b> is ideal for a wide range of sites. It uses <a href="http://purecss.io/">Yahoo Pure.css</a>, a powerful responsive CSS framework. <br /> <em>Developed by <a href="http://www.radut.net">Dr. Radut</a>.</em>
 
 core = 7.x
 
@@ -43,12 +43,11 @@ settings[breadcrumb_display] = 1
 settings[postedby] = 0
 settings[social_links_display] = 0
 settings[rebuild_registry] = 0
-settings[siteid] = ''
 
 
-; Information added by Drupal.org packaging script on 2015-09-06
-version = "7.x-4.5"
+; Information added by Drupal.org packaging script on 2015-09-26
+version = "7.x-4.6"
 core = "7.x"
 project = "zeropoint"
-datestamp = "1441548549"
+datestamp = "1443242963"
 

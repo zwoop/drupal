@@ -35,8 +35,8 @@
   <?php endif; ?>
   <?php if ($main_menu): ?>
     <a href="#" id="toggles" class="menu-toggle"><s class="bars"></s><s class="bars"></s><div class="element-invisible">toggle</div></a>
-    <div class="pure-menu pure-menu-horizontal menu-transform">
-      <h2 class="element-invisible"><?php print t('Main menu'); ?></h2>
+    <div class="pure-menu pure-menu-horizontal menu-transform" role="navigation" aria-label="Menu">
+      <div class="element-invisible"><?php print t('Main menu'); ?></div>
       <?php print theme('links__system_main_menu', array('links' => menu_tree(variable_get('menu_main_links_source', 'main-menu')))); ?>
     </div>
   <?php endif; ?>
@@ -52,6 +52,7 @@
 <div id="body_right">
 
 <?php if ($secondary_menu): ?>
+  <div role="navigation" aria-label="Submenu">
   <?php print theme('links', array(
     'links' => $secondary_menu,
     'attributes' => array(
@@ -60,10 +61,11 @@
     ),
     'heading' => array(
       'text' => t('Secondary menu'),
-      'level' => 'h2',
+      'level' => 'div',
       'class' => array('element-invisible'),
     ),
   )); ?>
+  </div>
 <?php endif; ?>
 
 <div id="breadcrumb" class="clearfix"><?php print $breadcrumb; ?></div>
@@ -86,7 +88,7 @@
   </div>
 <?php } ?>
   <div class="<?php print cont_class($page); ?>">
-    <div id="main">
+    <div id="main" role="main">
       <?php if ($page['highlighted']): ?><div id="mission"><?php print render ($page['highlighted']); ?></div><?php endif; ?>
       <?php print render($title_prefix); ?>
       <?php if ($title): if ($is_front){ print '<h2 class="title">'. $title .'</h2>'; } else { print '<h1 class="title">'. $title .'</h1>'; } endif; ?>
@@ -117,6 +119,7 @@
 <?php endif; ?>
 
 <?php if (($main_menu) && theme_get_setting('menu2')): ?>
+  <div role="navigation" aria-label="Menu 2">
   <?php print theme('links', array(
     'links' => $main_menu,
     'attributes' => array(
@@ -125,9 +128,10 @@
     ),
     'heading' => array(
       'text' => t('Main menu'),
-      'level' => 'h2',
+      'level' => 'div',
       'class' => array('element-invisible'),
     ),)); ?>
+    </div>
 <?php endif; ?>
 
 </div></div></div></div>

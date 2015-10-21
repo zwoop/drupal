@@ -1,11 +1,13 @@
-html { direction: rtl; }
-body { direction: rtl; }
+html, body { direction: rtl; }
 th { text-align: right; }
+
 .comment .title {
 	padding: 10px 19px 12px 0;
 	background: transparent url(../images/all/icon-comment_rtl.png) right center no-repeat !important;
 }
-.comment .new, .by { float: left; }
+.comment .new, .by {
+	float: left;
+}
 .node .user-picture, .comment .user-picture {
 	float: left;
 	padding: 0 .5em .5em 0;
@@ -19,7 +21,6 @@ th { text-align: right; }
 	border-left: none !important;
 	border-right: 1px dashed #ddd;
 }
-#breadcrumb { padding-right: 20px; }
 #forum td.container { background: #cdcdcd url(../images/all/forum-container_rtl.jpg) left top no-repeat !important; }
 #forum td.container .name a {
 	padding: 10px 40px 10px 0;
@@ -29,18 +30,32 @@ th { text-align: right; }
 	float: right;
 	margin: .6em 0 .6em .6em;
 }
-html.js fieldset.collapsible .fieldset-legend { padding-right: 1.7em; }
+html.js fieldset.collapsible .fieldset-legend {
+	padding-right: 1.7em;
+}
 
 /* MENU & link STYLES */
-ul li.collapsed { list-style-image: url(../images/all/menu-collapsed_rtl.png) !important; }
+ul li.collapsed {
+	list-style-image: url(../images/all/menu-collapsed_rtl.png) !important;
+}
 ul.links li {
 	border-left: none !important;
 	border-right: 1px solid #d3d3d3;
 }
-.pure-menu-heading { float: right; margin: 0 18px 0 0; }
-.menu-toggle { float: left; margin: 0 0 0 18px; }
-.menu-toggle .bars { right: .5em; }
-.pure-menu-link { text-align: right; }
+.pure-menu-heading {
+	float: right;
+	margin: 0 18px 0 0;
+}
+.menu-toggle {
+	float: left;
+	margin: 0 0 0 18px;
+}
+.menu-toggle .bars {
+	right: .5em;
+}
+.pure-menu-link {
+	text-align: right;
+}
 .pure-menu-children .pure-menu-children {
 	left: auto;
 	right: 100%;
@@ -51,18 +66,28 @@ ul.links li {
 	padding-left: 0;
 	padding-right: .5em;
 }
-.pure-menu-has-children .pure-menu-has-children > .pure-menu-link:after { content: "\25C2"; }
+.pure-menu-has-children .pure-menu-has-children > .pure-menu-link:after {
+	content: "\25C2";
+}
 
 
 /* ROUNDED CORNERS */
-.rnd .pure-paginator .first .pure-button { border-radius: 0px 6px 6px 0px; }
-.rnd .pure-paginator .last .pure-button { border-radius: 6px 0px 0px 6px; }
+.rnd .pure-paginator .first .pure-button {
+	border-radius: 0px 6px 6px 0px;
+	}
+.rnd .pure-paginator .last .pure-button {
+	border-radius: 6px 0px 0px 6px;
+}
 
 
 /* BLOCK ICONS */
 
-.bi32 .block-icon { margin: -5px -5px 0 0; }
-.bi48 .block-icon { margin: -15px -18px 0 0; }
+.bi32 .block-icon {
+	margin: -5px -5px 0 0;
+}
+.bi48 .block-icon {
+	margin: -15px -18px 0 0;
+}
 .bi32 .themed-block .title, .bi48 .themed-block .title {
 	text-align: left;
 	padding: 6px 28px 6px 6px;
