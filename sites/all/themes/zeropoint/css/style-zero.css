@@ -1,4 +1,4 @@
-/* style-zero.css, v5.01 2015/08/22
+/* style-zero.css, v5.02 2015/11/06
  *
  * ZERO POINT responsive theme for Drupal 7
  * Dr. Florian Radut, florian@radut.net
@@ -24,8 +24,11 @@ body {
 .sizer0 {
 	margin: 0 auto;
 }
-#middlecontainer, #main, #sidebar-left, #sidebar-right {
+#middlecontainer, #sidebar-left, #sidebar-right {
 	margin: 10px;
+}
+#main {
+	margin: 7px 10px;
 }
 #top_right, #body_right {
 	padding: 0 25px;
@@ -42,7 +45,7 @@ h1 {
 	font-size: 1.6em;
 	line-height: normal;
 }
-h2, .block-title { font-size: 1.3em; }
+h2, h3.block-title, .block-title { font-size: 1.3em; font-weight: bold; }
 h3 { font-size: 1.1em; }
 h4, h5, h6 { font-size: 1em; }
 
@@ -51,7 +54,7 @@ p {
 	margin-bottom: .9em;
 }
 a {text-decoration: none;}
-a:hover {text-decoration: underline;}
+a:hover, a:focus {text-decoration: underline;}
 fieldset {
 	border: 1px solid #ccc;
 }
@@ -59,6 +62,9 @@ pre {
 	background: #eee;
 	padding: .75em 1.5em;
 	border: 1px solid #ddd;
+}
+table {
+	width: 100%;
 }
 th, td {
 	padding: .3em;
@@ -109,6 +115,9 @@ ul.primary {
 	padding: 0;
 	margin: 0;
 }
+.block ul {
+	padding: 0 .6em;
+}
 .themed-block {
 	padding: 5px;
 	margin-bottom: 15px;
@@ -118,9 +127,6 @@ ul.primary {
 	text-transform: uppercase;
 }
 .themed-block .content {
-	padding: 6px;
-}
-.themed-block ul {
 	padding: 6px;
 }
 .sections .block {
@@ -173,7 +179,7 @@ ul.primary {
 .comment-wrapper {
 	padding: 25px 0;
 }
-h2.title.comments-header, h2.title.comment-form {
+.title.comments-header, .title.comment-form {
 	margin: 25px 0 15px 0;
 }
 .node .user-picture, .comment .user-picture {
@@ -261,9 +267,6 @@ ul.breadcrumb li {
 }
 #section2 {
 	padding: 0 10px 20px;
-}
-#main .field-name-body a {
-	text-decoration: underline;
 }
 #main .block {
 	padding-top: 10px;
@@ -355,6 +358,9 @@ li.topic_reply {
 .pane-content h2.title a {
 	font-size: 1.4em;
 }
+.page-admin-appearance-settings .fieldset-wrapper {
+	margin: 0 0 0 1em; /* LTR */
+}
 
 
 /* pure forms */
@@ -438,14 +444,14 @@ li.topic_reply {
 	text-decoration: none !important;
 	white-space: normal;
 	float: left; /* LTR */
-	margin: 0 0 0 18px; /* LTR */
+	margin: 0 0 0 10px; /* LTR */
 	display: none;
 }
 .menu-toggle {
 	width: 2.3em;
 	height: 2.3em;
 	float: right; /* LTR */
-	margin: 0 18px 0 0; /* LTR */
+	margin: 0 10px 0 0; /* LTR */
 	display: none;
 }
 .menu-toggle .bars {
@@ -711,26 +717,21 @@ div.messages,
 
 /* PAGE ICONS */
 
-.pi .print-icon {
+.book_printer img, .book_mail img, .book_pdf img {
 	display: none;
 }
-.pi .print_html, .pi .print_mail, .pi .print_pdf,
 .pi .book_printer, .pi .book_mail, .pi .book_pdf {
-	margin: auto 0;
-	padding: 0;
-}
-.pi .print-page, .pi .print-mail, .pi .print-pdf {
 	margin: 0 0 0 5px; /* LTR */
-	padding: 0 0 0 20px; /* LTR */
+	padding: 0 0 0 24px; /* LTR */
 }
-.pi .print-page {
-	background: url(../images/all/icons/printer.png) no-repeat left center; /* LTR */
+.pi .book_printer {
+	background: url(../images/all/icons/printer.png) no-repeat 4px center; /* LTR */
 }
-.pi .print-mail {
-	background: url(../images/all/icons/email.png) no-repeat left center; /* LTR */
+.pi .book_mail {
+	background: url(../images/all/icons/email.png) no-repeat 4px center; /* LTR */
 }
-.pi .print-pdf {
-	background: url(../images/all/icons/pdf.png) no-repeat left center; /* LTR */
+.pi .book_pdf {
+	background: url(../images/all/icons/pdf.png) no-repeat 4px center; /* LTR */
 }
 .pi .field-type-taxonomy-term-reference {
 	background: url(../images/all/icons/tag.png) no-repeat left top; /* LTR */
@@ -807,8 +808,9 @@ div.messages,
 /* media screens (35.5 & 48 em) */
 
 @media screen and (max-width: 48em) {
-	#top_right, #body_right {
+	#top_right, #body_right, #sidebar-left, #sidebar-right, #section1, #section2, #main {
 		padding: 0;
+		margin: 0;
 	}
 	#top_left, #top_right, #top_bg, #body_left, #body_right, #middlecontainer {
 		background: none !important;
@@ -820,11 +822,23 @@ div.messages,
 	.himg #headimg {
 		background-position: 100% 0;
 	}
+	.sections .block, .sections .themed-block {
+		margin: 10px;
+	}
+	#top-elements {
+		padding: 10px;
+	}
+	.breadcrumb {
+		padding: 0 10px;
+	}
+	#submenu {
+		padding: 1px 10px;
+	}
 	.divider {
 		border: none !important;
 	}
-	.mc #submenu,	.mr #submenu {
-		text-align: left; /* LTR */
+	.ml #submenu, .mr #submenu {
+		text-align: center;
 	}
 	.nb1 #section1, .nb2 #section2, .nbl #sidebar-left, .nbr #sidebar-right, 
 	.pure-menu-horizontal, .logoimg, .by, #name-and-slogan {
@@ -850,6 +864,9 @@ div.messages,
 		float: left; /* LTR */
 		margin: -0.4em .5em 0 0; /* LTR */
 		height: 1.75em;
+	}
+	.pure-menu-list {
+		padding: 0 10px;
 	}
 	.pure-menu-link {
 		margin: 0;

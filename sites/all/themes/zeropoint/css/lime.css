@@ -37,6 +37,10 @@ blockquote, .messages {
 .form-item label, .item-list .title {
 	color: #222;
 }
+#main .field-name-body a, #main .description a, #main .messages a,
+#mission a {
+	text-decoration: underline;
+}
 #site-slogan {
 	color: #000;
 }
@@ -157,6 +161,9 @@ a, a:link,
 #forum td .name,
 .admin-panel .description {
 	color: #5a7d4f;
+}
+a:hover {
+	color: #535353;
 }
 
 .block.themed-block {

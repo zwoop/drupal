@@ -1,5 +1,12 @@
 CHANGELOG - ZERO POINT responsive theme for Drupal 7
 
+0 Point 7.x-4.7 (Nov 6, 2015)
+------------------------------
+    o added "narrower" setting for sidebars (#2597245: Left sidebar width ...)
+    o added "show dropdown" setting
+    o added "Search engine optimization (SEO) settings"
+    o added theme's slideshow (thanks to Pradeep Saran and Mheinke)
+
 0 Point 7.x-4.6 (Sep 26, 2015)
 ------------------------------
     o Minor bugs were addressed

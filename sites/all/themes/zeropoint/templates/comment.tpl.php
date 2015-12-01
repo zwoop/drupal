@@ -10,7 +10,7 @@
   <?php print render($title_suffix) ?>
 
   <div class="submitted">
-    <?php print t('!username - !datetime.', array('!username' => $author, '!datetime' => $created)) ?>
+    <?php print t('!username - !datetime', array('!username' => $author, '!datetime' => $created)) ?>
   </div>
 
   <div class="content"<?php print $content_attributes ?>>

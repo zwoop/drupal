@@ -33,6 +33,9 @@ th { text-align: right; }
 html.js fieldset.collapsible .fieldset-legend {
 	padding-right: 1.7em;
 }
+.page-admin-appearance-settings .fieldset-wrapper {
+	margin: 0 1em 0 0;
+}
 
 /* MENU & link STYLES */
 ul li.collapsed {
@@ -44,11 +47,11 @@ ul.links li {
 }
 .pure-menu-heading {
 	float: right;
-	margin: 0 18px 0 0;
+	margin: 0 10px 0 0;
 }
 .menu-toggle {
 	float: left;
-	margin: 0 0 0 18px;
+	margin: 0 0 0 10px;
 }
 .menu-toggle .bars {
 	right: .5em;
@@ -81,7 +84,6 @@ ul.links li {
 
 
 /* BLOCK ICONS */
-
 .bi32 .block-icon {
 	margin: -5px -5px 0 0;
 }
@@ -95,19 +97,18 @@ ul.links li {
 
 
 /* PAGE ICONS */
-
-.pi .print-page, .pi .print-mail, .pi .print-pdf {
+.pi .book_printer, .pi .book_mail, .pi .book_pdf {
 	margin: 0 5px 0 0;
-	padding: 0 20px 0 0;
+	padding: 0 25px 0 0;
 }
-.pi .print-page {
-	background: url(../images/all/icons/printer.png) no-repeat right center;
+.pi .book_printer {
+	background: url(../images/all/icons/printer.png) no-repeat 97% center;
 }
-.pi .print-mail {
-	background: url(../images/all/icons/email.png) no-repeat right center;
+.pi .book_mail {
+	background: url(../images/all/icons/email.png) no-repeat 97% center;
 }
-.pi .print-pdf {
-	background: url(../images/all/icons/pdf.png) no-repeat right center;
+.pi .book_pdf {
+	background: url(../images/all/icons/pdf.png) no-repeat 97% center;
 }
 .pi .field-type-taxonomy-term-reference {
 	background: url(../images/all/icons/tag.png) no-repeat right top;
@@ -177,9 +178,6 @@ ul.links li {
 
 
 @media screen and (max-width: 48em) {
-	.ml #submenu,	.mc #submenu {
-		text-align: right;
-	}
 	.pure-menu-allow-hover:hover > .pure-menu-children {
 		right: 0;
 		padding: 0 1em 0 0;

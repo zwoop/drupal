@@ -77,7 +77,7 @@
 
 <div id="footer" class="pure-g">
   <div class="pure-u-1">
-    <?php if (theme_get_setting('social_links_display')): ?><div id="soclinks"><?php print zeropoint_social_links(); ?></div><?php endif; ?>
+    <?php if (theme_get_setting('social_links_display')): ?><div id="soclinks"><?php print social_links(); ?></div><?php endif; ?>
   </div>
 </div>
 <div id="brand"></div>

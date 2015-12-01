@@ -146,8 +146,17 @@ if(theme_get_setting('headerimg')) {
 }
   drupal_add_css(drupal_get_path('theme','zeropoint').'/css/style-zero.css', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => 3));
   drupal_add_css(drupal_get_path('theme','zeropoint').'/css/'.get_zeropoint_style().'.css', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => 4));
-  drupal_add_css(drupal_get_path('theme','zeropoint').'/_custom/custom-style.css', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => 5));
-  drupal_add_css(drupal_get_path('theme','zeropoint').'/css/print.css', array('group' => CSS_THEME, 'media' => 'print', 'every_page' => TRUE, 'weight' => 6));
+  drupal_add_css(drupal_get_path('theme','zeropoint').'/_custom/custom-style.css', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => 6));
+  drupal_add_css(drupal_get_path('theme','zeropoint').'/css/print.css', array('group' => CSS_THEME, 'media' => 'print', 'every_page' => TRUE, 'weight' => 7));
+
+// Add javascript and CSS files for jquery slideshow.
+if (theme_get_setting('slideshow_display')) {
+  if (drupal_is_front_page() || theme_get_setting('slideshow_all')) {
+    drupal_add_css(drupal_get_path('theme','zeropoint').'/css/slider.css', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => 5));
+    drupal_add_js(drupal_get_path('theme', 'zeropoint').'/js/jquery.flexslider-min.js', array('group' => JS_THEME));
+    drupal_add_js(drupal_get_path('theme', 'zeropoint').'/js/slide.js', array('group' => JS_THEME));
+  }
+}
 
 $devlink = theme_get_setting('devlink');
   if ($devlink == '0'){
@@ -341,22 +350,22 @@ function zeropoint_field__taxonomy_term_reference($vars) {
 /**
  * Social links
  */
-function zeropoint_social_links() {
+function social_links() {
   $social = '';
   if (theme_get_setting('social_links_display')) {
     $displays_possible = array(
-      'facebook' => 'social_links_display_links_facebook',
-      'googleplus' => 'social_links_display_links_googleplus',
-      'twitter' => 'social_links_display_links_twitter',
-      'instagram' => 'social_links_display_links_instagram',
-      'pinterest' => 'social_links_display_links_pinterest',
-      'linkedin' => 'social_links_display_links_linkedin',
-      'youtube' => 'social_links_display_links_youtube',
-      'vimeo' => 'social_links_display_links_vimeo',
-      'flickr' => 'social_links_display_links_flickr',
-      'tumblr' => 'social_links_display_links_tumblr',
-      'skype' => 'social_links_display_links_skype',
-      'myother' => 'social_links_display_links_myother',
+      'facebook' => 'facebook',
+      'googleplus' => 'googleplus',
+      'twitter' => 'twitter',
+      'instagram' => 'instagram',
+      'pinterest' => 'pinterest',
+      'linkedin' => 'linkedin',
+      'youtube' => 'youtube',
+      'vimeo' => 'vimeo',
+      'flickr' => 'flickr',
+      'tumblr' => 'tumblr',
+      'skype' => 'skype',
+      'myother' => 'myother',
     );
     foreach ($displays_possible as $key => $display_possible) {
       $link_possible = $display_possible . '_link';
@@ -588,9 +597,16 @@ function zeropoint_links__system_main_menu($vars, $is_child=false){
       $link['#attributes']['class'][] = 'menu-' . $link['#original_link']['mlid'];
 
       if(!empty($link['#below'])){
-        $html .= '<li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">';
+        if(theme_get_setting('dropdown') == '1') {
+          $html .= '<li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">';
+        }
+        if(theme_get_setting('dropdown') == '0') {
+          $html .= '<li class="pure-menu-item">';
+        }
         $html .= l($link['#title'], $link['#href'], array('attributes' => $link['#attributes']));
-        $html .= zeropoint_links__system_main_menu(array('links' => $link['#below']), true);
+        if(theme_get_setting('dropdown') == '1') {
+          $html .= zeropoint_links__system_main_menu(array('links' => $link['#below']), true);
+        }
         $html .= '</li>';
       }
       else
