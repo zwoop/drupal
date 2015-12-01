@@ -23,15 +23,18 @@ with WAVE (http://wave.webaim.org/) and FAE (http://fae.cita.uiuc.edu/).
 - 1, 2, or 3 column layout with customizable widths using Yahoo Pure.css Framework (http://purecss.io);
 - 15 block regions;
 - 8 colour styles + themer setting;
-- Advanced SEO optimization;
-- Round corners for page elements and menus;
-- Block icons;
-- Page icons;
+- Helpful body classes (unique classes for each page, term, website section, etc.);
+- Themed blocks, block icons, page icons;
 - Drop-down primary links menu;
 - Primary/secondary links menu position (center, left, right);
-- Helpful body classes (unique classes for each page, term, website section, etc.);
+- Different font sizes;
+- Round corners for page elements and menus;
+- Header image rotator;
 - Full breadcrumb;
 - Possibility to change "Submitted by" display on all nodes;
+- Advanced SEO optimization;
+- Theme's own slideshow;
+- Social links integration;
 - Bi-directional right to left (RTL) theming;
 - Works perfect in Multilingual installations.
 
@@ -63,6 +66,7 @@ Layout and other settings
 - No-followed login/register links;
 - Breadcrumb - display or not;
 - Change "Submitted by" display on all nodes, site-wide;
+- Theme slideshow;
 - Social links - Display various social links at the bottom of the page.
 
 Theme development settings
@@ -127,6 +131,7 @@ http://www.radut.net/ (modified theme)
 http://www.eucopyright.com/
 http://www.301.ro/
 http://www.mlnar.ro/
+http://www.smokersassociation.org/ (modified theme)
 
 
 RELATED THEMES

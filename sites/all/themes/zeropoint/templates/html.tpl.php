@@ -7,7 +7,7 @@
 
 <head><!-- zp7-4.x -->
 <title><?php print $head_title ?></title>
-<?php if (theme_get_setting('grid_responsive') == '1'): ?>
+<?php if (theme_get_setting('grid_responsive')): ?>
 <meta name="HandheldFriendly" content="true" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="MobileOptimized" content="width" />

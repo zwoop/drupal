@@ -26,6 +26,15 @@ Steps to customize your theme:
 }
 
 
+/***********************/
+/* CHANGE DEFAULT FONT */
+/***********************/
+/*
+html, .pure-g [class*="pure-u"] {
+	font-family: Verdana, Helvetica;
+}*/
+
+
 /**********************/
 /* ROUND USER PICTURE */
 /**********************/
@@ -148,10 +157,10 @@ Steps to customize your theme:
 /***********************/
 /* CHANGE HEADER IMAGE */
 /***********************/
-/* Deactivate the image rotator in theme's settings, change the path to your image and uncomment the lines below */
+/* Deactivate the image rotator in theme's settings, put your new image in the _custom folder and uncomment the lines below */
 /*
-#headimg {
-	background: #fff url(path to your image) no-repeat 100% 100%;
+.himg #headimg, #headimg {
+	background: #fff url(YOUR_IMAGE.png) no-repeat 100% 100%;
 }*/
 
 
