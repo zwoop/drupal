@@ -1,10 +1,5 @@
 /* Pixture Reloaded main CSS */
 
-/* Ogre additions */
-#main-content {
-    padding-left: 0.2in;
-}
-
 body,
 #branding,
 #header hgroup {
@@ -87,12 +82,6 @@ tt,
 samp,
 kbd,
 var {
-  padding: 0.1em 0.5em 0.3em 0.7em;
-  border-left: 11px solid #ccc;
-  margin-left: .4in;
-  overflow: auto;
-  width: 90%;
-  line-height: 1.6em;
   font: 1em "Lucida Console", Monaco, "DejaVu Sans Mono", sans-serif; /* Safari workaround */
 }
 blockquote,q {
