@@ -1,14 +1,11 @@
-name = Content Taxonomy Autocomplete
-description = Extends the Taxonomy Autocomplete Widget
-
+name = Content Taxonomy Entity Translations
+description = Adds support for terms that are translated via the Entity Translation and Title module.
 core = 7.x
 package = Fields
 
 dependencies[] = content_taxonomy
-
-files[] = includes/content_taxonomy_autocomplete_moderated_terms.inc
-
-
+dependencies[] = entity_translation
+dependencies[] = title
 
 ; Information added by Drupal.org packaging script on 2016-03-22
 version = "7.x-1.0-rc1"
