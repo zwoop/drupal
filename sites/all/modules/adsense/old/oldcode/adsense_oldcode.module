@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Displays Google AdSense ads on Drupal pages
+ * Displays Google AdSense ads on Drupal pages.
  *
  * This is the core module of the AdSense package, with the Drupal hooks
  * and other administrative functions.
@@ -70,10 +70,12 @@ function adsense_oldcode_block_info() {
 function adsense_oldcode_block_configure($delta) {
   $ad = _adsense_oldcode_get_block_config($delta);
 
-  foreach (adsense_ad_formats() as $format => $data) {
+  $ad_list = array();
+  foreach (adsense_ad_formats(NULL, FALSE) as $format => $data) {
     $ad_list[$format] = $format . ' : ' . $data['desc'];
   }
 
+  $group_list = array();
   for ($group = 1; $group <= ADSENSE_MAX_GROUPS; $group++) {
     $group_list[$group] = $group . ' : ' . variable_get('adsense_group_title_' . $group, ADSENSE_GROUP_TITLE_DEFAULT);
   }
@@ -135,7 +137,13 @@ function adsense_oldcode_block_configure($delta) {
  * Implements hook_block_save().
  */
 function adsense_oldcode_block_save($delta, $edit) {
-  $data = implode(':', array(urlencode($edit['info']), $edit['ad_format'], $edit['ad_group'], $edit['ad_channel'], $edit['ad_align']));
+  $data = implode(':', array(
+    urlencode(check_plain($edit['info'])),
+    check_plain($edit['ad_format']),
+    check_plain($edit['ad_group']),
+    check_plain($edit['ad_channel']),
+    check_plain($edit['ad_align']),
+  ));
   variable_set('adsense_oldcode_ad_block_' . $delta, $data);
 }
 
@@ -143,23 +151,25 @@ function adsense_oldcode_block_save($delta, $edit) {
  * Implements hook_block_view().
  */
 function adsense_oldcode_block_view($delta) {
+  $block = array();
   if (_adsense_page_match()) {
     $ad = _adsense_oldcode_get_block_config($delta);
     $block['content'] = ($ad) ? adsense_display(array('title' => $ad[0], 'format' => $ad[1], 'group' => $ad[2], 'channel' => $ad[3])) : t('AdSense unconfigured block. <a href=!url>Click to configure.</a>', array('!url' => url('admin/structure/block/manage/adsense_oldcode/' . $delta)));
     if (!empty($ad[4])) {
-      $block['content'] = "<div style='text-align:${ad[4]}'>${block['content']}</div>";
+      $block['content'] = "<div style='text-align:{$ad[4]}'>{$block['content']}</div>";
     }
-
-    return $block;
   }
+
+  return $block;
 }
 
 /**
- * Configuration of the provided block
+ * Configuration of the provided block.
  *
- * @param $delta
- *   block number
- * @return
+ * @param int $delta
+ *   Block number.
+ *
+ * @return array
  *   array with the block configuration or FALSE if no such block was found
  */
 function _adsense_oldcode_get_block_config($delta = 0) {
@@ -173,29 +183,36 @@ function _adsense_oldcode_get_block_config($delta = 0) {
 }
 
 /**
- * Generates the AdSense ad
+ * Generates the AdSense ad.
  *
- * @param $format
- *   format of the ad
- * @param $group
- *   (optional) Group ID of the configured color attributes group
- * @param $channel
- *   (optional) Channel ID of the configured Ad Channel
- * @return
+ * @param string $format
+ *   Format of the ad.
+ * @param string $client
+ *   Publisher ID.
+ * @param int $group
+ *   Group ID of the configured color attributes group (optional).
+ * @param int $channel
+ *   Channel ID of the configured Ad Channel (optional).
+ *
+ * @return string
  *   JavaScript that embeds the Google AdSense ad
  */
 function _adsense_oldcode_get_ad($format, $client, $group = 1, $channel = 1) {
-  $ad = adsense_ad_formats($format);
+  $ad = adsense_ad_formats($format, FALSE);
 
   if ($ad === NULL) {
     $output = "";
   }
   elseif (variable_get('adsense_test_mode', ADSENSE_TEST_MODE_DEFAULT)) {
-    $output = theme('adsense_placeholder', array('text' => "client = ${client}<br />format = ${format}<br />width = ${ad['width']}<br />height = ${ad['height']}", 'width' => $ad['width'], 'height' => $ad['height']));
+    $output = theme('adsense_placeholder', array(
+      'text' => "client = {$client}<br />format = {$format}<br />width = {$ad['width']}<br />height = {$ad['height']}",
+      'width' => $ad['width'],
+      'height' => $ad['height'],
+    ));
   }
   else {
     if (($group < 1) || ($group > ADSENSE_MAX_GROUPS)) {
-      // Default to 1 if an invalid group is supplied
+      // Default to 1 if an invalid group is supplied.
       $group = 1;
     }
 
@@ -203,9 +220,11 @@ function _adsense_oldcode_get_ad($format, $client, $group = 1, $channel = 1) {
       case 2:
         $type = 'text_image';
         break;
+
       case 1:
         $type = 'image';
         break;
+
       default:
         $type = 'text';
         break;
@@ -226,12 +245,14 @@ function _adsense_oldcode_get_ad($format, $client, $group = 1, $channel = 1) {
       case 1:
         $part1 = "google_alternate_ad_url = \"$alt_info\";";
         break;
+
       case 2:
         $part1 = "google_alternate_color = \"$alt_info\";";
         break;
+
       case 0:
-        // disabled
       default:
+        // Disabled.
         $part1 = "";
     }
 
@@ -244,20 +265,17 @@ function _adsense_oldcode_get_ad($format, $client, $group = 1, $channel = 1) {
     }
 
     $secret = '';
-    if (variable_get('adsense_secret_adtest', ADSENSE_SECRET_ADTEST_DEFAULT)) {
-      $secret .= "google_adtest = 'on';\n";
-    }
     if ($lang = variable_get('adsense_secret_language', ADSENSE_SECRET_LANGUAGE_DEFAULT)) {
-      $secret .= "google_language = '$lang';";
+      $secret = "google_language = '$lang';\n";
     }
 
     $output = <<<OLDCODE_TXT
 <script type="text/javascript"><!--
 google_ad_client = "$client";
 $part1
-google_ad_width = ${ad['width']};
-google_ad_height = ${ad['height']};
-google_ad_format = "${ad['code']}";
+google_ad_width = {$ad['width']};
+google_ad_height = {$ad['height']};
+google_ad_format = "{$ad['code']}";
 $part2
 google_color_border = "$border";
 google_color_bg = "$bg";
@@ -265,8 +283,7 @@ google_color_link = "$link";
 google_color_text = "$text";
 google_color_url = "$url";
 google_ui_features = "$corner";
-$secret
-//--></script>
+$secret//--></script>
 <script type="text/javascript"
   src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </script>

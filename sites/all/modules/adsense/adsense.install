@@ -2,16 +2,40 @@
 
 /**
  * @file
- * Install file of the adsense module
+ * Install file of the adsense module.
  */
 
 /**
- * Implements of hook_install().
+ * Implements hook_install().
  */
 function adsense_install() {
-  drupal_set_message(st("AdSense settings are available under !link",
-    array( '!link' => l(st('Administration > Configuration > Web services > AdSense'),  'admin/config/services/adsense' ) )
-  ));
+  $t = get_t();
+  drupal_set_message($t("AdSense settings are available under !link", array(
+    '!link' => l($t('Administration') . ' > ' . $t('Configuration') . ' > ' . $t('Web services') . ' > ' . $t('AdSense'), 'admin/config/services/adsense'),
+  )));
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function adsense_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+  switch ($phase) {
+    // At runtime, make sure that we have a publisher ID.
+    case 'runtime':
+      $basic_id = variable_get('adsense_basic_id', ADSENSE_BASIC_ID_DEFAULT);
+      if (empty($basic_id)) {
+        $requirements['adsense_basic_id'] = array(
+          'title' => $t('AdSense'),
+          'value' => $t('Publisher ID is not set.'),
+          'description' => $t('Please configure it in the <a href="@url">AdSense Publisher ID settings page</a>.', array('@url' => url('admin/config/services/adsense/publisher'))),
+          'severity' => REQUIREMENT_ERROR,
+        );
+      }
+      break;
+  }
+  return $requirements;
 }
 
 /**

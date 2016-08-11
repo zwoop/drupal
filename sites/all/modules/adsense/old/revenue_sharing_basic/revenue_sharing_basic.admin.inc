@@ -2,8 +2,7 @@
 
 /**
  * @file
- * Contains the administrative functions of the revenue_sharing_basic
- * module.
+ * Administrative functions of the revenue_sharing_basic module.
  *
  * This file is included by the basic revenue sharing  module, and includes
  * the settings form.
@@ -118,6 +117,7 @@ function theme_revenue_sharing_basic_author_percentage_role($variables) {
   $form = $variables['form'];
   $output = '';
   $elements = element_children($form);
+  $rows = array();
   if (!empty($elements)) {
     $header = array(t('Role'), t('Percentage'));
     foreach ($elements as $key) {
@@ -135,9 +135,9 @@ function theme_revenue_sharing_basic_author_percentage_role($variables) {
 }
 
 /**
- * Auxiliary function to create the list for the revenue_sharing_basic_client_id_profile_field field
+ * Create the list for the revenue_sharing_basic_client_id_profile_field field.
  *
- * @return
+ * @return array
  *   array of fields with the field IDs as keys and the field titles as values
  *
  * @ingroup forms
@@ -145,7 +145,7 @@ function theme_revenue_sharing_basic_author_percentage_role($variables) {
 function revenue_sharing_basic_get_profile_fields() {
   $profile_list = array(0 => 'None');
 
-  // Start with the Field module fields
+  // Start with the Field module fields.
   if (module_exists('field')) {
     $fields = field_read_instances(array('entity_type' => 'user'));
     foreach ($fields as $field) {
@@ -153,7 +153,7 @@ function revenue_sharing_basic_get_profile_fields() {
     }
   }
 
-  // Get fields from the Profile module
+  // Get fields from the Profile module.
   if (module_exists('profile')) {
     $result = db_query("SELECT fid, name, title FROM {profile_field} WHERE type='textfield' ORDER BY fid");
     foreach ($result as $row) {
@@ -161,7 +161,7 @@ function revenue_sharing_basic_get_profile_fields() {
     }
   }
 
-  // Also display Profile2 fields
+  // Also display Profile2 fields.
   if (module_exists('profile2')) {
     $bundles = field_info_instances('profile2');
     foreach ($bundles as $bundle) {

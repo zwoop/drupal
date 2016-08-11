@@ -4,8 +4,8 @@ var f = document.getElementById('cse-search-box');
 if (!f) {
 f = document.getElementById('searchbox_demo');
 }
-if (f && f['q']) {
-var q = f['q'];
+if (f && f['as_q']) {
+var q = f['as_q'];
 var n = navigator;
 var l = location;
 var du = function(n, v) {

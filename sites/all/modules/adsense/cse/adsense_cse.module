@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Displays Google AdSense ads on Drupal pages
+ * Displays Google AdSense ads on Drupal pages.
  *
  * This is the core module of the AdSense package, with the Drupal hooks
  * and other administrative functions.
@@ -55,7 +55,7 @@ function adsense_cse_menu() {
 function adsense_cse_block_info() {
   $blocks = array();
   $max = variable_get('adsense_cse_number_blocks', ADSENSE_CSE_NUMBER_BLOCKS_DEFAULT);
-  for ($count=0 ; $count < $max ; $count++) {
+  for ($count = 0; $count < $max; $count++) {
     if ($ad = _adsense_cse_get_block_config($count)) {
       $title = $ad[0];
     }
@@ -102,7 +102,10 @@ function adsense_cse_block_configure($delta = '') {
  * Implements hook_block_save().
  */
 function adsense_cse_block_save($delta = '', $edit = array()) {
-  $data = implode(':', array(urlencode($edit['info']), $edit['ad_slot']));
+  $data = implode(':', array(
+    urlencode(check_plain($edit['info'])),
+    check_plain($edit['ad_slot']),
+  ));
   variable_set('adsense_cse_ad_block_' . $delta, $data);
 }
 
@@ -110,19 +113,22 @@ function adsense_cse_block_save($delta = '', $edit = array()) {
  * Implements hook_block_view().
  */
 function adsense_cse_block_view($delta = '') {
+  $block = array();
   if (_adsense_page_match()) {
     $ad = _adsense_cse_get_block_config($delta);
     $block['content'] = ($ad) ? adsense_display(array('title' => $ad[0], 'format' => 'Search Box', 'slot' => $ad[1])) : t('AdSense unconfigured block. <a href=!url>Click to configure.</a>', array('!url' => url('admin/structure/block/manage/adsense_cse/' . $delta)));
-    return $block;
   }
+
+  return $block;
 }
 
 /**
- * Configuration of the provided block
+ * Configuration of the provided block.
  *
- * @param $delta
- *   block number
- * @return
+ * @param int $delta
+ *   Block number.
+ *
+ * @return array
  *   array with the block configuration or FALSE if no such block was found
  */
 function _adsense_cse_get_block_config($delta = 0) {
@@ -136,11 +142,14 @@ function _adsense_cse_get_block_config($delta = 0) {
 }
 
 /**
- * Generates the CSE search box
+ * Generates the CSE search box.
  *
- * @param $slot
- *   Slot Id for the AdSense for Search
- * @return
+ * @param string $client
+ *   Publisher ID.
+ * @param int $slot
+ *   Slot Id for the AdSense for Search.
+ *
+ * @return string
  *   HTML with the search input form
  */
 function _adsense_cse_get_searchbox($client, $slot = NULL) {
@@ -172,21 +181,24 @@ function _adsense_cse_get_searchbox($client, $slot = NULL) {
   }
 
   switch ($ad_location) {
+    default:
     case 'adsense_cse_loc_top_right':
       $forid = 10;
       break;
+
     case 'adsense_cse_loc_top_bottom':
       $forid = 11;
       break;
+
     case 'adsense_cse_loc_right':
       $forid = 9;
       break;
   }
 
   if ($branding == 'adsense_cse_branding_watermark') {
-    // Since we use as_q, Google's Javascript can't be used, so we use a modified local copy
+    // Since we use as_q, we must use a modified copy of Google's Javascript.
     $script = $base_url . '/' . drupal_get_path('module', 'adsense_cse') . '/adsense_cse.js';
-    // If there is a watermark, the indentation of the code makes it impossible to re-use the same text
+    // When using a watermark, code is not reusable due to indentation.
     $output = <<<CSE_TXT1
 <script type="text/javascript"><!--
 drupal_adsense_cse_lang = '$language';
@@ -203,7 +215,7 @@ drupal_adsense_cse_lang = '$language';
 </form>
 <script type="text/javascript" src="$script"></script>
 CSE_TXT1;
-//<script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en"></script>
+/*<script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en"></script>*/
   }
   else {
     if ($branding == 'adsense_cse_branding_right') {

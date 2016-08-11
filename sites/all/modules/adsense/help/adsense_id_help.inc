@@ -1,16 +1,13 @@
 <?php
-// Copyright 2005-2008 Khalid Baheyeldin - http://2bits.com
-// Copyright 2008 Joao Ventura - http://www.venturas.org
-
 /**
  * @file
- * Helpfile for the Publisher ID tab of the adsense module configuration
+ * Help file for the Publisher ID tab of the adsense module configuration.
  */
 
 /**
- * Creates the help text for the Publisher ID tab
+ * Creates the help text for the Publisher ID tab.
  *
- * @return
+ * @return string
  *   HTML with the help text
  */
 function adsense_id_help_text() {

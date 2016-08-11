@@ -65,7 +65,7 @@ function adsense_click_permission() {
   return array(
     'view clicks' => array(
       'title' => 'View AdSense clicks',
-    )
+    ),
   );
 }
 
@@ -78,6 +78,9 @@ function adsense_click_init() {
   }
 }
 
+/**
+ * Logs a click in the database.
+ */
 function adsense_click_register() {
   if (variable_get('adsense_click_tracking', ADSENSE_CLICK_TRACKING_DEFAULT)) {
     db_insert('adsense_clicks')
@@ -86,7 +89,7 @@ function adsense_click_register() {
         'timestamp' => REQUEST_TIME,
         'path' => $_GET['u'],
         'title' => $_GET['t'],
-        'referrer' => $_GET['r']
+        'referrer' => $_GET['r'],
       ))
       ->execute();
   }

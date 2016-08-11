@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains the functions to display the logs tracked by the adsense_click
- * module.
- *
- * This file is included by the adsense_click module.
+ * Functions to display the logs tracked by the adsense_click module.
  */
 
+/**
+ * Click log.
+ */
 function adsense_click_log() {
   $header = array(
     array('data' => t('Timestamp'), 'field' => 'ads.timestamp', 'sort' => 'desc'),
-    array('data' => t('Path'),      'field' => 'ads.path'),
-    array('data' => t('IP/Host'),   'field' => 'ads.ip'),
-    array('data' => t('Referrer'),  'field' => 'ads.referrer'),
+    array('data' => t('Path'), 'field' => 'ads.path'),
+    array('data' => t('IP/Host'), 'field' => 'ads.ip'),
+    array('data' => t('Referrer'), 'field' => 'ads.referrer'),
   );
   $rows = array();
 
@@ -49,11 +49,14 @@ function adsense_click_log() {
   return theme('table', array('header' => $header, 'rows' => $rows)) . theme('pager');
 }
 
+/**
+ * Click top pages.
+ */
 function adsense_click_top_pages() {
   $header = array(
-    array('data' => t('Path'),   'field' => 'ads.path'),
+    array('data' => t('Path'), 'field' => 'ads.path'),
     array('data' => t('Clicks'), 'field' => 'count', 'sort' => 'desc'),
-    array('data' => t('Last'),   'field' => 'last'),
+    array('data' => t('Last'), 'field' => 'last'),
   );
   $rows = array();
 
@@ -67,8 +70,8 @@ function adsense_click_top_pages() {
     ->limit(50)
     ->orderByHeader($header);
 
-  $count = $query->addExpression('COUNT(*)', 'count');
-  $max = $query->addExpression('MAX(timestamp)', 'last');
+  $query->addExpression('COUNT(*)', 'count');
+  $query->addExpression('MAX(timestamp)', 'last');
 
   $result = $query->execute();
 
@@ -83,9 +86,12 @@ function adsense_click_top_pages() {
   return theme('table', array('header' => $header, 'rows' => $rows)) . theme('pager');
 }
 
+/**
+ * Click by day.
+ */
 function adsense_click_by_day() {
   $header = array(
-    array('data' => t('Day'),    'field' => 'day', 'sort' => 'desc'),
+    array('data' => t('Day'), 'field' => 'day', 'sort' => 'desc'),
     array('data' => t('Clicks'), 'field' => 'count'),
   );
   $rows = array();
@@ -94,28 +100,28 @@ function adsense_click_by_day() {
   $count_query = clone $query;
   $query = $query->extend('PagerDefault')->extend('TableSort');
 
-  /**
-   * @TODO Must be an easier and prettier way of doing this.
-   */
+  // @TODO Must be an easier and prettier way of doing this.
   $database_driver = db_driver();
 
   switch ($database_driver) {
     case 'mysql':
       $count_query->addExpression("COUNT(DISTINCT(FROM_UNIXTIME(timestamp, '%y-%m-%d')))");
-      $day = $query->addExpression("FROM_UNIXTIME(timestamp, '%Y-%m-%d')", 'day');
+      $query->addExpression("FROM_UNIXTIME(timestamp, '%Y-%m-%d')", 'day');
       break;
+
     case 'pgsql':
       $count_query->addExpression("COUNT(DISTINCT(TO_CHAR(timestamp, 'YYYY-MM-DD')))");
-      $day = $query->addExpression("TO_CHAR(timestamp, 'YYYY-MM-DD')", 'day');
+      $query->addExpression("TO_CHAR(timestamp, 'YYYY-MM-DD')", 'day');
       break;
+
     case 'sqlite':
       $count_query->addExpression("COUNT(DISTINCT(datetime(timestamp, 'unixepoch', 'localtime')))");
-      $day = $query->addExpression("datetime(timestamp, 'unixepoch', 'localtime')", 'day');
+      $query->addExpression("datetime(timestamp, 'unixepoch', 'localtime')", 'day');
       break;
   }
 
   // Extend our query and add our count expression.
-  $count = $query->addExpression('COUNT(*)', 'count');
+  $query->addExpression('COUNT(*)', 'count');
 
   $query->groupBy('day')
     ->limit(50)
@@ -134,6 +140,9 @@ function adsense_click_by_day() {
   return theme('table', array('header' => $header, 'rows' => $rows)) . theme('pager');
 }
 
+/**
+ * Format path.
+ */
 function _adsense_click_format_path($path, $title = '', $width = 32) {
   global $base_url;
 

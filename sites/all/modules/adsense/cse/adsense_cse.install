@@ -2,14 +2,14 @@
 
 /**
  * @file
- * Install file of the adsense_cse module
+ * Install file of the adsense_cse module.
  */
 
 /**
  * Implements hook_uninstall().
  */
 function adsense_cse_uninstall() {
-variable_del('adsense_cse_ad_location');
+  variable_del('adsense_cse_ad_location');
   variable_del('adsense_cse_color_box_background');
   variable_del('adsense_cse_country');
   variable_del('adsense_cse_encoding');
