@@ -1,5 +1,13 @@
 CHANGELOG - ZERO POINT responsive theme for Drupal 7
 
+0 Point 7.x-4.10 (Jul 17, 2016)
+------------------------------
+    o #2767477: Error on Maintenance Page
+
+0 Point 7.x-4.8 (Jul 12, 2016)
+------------------------------
+    o Minor bugs were addressed
+
 0 Point 7.x-4.7 (Nov 6, 2015)
 ------------------------------
     o added "narrower" setting for sidebars (#2597245: Left sidebar width ...)

@@ -96,22 +96,17 @@ html, .pure-g [class*="pure-u"] {
 }*/
 
 
-/*********************************/
-/* HIDE some TITLES and READMORE */
-/*********************************/
+/***************************************************/
+/* HIDE some TITLES, READMORE and Developer's link */
+/***************************************************/
 /* Uncomment the first declaration below to hide all titles on the front page 
  * Addapt the second declaration to hide a certain title on the frontpage. 
  * Third one is for no "Read more" on the front page. */ 
 /*
-.front #main h2.title a {
-	display: none;
-}
-.front #main #node-XXX h2.title a {
-	display: none;
-}
-.front .node-readmore {
-	display: none;
-}
+.front #main h2.title a {	display: none; }
+.front #main #node-XXX h2.title a {	display: none; }
+.front .node-readmore {	display: none; }
+.by { visibility: hidden; }
 */
 
 

@@ -39,7 +39,6 @@ settings[fntsize] = 0
 settings[roundcorners] = 1
 settings[headerimg] = 1
 settings[loginlinks] = 1
-settings[devlink] = 0
 settings[breadcrumb_display] = 1
 settings[postedby] = 0
 settings[page_h1] = 0
@@ -66,9 +65,9 @@ settings[youtube] = 'https://www.youtube.com/c/CatalinFlorianRadut'
 settings[rebuild_registry] = 0
 
 
-; Information added by Drupal.org packaging script on 2015-11-08
-version = "7.x-4.7"
+; Information added by Drupal.org packaging script on 2016-07-16
+version = "7.x-4.10"
 core = "7.x"
 project = "zeropoint"
-datestamp = "1447027159"
+datestamp = "1468709346"
 
