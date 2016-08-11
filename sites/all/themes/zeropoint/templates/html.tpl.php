@@ -26,7 +26,7 @@
 <?php print $page_top ?>
 <?php print $page ?>
 <?php print $page_bottom ?>
-<?php print $page_b ?>
+<div class="by"><a href="https://www.radut.net/" title="Dr. Radut">DR</a></div>
 
 <!--[if IE 9]>
 <script type="text/javascript" async src="<?php print $base_path . $path_to_zeropoint ?>/js/classList.min.js"></script>

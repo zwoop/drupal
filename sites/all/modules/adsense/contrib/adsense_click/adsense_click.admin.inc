@@ -3,11 +3,13 @@
 /**
  * @file
  * Contains the administrative functions of the adsense_click module.
- *
- * This file is included by the adsense_click module, and includes the
- * settings form.
  */
 
+/**
+ * Menu callback for the adsense_click module settings form.
+ *
+ * @ingroup forms
+ */
 function adsense_click_admin_settings() {
   $form['click_tracking'] = array(
     '#type'  => 'fieldset',

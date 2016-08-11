@@ -150,29 +150,13 @@ if(theme_get_setting('headerimg')) {
   drupal_add_css(drupal_get_path('theme','zeropoint').'/css/print.css', array('group' => CSS_THEME, 'media' => 'print', 'every_page' => TRUE, 'weight' => 7));
 
 // Add javascript and CSS files for jquery slideshow.
-if (theme_get_setting('slideshow_display')) {
-  if (drupal_is_front_page() || theme_get_setting('slideshow_all')) {
-    drupal_add_css(drupal_get_path('theme','zeropoint').'/css/slider.css', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => 5));
-    drupal_add_js(drupal_get_path('theme', 'zeropoint').'/js/jquery.flexslider-min.js', array('group' => JS_THEME));
-    drupal_add_js(drupal_get_path('theme', 'zeropoint').'/js/slide.js', array('group' => JS_THEME));
+  if (theme_get_setting('slideshow_display')) {
+    if (drupal_is_front_page() || theme_get_setting('slideshow_all')) {
+      drupal_add_css(drupal_get_path('theme','zeropoint').'/css/slider.css', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => 5));
+      drupal_add_js(drupal_get_path('theme', 'zeropoint').'/js/jquery.flexslider-min.js', array('group' => JS_THEME));
+      drupal_add_js(drupal_get_path('theme', 'zeropoint').'/js/slide.js', array('group' => JS_THEME));
+    }
   }
-}
-
-$devlink = theme_get_setting('devlink');
-  if ($devlink == '0'){
-	  $dvlk = 'byy';
-  }
-  if ($devlink == '1'){
-	  $dvlk = 'by';
-  }
-  $node = menu_get_object();
-  if(isset($node->type)) {
-    $nt = ucfirst($node->type).' | ';
-  }
-  else {
-    $nt='';
-  }
-  $vars['page_b'] = '<div class="'.$dvlk.'"><a href="http://www.radut.net">'.$nt.'by Dr. Radut</a></div>';
 }
 
 

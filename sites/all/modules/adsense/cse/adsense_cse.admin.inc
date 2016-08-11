@@ -14,7 +14,6 @@
  * @ingroup forms
  */
 function adsense_cse_settings() {
-  global $base_url;
   module_load_include('inc', 'adsense_cse', 'help/adsense_cse.help');
   module_load_include('inc', 'adsense', 'includes/adsense.search_options');
 
@@ -140,13 +139,13 @@ function _adsense_cse_settings_validate($form, &$form_state) {
   $textbox_length = $form_state['values']['adsense_cse_textbox_length'];
   $min = 8;
   $max = 64;
-  if (($textbox_length < $min ) || ($textbox_length > $max )) {
+  if (($textbox_length < $min) || ($textbox_length > $max)) {
     form_set_error('adsense_cse_textbox_length', t("Text Box Length must be between !min and !max", array('!min' => $min, '!max' => $max)));
   }
   $min = ($form_state['values']['adsense_cse_ad_location'] == 'adsense_cse_loc_top_bottom') ? 500 : 795;
   $max = 10000;
   $frame_width = $form_state['values']['adsense_cse_frame_width'];
-  if (($frame_width < $min ) || ($frame_width > $max )) {
+  if (($frame_width < $min) || ($frame_width > $max)) {
     form_set_error('adsense_cse_frame_width', t("Results area width must be between !min and !max", array('!min' => $min, '!max' => $max)));
   }
   $number_blocks = $form_state['values']['adsense_cse_number_blocks'];

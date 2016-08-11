@@ -4,7 +4,7 @@ Copyright 2008      Joao Ventura      (http://www.venturas.org)
 
 Description
 -----------
-This module provides web site admins the factility to display Google AdSense
+This module provides web site admins the ability to display Google AdSense
 ads on their web site, thus earning revenue.
 
 

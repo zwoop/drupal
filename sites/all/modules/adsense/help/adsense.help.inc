@@ -1,22 +1,19 @@
 <?php
-// Copyright 2005-2008 Khalid Baheyeldin - http://2bits.com
-// Copyright 2008 Joao Ventura - http://www.venturas.org
-
 /**
  * @file
- * Helpfile for the settings tab of the adsense module
+ * Help file for the settings tab of the adsense module.
  */
 
 /**
- * Creates the help text for the settings tab
+ * Creates the help text for the settings tab.
  *
- * @return
+ * @return string
  *   HTML with the help text
  */
 function adsense_help_text() {
   $base = rtrim(base_path(), '/');
 
-  // Get the ad formats
+  // Get the ad formats.
   $ads = adsense_ad_formats();
   $ads['Search Box'] = adsense_ad_formats('Search Box');
 
@@ -40,7 +37,7 @@ function adsense_help_text() {
 
   $output = <<<EOF
 <h2>Overview</h2>
-<p>This module provides web site admins the factility to display Google
+<p>This module provides web site admins the ability to display Google
 AdSense ads on their web site, thus earning revenue.</p>
 
 <h2>Prerequisites</h2>

@@ -1,16 +1,13 @@
 <?php
-// Copyright 2005-2008 Khalid Baheyeldin - http://2bits.com
-// Copyright 2008 Joao Ventura - http://www.venturas.org
-
 /**
  * @file
- * Helpfile for the revenue_sharing_basic module
+ * Help file for the revenue_sharing_basic module.
  */
 
 /**
- * Creates the help text for the revenue sharing (basic)
+ * Creates the help text for the revenue sharing (basic).
  *
- * @return
+ * @return string
  *   HTML with the help text
  */
 function revenue_sharing_basic_help_text() {

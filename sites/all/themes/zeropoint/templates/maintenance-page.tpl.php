@@ -23,7 +23,7 @@
 <div id="top_right">
 <div id="headimg">
 
-<div id="header">
+<div id="header" role="banner">
 <div class="clearfix">
   <?php if ($logo): ?><a href="<?php print check_url($front_page); ?>" title="<?php print t('Home'); ?>"><img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" class="logoimg" /></a><?php endif; ?>
   <div id="name-and-slogan">
@@ -57,7 +57,7 @@
 <div class="clearfix">
 <div id="middlecontainer" class="pure-g">
   <div class="pure-u-1">
-    <div id="main">
+    <div id="main" role="main">
       <?php print render($title_prefix); ?>
       <?php if ($title): print '<h2 class="title">'. $title .'</h2>'; endif; ?>
       <?php print render($title_suffix); ?>
@@ -75,7 +75,7 @@
 <div id="bottom_left">
 <div id="bottom_right">
 
-<div id="footer" class="pure-g">
+<div id="footer" class="pure-g" role="contentinfo">
   <div class="pure-u-1">
     <?php if (theme_get_setting('social_links_display')): ?><div id="soclinks"><?php print social_links(); ?></div><?php endif; ?>
   </div>
@@ -85,7 +85,6 @@
 </div></div></div></div>
 
 <?php print $page_bottom; ?>
-<?php print $page_b; ?>
 
 </body>
 </html>

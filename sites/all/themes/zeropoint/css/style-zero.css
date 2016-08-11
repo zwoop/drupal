@@ -352,7 +352,7 @@ ul.breadcrumb li {
 li.topic_reply {
 	list-style-type: none;
 }
-.sitemap-box h2, .byy {
+.sitemap-box h2 {
 	display: none;
 }
 .pane-content h2.title a {

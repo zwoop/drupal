@@ -36,7 +36,7 @@ function adsense_oldcode_settings($form, &$form_state) {
     '#title' => t('Ad groups'),
   );
 
-  // Add Farbtastic color picker
+  // Add Farbtastic color picker.
   drupal_add_css('misc/farbtastic/farbtastic.css', array('preprocess' => FALSE));
   drupal_add_js('misc/farbtastic/farbtastic.js');
   drupal_add_js(drupal_get_path('module', 'adsense_oldcode') . '/adsense_oldcode.js');
