@@ -584,7 +584,7 @@ function _cdn_settings_form_prepare(&$form, $form_state) {
 
     // Advanced help.
     _cdn_check_advanced_help();
-    $form['#attributes']['class'] = 'cdn-settings';
+    $form['#attributes']['class'][] = 'cdn-settings';
     $form['#attached']['css'][] = drupal_get_path('module', 'cdn') . '/cdn.admin.css';
   }
 

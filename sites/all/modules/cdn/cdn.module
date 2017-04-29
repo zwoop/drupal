@@ -257,6 +257,13 @@ function cdn_css_alter(&$css) {
     return;
   }
 
+  // If all CSS files are blacklisted, return early, otherwise we'd end up
+  // disabling preprocessing (aggregation) for every CSS file, hence disabling
+  // aggregation altogether.
+  if (!cdn_check_file('*.css')) {
+    return;
+  }
+
   foreach (array_keys($css) as $key) {
     // Skip $type = 'inline'.
     if (is_numeric($key)) {
@@ -277,6 +284,13 @@ function cdn_css_alter(&$css) {
  */
 function cdn_js_alter(&$javascript) {
   if (!cdn_status_is_enabled()) {
+    return;
+  }
+
+  // If all JS files are blacklisted, return early, otherwise we'd end up
+  // disabling preprocessing (aggregation) for every JS file, hence disabling
+  // aggregation altogether.
+  if (!cdn_check_file('*.js')) {
     return;
   }
 
@@ -557,6 +571,8 @@ function cdn_boot() {
     // @see http://googlewebmastercentral.blogspot.com/2011/06/supporting-relcanonical-http-headers.html
     header('Link: <' . $redirect_url . '>; rel="canonical"');
     header('Location: ' . $redirect_url);
+    // Informative header to simplify debugging.
+    header('Drupal-CDN-Redirect: duplicate content prevention');
 
     // To ensure this redirect occurs immediately we don't use drupal_exit().
     exit();
