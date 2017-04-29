@@ -51,7 +51,7 @@ function revenue_sharing_basic_theme() {
  *   Operation being performed, can be one of the following:
  *   'settings' : access to this module's settings form
  *   'client_id': fetch the user's Publisher ID.
- * @param string $args
+ * @param array $args
  *   For the 'client_id' operation, this can be the format of the ad being
  *   generated, in case there is a need to return a user-configured Slot ID.
  *

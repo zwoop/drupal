@@ -12,8 +12,12 @@
  *   JavaScript that embeds the Google results
  */
 function _adsense_cse_results() {
+  global $base_url;
+
   // Log the search keys:
   watchdog('AdSense search', 'Search keywords: ' . urldecode(check_plain($_GET['as_q'])));
+
+  $script = $base_url . '/' . drupal_get_path('module', 'adsense_cse') . '/adsense_cse.results.js';
 
   // Output search results.
   $width   = variable_get('adsense_cse_frame_width', ADSENSE_CSE_FRAME_WIDTH_DEFAULT);
@@ -37,7 +41,7 @@ function _adsense_cse_results() {
   var googleSearchPath = "/cse";
   var googleSearchQueryString = "as_q";
 </script>
-<script type="text/javascript" src="http://www.google.com/afsonline/show_afs_search.js"></script>
+<script type="text/javascript" src="$script"></script>
 CSE_RESULTS_TXT;
 
     // Remove empty lines.

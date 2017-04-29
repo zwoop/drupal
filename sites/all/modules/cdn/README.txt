@@ -115,6 +115,14 @@ Installation
    your site with your root/admin (user id 1) account. The statistics will
    show which files are served from the CDN!
 
+9) If your site is behind a reverse proxy such as Varnish, so that your stack
+   looks like: CDN <-> reverse proxy <-> web server, then you need to take extra
+   measures if you want to prevent duplicate content showing up on the CDN. See
+   https://www.drupal.org/node/2678374#comment-11278951 for details. It's
+   possible in this situation to end up with redirect loops; for that reason
+   the CDN module adds a debugging header to the 301 redirects it emits in order
+   to facilitate troubleshooting.
+
 
 File Conveyor mode
 ------------------
