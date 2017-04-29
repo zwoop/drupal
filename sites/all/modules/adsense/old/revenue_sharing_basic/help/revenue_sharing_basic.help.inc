@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Help file for the revenue_sharing_basic module.

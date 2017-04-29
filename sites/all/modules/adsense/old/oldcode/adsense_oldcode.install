@@ -51,4 +51,8 @@ function adsense_oldcode_uninstall() {
   foreach ($settings as $variable) {
     variable_del($variable->name);
   }
+  $settings = db_query("SELECT name FROM {variable} WHERE name LIKE 'adsense\_ui\_features\_%'");
+  foreach ($settings as $variable) {
+    variable_del($variable->name);
+  }
 }

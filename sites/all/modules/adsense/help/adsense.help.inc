@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Help file for the settings tab of the adsense module.

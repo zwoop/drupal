@@ -129,7 +129,7 @@ function adsense_managed_block_configure($delta = '') {
   $form['ad_width'] = array(
     '#type' => 'textfield',
     '#title' => t('Width'),
-    '#default_value' => ($ad) ? $ad[5] : '',
+    '#default_value' => isset($ad[5]) ? $ad[5] : '',
     '#description' => t('Custom ad width.'),
     '#field_suffix' => ' ' . t('pixels'),
     '#size' => 3,
@@ -150,7 +150,7 @@ function adsense_managed_block_configure($delta = '') {
   $form['ad_height'] = array(
     '#type' => 'textfield',
     '#title' => t('Height'),
-    '#default_value' => ($ad) ? $ad[6] : '',
+    '#default_value' => isset($ad[6]) ? $ad[6] : '',
     '#description' => t('Custom ad height.'),
     '#field_suffix' => ' ' . t('pixels'),
     '#size' => 3,
@@ -236,7 +236,7 @@ function adsense_managed_block_view($delta = '') {
     $ad = _adsense_managed_get_block_config($delta);
     $format = ($ad[1] == 'custom') ? ($ad[5] . 'x' . $ad[6]) : $ad[1];
     $shape = isset($ad[4]) ? $ad[4] : 'auto';
-    $block['content'] = ($ad) ? adsense_display(array('title' => $ad[0], 'format' => $format, 'slot' => $ad[2], 'shape' => $shape)) : t('AdSense unconfigured block. <a href=!url>Click to configure.</a>', array('!url' => url('admin/structure/block/manage/adsense_managed/' . $delta)));
+    $block['content'] = ($ad) ? adsense_display(array('title' => $ad[0], 'format' => $format, 'slot' => $ad[2], 'shape' => $shape)) : _adsense_configure_block_message(url('admin/structure/block/manage/adsense_managed/' . $delta));
     if (!empty($ad[3])) {
       $block['content'] = "<div style='text-align:{$ad[3]}'>{$block['content']}</div>";
     }
@@ -264,7 +264,6 @@ function _adsense_managed_get_block_config($delta = 0) {
   return FALSE;
 }
 
-
 /**
  * Generates the AdSense ad.
  *
@@ -283,7 +282,7 @@ function _adsense_managed_get_block_config($delta = 0) {
 function _adsense_managed_get_ad($format, $client, $slot, $shape = 'auto') {
   $ad = _adsense_dimensions($format);
 
-  if (empty($slot) || (($format != 'responsive')  && ($ad === NULL))) {
+  if (empty($slot) || ((!_adsense_is_responsive($format))  && ($ad === NULL))) {
     $output = "";
   }
   elseif (variable_get('adsense_test_mode', ADSENSE_TEST_MODE_DEFAULT)) {
@@ -294,7 +293,9 @@ function _adsense_managed_get_ad($format, $client, $slot, $shape = 'auto') {
     ));
   }
   else {
-    if ($format == 'responsive') {
+    if (_adsense_is_responsive($format)) {
+      $shape = ($format == 'responsive') ? $shape : $format;
+
       // Responsive smart sizing code.
       $output = <<<MANAGED_RESP_SMART_TXT
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>

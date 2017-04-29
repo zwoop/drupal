@@ -119,7 +119,7 @@ function adsense_search_block_view($delta) {
   $block = array();
   if (_adsense_page_match()) {
     $ad = _adsense_search_get_block_config($delta);
-    $block['content'] = ($ad) ? adsense_display(array('title' => $ad[0], 'format' => 'Search Box', 'channel' => $ad[1])) : t('AdSense unconfigured block. <a href=!url>Click to configure.</a>', array('!url' => url('admin/structure/block/manage/adsense_search/' . $delta)));
+    $block['content'] = ($ad) ? adsense_display(array('title' => $ad[0], 'format' => 'Search Box', 'channel' => $ad[1])) : _adsense_configure_block_message(url('admin/structure/block/manage/adsense_search/' . $delta));
   }
 
   return $block;
@@ -131,7 +131,7 @@ function adsense_search_block_view($delta) {
  * @param int $delta
  *   Block number.
  *
- * @return array
+ * @return array|bool
  *   array with the block configuration or FALSE if no such block was found
  */
 function _adsense_search_get_block_config($delta = 0) {
@@ -158,18 +158,18 @@ function _adsense_search_get_block_config($delta = 0) {
 function _adsense_search_get_searchbox($client, $channel = NULL) {
   global $base_url;
 
-  $country  = variable_get('adsense_search_country', ADSENSE_SEARCH_COUNTRY_DEFAULT);
+  $country = variable_get('adsense_search_country', ADSENSE_SEARCH_COUNTRY_DEFAULT);
 
-  $border   = variable_get('adsense_search_color_border', ADSENSE_SEARCH_COLOR_BORDER_DEFAULT);
-  $title    = variable_get('adsense_search_color_title', ADSENSE_SEARCH_COLOR_TITLE_DEFAULT);
-  $bg       = variable_get('adsense_search_color_bg', ADSENSE_SEARCH_COLOR_BG_DEFAULT);
-  $text     = variable_get('adsense_search_color_text', ADSENSE_SEARCH_COLOR_TEXT_DEFAULT);
-  $url      = variable_get('adsense_search_color_url', ADSENSE_SEARCH_COLOR_URL_DEFAULT);
-  $visited  = variable_get('adsense_search_color_visited_url', ADSENSE_SEARCH_COLOR_VISITED_URL_DEFAULT);
-  $light    = variable_get('adsense_search_color_light_url', ADSENSE_SEARCH_COLOR_LIGHT_URL_DEFAULT);
-  $logobg   = variable_get('adsense_search_color_logo_bg', ADSENSE_SEARCH_COLOR_LOGO_BG_DEFAULT);
+  $border = variable_get('adsense_search_color_border', ADSENSE_SEARCH_COLOR_BORDER_DEFAULT);
+  $title = variable_get('adsense_search_color_title', ADSENSE_SEARCH_COLOR_TITLE_DEFAULT);
+  $bg = variable_get('adsense_search_color_bg', ADSENSE_SEARCH_COLOR_BG_DEFAULT);
+  $text = variable_get('adsense_search_color_text', ADSENSE_SEARCH_COLOR_TEXT_DEFAULT);
+  $url = variable_get('adsense_search_color_url', ADSENSE_SEARCH_COLOR_URL_DEFAULT);
+  $visited = variable_get('adsense_search_color_visited_url', ADSENSE_SEARCH_COLOR_VISITED_URL_DEFAULT);
+  $light = variable_get('adsense_search_color_light_url', ADSENSE_SEARCH_COLOR_LIGHT_URL_DEFAULT);
+  $logobg = variable_get('adsense_search_color_logo_bg', ADSENSE_SEARCH_COLOR_LOGO_BG_DEFAULT);
 
-  $logo     = variable_get('adsense_search_logo', ADSENSE_SEARCH_LOGO_DEFAULT);
+  $logo = variable_get('adsense_search_logo', ADSENSE_SEARCH_LOGO_DEFAULT);
   $search_button = variable_get('adsense_search_button', ADSENSE_SEARCH_BUTTON_DEFAULT);
 
   $box_text_color = variable_get('adsense_search_color_box_text', ADSENSE_SEARCH_COLOR_BOX_TEXT_DEFAULT);
@@ -245,7 +245,7 @@ function _adsense_search_get_searchbox($client, $channel = NULL) {
   }
 
   // AdSense for Search channel.
-  $channel  = variable_get('adsense_ad_channel_' . $channel, ADSENSE_AD_CHANNEL_DEFAULT);
+  $channel = variable_get('adsense_ad_channel_' . $channel, ADSENSE_AD_CHANNEL_DEFAULT);
   if (!empty($channel)) {
     $part6 = "<input type=\"hidden\" name=\"channel\" value=\"$channel\"></input>";
   }

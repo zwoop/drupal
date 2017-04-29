@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Help file for the Managed ads generator module.

@@ -12,6 +12,7 @@
 define('ADSENSE_TYPE_LINK', 1);
 define('ADSENSE_TYPE_AD', 2);
 define('ADSENSE_TYPE_SEARCH', 3);
+define('ADSENSE_TYPE_MATCHED', 4);
 
 define('ADSENSE_MAX_CHANNELS', 10);
 define('ADSENSE_AD_CHANNEL_DEFAULT', '');
@@ -43,6 +44,8 @@ define('ADSENSE_SECRET_LANGUAGE_DEFAULT', '');
  *
  * @param string $key
  *   Ad key for which the format is needed (optional).
+ * @param bool $newcode
+ *   Pass TRUE to get list of new code ads (optional).
  *
  * @return array
  *   if no key is provided: array of supported ad formats as an array (type,
@@ -51,9 +54,11 @@ define('ADSENSE_SECRET_LANGUAGE_DEFAULT', '');
  *   NULL if there is no ad with that key
  */
 function adsense_ad_formats($key = NULL, $newcode = TRUE) {
+  // Don't forget to add responsive formats in _adsense_is_responsive().
   $ads = array(
     'responsive' => array('type' => ADSENSE_TYPE_AD, 'desc' => t('Responsive ad unit'), 'code' => 'responsive', 'width' => '', 'height' => ''),
     'custom' => array('type' => ADSENSE_TYPE_AD, 'desc' => t('Custom size ad unit'), 'code' => 'custom', 'width' => '', 'height' => ''),
+    'autorelaxed' => array('type' => ADSENSE_TYPE_MATCHED, 'desc' => t('Matched content'), 'code' => 'autorelaxed', 'width' => '', 'height' => ''),
     '120x240' => array('type' => ADSENSE_TYPE_AD, 'desc' => t('Vertical Banner'), 'code' => '120x240_as', 'width' => 120, 'height' => 240),
     '120x600' => array('type' => ADSENSE_TYPE_AD, 'desc' => t('Skyscraper'), 'code' => '120x600_as', 'width' => 120, 'height' => 600),
     '125x125' => array('type' => ADSENSE_TYPE_AD, 'desc' => t('Button'), 'code' => '125x125_as', 'width' => 125, 'height' => 125),
@@ -72,6 +77,7 @@ function adsense_ad_formats($key = NULL, $newcode = TRUE) {
     '728x90' => array('type' => ADSENSE_TYPE_AD, 'desc' => t('Leaderboard'), 'code' => '728x90_as', 'width' => 728, 'height' => 90),
     '970x250' => array('type' => ADSENSE_TYPE_AD, 'desc' => t('Billboard'), 'code' => '970x250_as', 'width' => 970, 'height' => 250),
     '970x90' => array('type' => ADSENSE_TYPE_AD, 'desc' => t('Large Leaderboard'), 'code' => '970x90_as', 'width' => 970, 'height' => 90),
+    'link' => array('type' => ADSENSE_TYPE_LINK, 'desc' => t('Responsive links'), 'code' => 'link', 'width' => '', 'height' => ''),
     '120x90' => array('type' => ADSENSE_TYPE_LINK, 'desc' => t('4-links Vertical Small'), 'code' => '120x90_0ads_al', 'width' => 120, 'height' => 90),
     '160x90' => array('type' => ADSENSE_TYPE_LINK, 'desc' => t('4-links Vertical Medium'), 'code' => '160x90_0ads_al', 'width' => 160, 'height' => 90),
     '180x90' => array('type' => ADSENSE_TYPE_LINK, 'desc' => t('4-links Vertical Large'), 'code' => '180x90_0ads_al', 'width' => 180, 'height' => 90),
@@ -89,6 +95,8 @@ function adsense_ad_formats($key = NULL, $newcode = TRUE) {
   if (!$newcode) {
     unset($ads['responsive']);
     unset($ads['custom']);
+    unset($ads['autorelaxed']);
+    unset($ads['link']);
   }
 
   if (!empty($key)) {
@@ -212,25 +220,14 @@ function adsense_filter_info() {
 }
 
 /**
- * Callback to display our filter tips.
+ * Implements callback_filter_tips().
  */
 function _adsense_filter_tips($filter, $format, $long = FALSE) {
   return t('Use the special tag [adsense:<em>format</em>:<em>slot</em>] or [adsense:<em>format</em>:<em>[group]</em>:<em>[channel]</em><em>[:slot]</em>] or [adsense:block:<em>location</em>] to display Google AdSense ads.');
 }
 
 /**
- * Helper function to process the adsense input filter.
- *
- * @param string $text
- *   Text of the node being processed.
- * @param string $filter
- *   Filter.
- *
- * @return string
- *   modified text with the adsense tags replaced by Google AdSense ads
- *
- * @see adsense_filter_info()
- * @see adsense_display()
+ * Implements callback_filter_process().
  */
 function _adsense_process_tags($text, $filter) {
   $patterns = array(
@@ -265,7 +262,7 @@ function _adsense_process_tags($text, $filter) {
             break;
 
           case 'oldtag':
-            // If not specified, default group and channel to 1
+            // If not specified, default group and channel to 1.
             if (empty($match[2])) {
               $match[2] = 1;
             }
@@ -319,6 +316,7 @@ function _adsense_process_tags($text, $filter) {
  */
 function adsense_get_client_slot_id($format = NULL) {
   // Get the configured function.
+  /** @var string $function */
   $function = variable_get('adsense_id_module', ADSENSE_ID_MODULE_DEFAULT);
 
   if ($function != ADSENSE_ID_MODULE_DEFAULT) {
@@ -503,9 +501,25 @@ function adsense_request_unblock() {
 }
 
 /**
+ * Helper function to determine if an ad format is responsive.
+ *
+ * @param string $format
+ *   Ad format.
+ *
+ * @return bool
+ *   TRUE if the ad is responsive.
+ */
+function _adsense_is_responsive($format) {
+  return in_array($format, array('responsive', 'link', 'autorelaxed'));
+}
+
+/**
  * Helper function to get ad width and height from the format.
  *
- * @return mixed
+ * @param string $format
+ *   Ad format.
+ *
+ * @return array|null
  *   Width and height of the ad, or NULL
  */
 function _adsense_dimensions($format) {
@@ -521,6 +535,7 @@ function _adsense_dimensions($format) {
  * Simply add a div with the adsense and $module classes.
  *
  * @param array $vars
+ *   Array elements:
  *   'ad': string with the generated ad unit.
  *   'module': module used to generate the ad.
  *
@@ -531,7 +546,7 @@ function _adsense_dimensions($format) {
  */
 function theme_adsense_ad(array $vars) {
   $style = '';
-  if (isset($vars['format']) && ($vars['format'] != 'responsive')) {
+  if (isset($vars['format']) && (!_adsense_is_responsive($vars['format']))) {
     $ad_fmt = _adsense_dimensions($vars['format']);
     $style = "style='display:inline-block;width:{$ad_fmt['width']}px;height:{$ad_fmt['height']}px;'";
   }
@@ -579,16 +594,21 @@ function _adsense_check_if_enabled() {
  *   TRUE if we can insert another ad, FALSE if not allowed.
  */
 function _adsense_can_insert_another($type = ADSENSE_TYPE_AD) {
+  // Because of #1627846, it's better to always return TRUE.
+  return TRUE;
+
   static $num_ads = array(
-    ADSENSE_TYPE_AD     => 0,
-    ADSENSE_TYPE_LINK   => 0,
-    ADSENSE_TYPE_SEARCH => 0,
+    ADSENSE_TYPE_AD      => 0,
+    ADSENSE_TYPE_LINK    => 0,
+    ADSENSE_TYPE_SEARCH  => 0,
+    ADSENSE_TYPE_MATCHED => 0,
   );
 
   $max_ads = array(
-    ADSENSE_TYPE_AD     => 3,
-    ADSENSE_TYPE_LINK   => 3,
-    ADSENSE_TYPE_SEARCH => 2,
+    ADSENSE_TYPE_AD      => 3,
+    ADSENSE_TYPE_LINK    => 3,
+    ADSENSE_TYPE_SEARCH  => 2,
+    ADSENSE_TYPE_MATCHED => PHP_INT_MAX,
   );
 
   if ($num_ads[$type] < $max_ads[$type]) {
@@ -596,9 +616,7 @@ function _adsense_can_insert_another($type = ADSENSE_TYPE_AD) {
     return TRUE;
   }
 
-  // Because of #1627846, it's better to always return TRUE.
-  return TRUE;
-  /*return FALSE;*/
+  return FALSE;
 }
 
 /**
@@ -645,4 +663,17 @@ function theme_adsense_placeholder(array $vars) {
   $style .= ((!empty($vars['width'])) && (!empty($vars['height']))) ? 'width:' . ($vars['width'] - 2) . 'px;height:' . ($vars['height'] - 2) . 'px;' : '';
 
   return "<div class='adsense adsense-placeholder' style='{$style}'>{$vars['text']}</div>";
+}
+
+/**
+ * Displays a message for unconfigured blocks.
+ *
+ * @param array $url
+ *   URL of the block admin page.
+ *
+ * @return string
+ *   string with the configure block message.
+ */
+function _adsense_configure_block_message($url) {
+  return user_access('administer adsense') ? t('AdSense unconfigured block. <a href=!url>Click to configure.</a>', array('!url' => $url)) : '';
 }

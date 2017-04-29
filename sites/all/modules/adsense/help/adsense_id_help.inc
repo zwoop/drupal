@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Help file for the Publisher ID tab of the adsense module configuration.

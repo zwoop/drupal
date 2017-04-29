@@ -116,7 +116,7 @@ function adsense_cse_block_view($delta = '') {
   $block = array();
   if (_adsense_page_match()) {
     $ad = _adsense_cse_get_block_config($delta);
-    $block['content'] = ($ad) ? adsense_display(array('title' => $ad[0], 'format' => 'Search Box', 'slot' => $ad[1])) : t('AdSense unconfigured block. <a href=!url>Click to configure.</a>', array('!url' => url('admin/structure/block/manage/adsense_cse/' . $delta)));
+    $block['content'] = ($ad) ? adsense_display(array('title' => $ad[0], 'format' => 'Search Box', 'slot' => $ad[1])) : _adsense_configure_block_message(url('admin/structure/block/manage/adsense_cse/' . $delta));
   }
 
   return $block;
@@ -128,7 +128,7 @@ function adsense_cse_block_view($delta = '') {
  * @param int $delta
  *   Block number.
  *
- * @return array
+ * @return array|bool
  *   array with the block configuration or FALSE if no such block was found
  */
 function _adsense_cse_get_block_config($delta = 0) {
@@ -226,7 +226,7 @@ CSE_TXT1;
     }
     $output = <<<CSE_TXT2
 <style type="text/css">
-@import url(http://www.google.com/cse/api/branding.css);
+@import url(//www.google.com/cse/api/branding.css);
 </style>
 <div class="$class" style="background-color:#$box_background_color;color:#$box_text_color">
   <div class="cse-branding-form">
@@ -241,7 +241,7 @@ CSE_TXT1;
     </form>
   </div>
   <div class="cse-branding-logo">
-    <img src="http://www.google.com/images/poweredby_transparent/poweredby_$box_background_color.gif" alt="Google" />
+    <img src="//www.google.com/images/poweredby_transparent/poweredby_$box_background_color.gif" alt="Google" />
   </div>
   <div class="cse-branding-text">
     $custom_search
