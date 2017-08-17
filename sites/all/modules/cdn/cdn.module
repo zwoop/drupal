@@ -75,7 +75,7 @@ function cdn_file_url_alter(&$original_uri) {
 
     if ($stats) {
       cdn_load_include('stats');
-      $start = microtime();
+      $start = microtime(TRUE);
     }
 
     // Alter the file path when using Origin Pull mode and using that mode's
@@ -152,7 +152,7 @@ function cdn_file_url_alter(&$original_uri) {
 
     // If the user can access it, add this to the per-page statistics.
     if ($stats) {
-      $end = microtime();
+      $end = microtime(TRUE);
       $source_uri = ($mode == CDN_MODE_BASIC && $farfuture && !$maintenance_mode) ? $uri_before_farfuture : $original_uri;
       _cdn_devel_page_stats($source_uri, $cdn_url, $server, $end - $start);
     }
