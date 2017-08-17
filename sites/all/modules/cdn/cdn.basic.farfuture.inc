@@ -106,7 +106,11 @@ function cdn_basic_farfuture_download($token, $ufi, $path) {
     // Set a far future Cache-Control header (480 weeks), which prevents
     // intermediate caches from transforming the data and allows any
     // intermediate cache to cache it, since it's marked as a public resource.
-    header("Cache-Control: max-age=290304000, no-transform, public");
+    // Finally, it's also marked as "immutable", which helps avoid revalidation,
+    // see:
+    // - https://bitsup.blogspot.be/2016/05/cache-control-immutable.html
+    // - https://tools.ietf.org/html/draft-mcmanus-immutable-00
+    header('Cache-Control', 'max-age=290304000, no-transform, public, immutable');
     // Set a far future Expires header. The maximum UNIX timestamp is somewhere
     // in 2038. Set it to a date in 2037, just to be safe.
     header("Expires: Tue, 20 Jan 2037 04:20:42 GMT");
