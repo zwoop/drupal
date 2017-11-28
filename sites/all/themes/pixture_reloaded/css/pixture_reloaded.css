@@ -2,13 +2,50 @@
 
 body,
 #branding,
-#header hgroup {
+#header .h-group {
   padding: 0;
   margin: 0;
 }
 #columns {
   padding-top: 15px;
   clear: both;
+}
+
+/* Gutters - if gutters are set in theme settings they will override these
+   values: see Extensions > Modify Output > Design */
+#main-content,
+.block-inner,
+.pane-inner,
+.menu-wrapper,
+.branding-elements,
+.breadcrumb-wrapper,
+.attribution,
+.at-panel .rounded-corner,
+.block-panels-mini > .block-title,
+div.messages {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+/* Panel pages need negative margin equal to the gutter width applied to #content,
+  this is taken care of in theme settings as per above for normal gutters */
+#content .panel-display,
+#content .panel-flexible {
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
+/* Reset HTML5 elements */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+menu,
+nav,
+section {
+  display: block;
 }
 
 /* Gpanel margins */
@@ -55,9 +92,6 @@ body,
 }
 
 /* HTML elements */
-html {
-  font-size: 81.3%; /* 16px x 81.3% = 13px */
-}
 body {
   line-height: 1.5;
 }
@@ -200,13 +234,75 @@ blockquote {
 abbr, acronym {
   border-bottom: none;
 }
-.article .article-content,
+.node .node-content,
 .comment .comment-content {
   line-height: 1.5em;
 }
 h1#page-title {
   padding: 0;
   margin: 0 0 0.46em;
+}
+
+/**
+ * Flexible Media and Cross browser improvements
+ * - This can cause issues in table cells where no width is set on the column,
+ *   only in some versions of webkit and IE 7/8.
+ * - declaring the width attribute on image elements and using max-width causes
+ *   the "dissappering images" bug in IE8.
+ * - Google maps break also, see below for fixes.
+ */
+img {
+  max-width: 100%;
+  height: auto;
+  -ms-interpolation-mode: bicubic;
+}
+
+/* /ht Ethan Marcotte - http://front.ie/l8rJaA */
+img,
+embed,
+object,
+video {
+  max-width: 100%;
+}
+
+/* Disable flexiblity for IE8 and below */
+.lt-ie9 img,
+.lt-ie9 object,
+.lt-ie9 embed,
+.lt-ie9 video {
+  max-width: none;
+}
+
+/* Override max-width 100% for map displays and widgets */
+#map img,
+.gmap img,
+.view-gmap img,
+.openlayers-map img,
+#getlocations_map_canvas img,
+#locationmap_map img,
+.geofieldMap img,
+.views_horizontal_slider img,
+.field-widget-imagefield-crop-widget img {
+  max-width: none !important;
+}
+
+/* Improve IE's resizing of images */
+svg:not(:root) {
+  overflow: hidden;
+}
+
+/* Corrects inline-block display not defined in IE6/7/8/9 & FF3 */
+audio,
+canvas,
+video {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+}
+
+/* Prevents modern browsers from displaying 'audio' without controls */
+audio:not([controls]) {
+  display: none;
 }
 
 /* Links */
@@ -247,10 +343,20 @@ a.active:focus {
 #header,
 #branding {
   max-height: 88px;
+  line-height: 1;
 }
 #head-elements {
   min-height: 88px;
 }
+
+.noggin-header #header,
+#branding {
+  max-height: none;
+}
+
+
+
+
 /* IE6 treats height like max height */
 .ie6 #header,
 .ie6 #branding,
@@ -258,9 +364,6 @@ a.active:focus {
   height: 88px;
 }
 
-#branding {
-  text-transform: uppercase;
-}
 #site-name {
   font-size: 2.6em;
   margin: 0;
@@ -282,10 +385,16 @@ a.active:focus {
   float:right;
   margin:10px 0 0;
 }
-/* Special casing for the search block in the header region */
-.region-header #block-search-form {
-  margin: 0;
-  padding: 10px 0 0 10px;
+
+/* Special case blocks in the header region */
+.region-header .block {
+  float: left;
+  margin: 0 auto;
+}
+.region-header #block-search-form,
+.region-header #block-user-login.lb-h {
+  padding: 0;
+  margin: 10px 0 0 10px;
 }
 .region-header #block-search-form .block-inner {
   background: none;
@@ -297,14 +406,14 @@ a.active:focus {
 /* Menu-bar */
 #menu-bar {
   clear: both;
-  min-height: 32px;
-  line-height: 32px;
+  min-height: 2.5em;
+  line-height: 2.5em;
   padding: 0;
   z-index: 100; /* Needed so Superfish menus appear over flash & slideshows in IE7 */
   position: relative;
 }
 #menu-bar ul {
-  padding: 0 15px;
+  padding: 0;
 }
 #menu-bar ul ul {
   padding: 0;
@@ -323,6 +432,9 @@ a.active:focus {
   font-weight: bold;
   padding: 0 10px;
 }
+#menu-bar ul.sf-menu li a {
+  padding: 0 15px;
+}
 #menu-bar ul.menu li a:hover {
   background: transparent;
 }
@@ -333,6 +445,9 @@ a.active:focus {
   padding: 0;
   margin: 0;
 }
+#menu-bar .block-menu {
+  margin: 0 5px;
+}
 /**
  * Hide additional menu levels for normal menu blocks - I can't think of a better
  * way of handling these - you should really use http://drupal.org/project/menu_block
@@ -342,26 +457,22 @@ a.active:focus {
 }
 
 /* Articles */
-#main-content .article {
+#main-content .node {
   margin: 0 0 15px 0;
   padding: 0;
 }
-#main-content .article-teaser {
+#main-content .node-teaser {
   padding: 10px;
 }
-.article-full-view .article h1.article-title,
-.article h1.article-title {
+.node h1.node-title {
   margin: 0;
   padding-top: 0;
   padding-bottom: 0;
 }
-.article h1.article-title {
-  font-size: 1.5em;
-}
-.article h1.article-title a:hover {
+.node h1.node-title a:hover {
   text-decoration: none;
 }
-.article .user-picture {
+.node .user-picture {
   border: none;
   float: left;
   margin: 3px 10px 0 0;
@@ -369,43 +480,43 @@ a.active:focus {
 .user-picture img {
   max-width: 100%;
 }
-.article .submitted {
+.node .submitted {
   margin-top: 3px;
   padding: 0;
 }
-.article .article-content {
+.node .node-content {
   margin: 10px 0;
 }
-.article .field-type-taxonomy-term-refernce {
+.node .field-type-taxonomy-term-refernce {
   font-size: 0.9em;
 }
-.article .taxonomy {
+.node .taxonomy {
   margin: 0;
   padding: 0;
 }
-.article .taxonomy li {
+.node .taxonomy li {
   padding: 1px 5px;
 }
-.article nav {
+.node nav {
   clear: both;
 }
-.article ul.links li {
+.node ul.links li {
   margin: 0 0.25em;
   padding: 0;
   float: right;
 }
 /* Node Teaser */
-#content .article-teaser {
+#content .node-teaser {
   margin: 0 0 15px;
   padding: 10px;
   overflow: hidden;
 }
-.article h2.field-label {
+.node h2.field-label {
   font-size: 1em;
   border-bottom: none;
 }
 /* sticky node-teaser */
-#content .article-teaser.article-sticky {
+#content .node-teaser.node-sticky {
   padding: 10px;
   margin: 0 0 15px;
 }
@@ -439,8 +550,10 @@ article .field-type-image.field-label-inline .field-label {
   margin: 0 0 10px;
   padding: 10px;
 }
+.comment .comment-title {
+  margin-top: 0;
+}
 .comment .comment-title a {
-  font-size: 1.2em;
   font-weight: bold;
 }
 .comment .new {
@@ -470,7 +583,6 @@ article .field-type-image.field-label-inline .field-label {
   margin-bottom: 10px;
 }
 .block-title {
-  font-size: 1.167em;
   margin: 0;
   padding: 5px 10px 4px;
 }
@@ -499,10 +611,10 @@ article .field-type-image.field-label-inline .field-label {
   font-size: .94em;
 }
 /* blocks showing nodes, e.g help out views blocks */
-.block .article h2.article-title {
+.block .node h2.node-title {
   font-size: 1.167em;
 }
-.block .article {
+.block .node {
   padding: 5px 5px 0;
 }
 #block-search-form form {
@@ -518,6 +630,9 @@ article .field-type-image.field-label-inline .field-label {
   font-weight: 700;
   line-height: inherit;
   margin: 0;
+}
+.field-type-taxonomy-term-reference {
+  margin: 10px 0;
 }
 .field-type-taxonomy-term-reference ul {
   margin: 0;
@@ -546,7 +661,7 @@ article .field-type-image.field-label-inline .field-label {
   font-size: 0.923em;
   padding: 10px 0 0;
 }
-tabel .field-type-image img {
+table .field-type-image img {
   width: 100%;
   height: auto;
 }
@@ -797,6 +912,7 @@ ul.images li {
   margin-bottom: 1px;
   cursor: pointer;
   padding: 2px 10px;
+  margin: 4px;
   color: #666;
   font-weight: normal;
   font-size: 1em;
@@ -815,8 +931,19 @@ ul.primary {
   margin: 0 0 15px;
   padding: 0;
 }
+ul.primary,
+ul.primary li {
+  white-space: normal;
+}
 ul.primary li a {
-  padding: 0.25em 0.9em 0.3em;
+    display: block;
+    float: left;
+    height: 2em;
+    line-height: 2em;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    padding: 0 10px;
+    white-space: nowrap;
 }
 ul.primary li a.active:hover,
 ul.primary li a.active:focus {
@@ -873,9 +1000,6 @@ ul.menu ul {
 }
 
 /* Superfish */
-ul.sf-menu li ul {
-  display: none; /* Prevent sub menus from momentarily displaying */
-}
 /* sf-horizontal - classic drop menu style */
 .nav .block-superfish {
   padding: 0;
@@ -885,8 +1009,7 @@ ul.sf-menu.sf-horizontal {
   padding: 0;
 }
 ul.sf-menu.sf-horizontal a {
-  height: 32px;
-  line-height: 32px;
+  line-height: 2.5em;
   padding: 0 10px;
   border-left: none;
   border-top: none;
@@ -912,8 +1035,6 @@ ul.sf-menu.sf-navbar a.sf-with-ul {
   padding-right: 25px;
 }
 #menu-bar .contextual-links-wrapper {
-  left: 0;
-  right: auto;
 }
 /* .sf-navbar - drop down nav bar style */
 ul.sf-menu.sf-navbar {
@@ -922,8 +1043,7 @@ ul.sf-menu.sf-navbar {
   z-index: 99;
 }
 ul.sf-menu.sf-navbar a {
-  height: 32px;
-  line-height: 32px;
+  height: 2.5em;
   padding: 0 10px;
   border-left: none;
   border-top: none;
@@ -948,7 +1068,7 @@ ul.sf-menu.sf-navbar li {
 }
 ul.sf-menu.sf-navbar li:hover ul,
 ul.sf-menu.sf-navbar li.sfHover ul {
-  top: 32px;
+  top: 2.5em;
 }
 ul.sf-menu.sf-vertical ul,
 ul.sf-menu.sf-navbar ul ul,
@@ -1132,6 +1252,7 @@ textarea {
   border: 1px solid #ccc;
   height: auto;
   padding: 2px;
+  max-width: 100%;
 }
 textarea,
 input {
@@ -1303,4 +1424,15 @@ body.wysiwygeditor {
 .view-gmap img,
 #getlocations_map_canvas img {
   max-width: none;
+}
+
+/* Misc styles to be categorised */
+.filter-help a {
+  padding: 0 20px 0 0;
+}
+
+/* Attribution */
+.attribute-creator {
+  text-align: center;
+  opacity: 0.5;
 }
