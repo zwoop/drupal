@@ -2,21 +2,21 @@
 -- SUMMARY --
 
 Pixture Reloaded is a stylized, re-colorable, multi-column theme which uses HTML5
-and includes many advanced theme settings to allow you to customize 
+and includes many advanced theme settings to allow you to customize
 the theme to your requirements.
 
 
 -- REQUIREMENTS --
 
-Pixture Reloaded 7.x-2.x is a sub-theme of Adaptivetheme, you must download and install
+Pixture Reloaded 7.x-3.x is a sub-theme of Adaptivetheme, you must download and install
 this theme first. You do not need to enable it.
 
-http://drupal.org/project/adaptivetheme (take the latest 7.x-2.x version).
+http://drupal.org/project/adaptivetheme (take the latest 7.x-3.x version).
 
 
 -- INSTALLATION --
 
-Install as usual, see http://drupal.org/node/70151 for further information.
+Install as usual, see http://drupal.org/documentation/install/modules-themes/modules-7 for further information.
 
 
 -- CONFIGURATION --
@@ -26,7 +26,7 @@ Install as usual, see http://drupal.org/node/70151 for further information.
   theme settings page admin/appearance/settings/pixture_reloaded to configure your settings.
   You can change the layout, font, font size, heading styles and much more.
   In due course we will write documentation pages about each block of settings.
-  
+
   For additional help please view the online documentation:
   http://adaptivethemes.com/documentation/layout-settings-guide
 
@@ -40,8 +40,8 @@ Install as usual, see http://drupal.org/node/70151 for further information.
 
 -- SUPERFISH DROP MENUS --
 
-pixture_reloaded supports the Superfish module which is a dynamic menu module and enables 
-drop menus and other styles. First configure the Superfish menu to use the "none" 
+pixture_reloaded supports the Superfish module which is a dynamic menu module and enables
+drop menus and other styles. First configure the Superfish menu to use the "none"
 style and then place the menu in the "Menu Bar" region. Superfish installation
 instructions and downloads can be found on the Superfish menu project page:
 
