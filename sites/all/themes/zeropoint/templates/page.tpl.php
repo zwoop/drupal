@@ -142,6 +142,10 @@
 
 </div></div></div></div>
 
+<?php if ($is_front): ?>
+  <?php print dev_link() ?>
+<?php endif; ?>
+
 <div id="bottom_bg">
 <div class="sizer0 clearfix"<?php print wrapper_width() ?>>
 <div id="bottom_left">

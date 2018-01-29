@@ -121,19 +121,20 @@ $siteid = check_plain(theme_get_setting('siteid'));
   drupal_add_css(drupal_get_path('theme','zeropoint').'/css/drupal/drupal-default-min.css', array('group' => CSS_DEFAULT, 'every_page' => TRUE, 'weight' => -1));
 
   if(theme_get_setting('css_zone')) {
-    drupal_add_css('http://yui.yahooapis.com/pure/0.6.0/pure-min.css', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => -2, 'preprocess' => FALSE));
+    drupal_add_css('https://unpkg.com/purecss@'.get_css_version().'/build/pure-min.css', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => -2, 'preprocess' => FALSE));
   } else {
-    drupal_add_css(drupal_get_path('theme','zeropoint').'/css/yui/pure-min.css', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => -2));
+    drupal_add_css(drupal_get_path('theme','zeropoint').'/css/yui/'.get_css_version().'/pure-min.css', array('group' => CSS_THEME, 'every_page' => TRUE, 'weight' => -2));
   }
   if(theme_get_setting('grid_responsive') == '1') {
     if(theme_get_setting('css_zone')) {
-      drupal_add_css('http://yui.yahooapis.com/pure/0.6.0/grids-responsive-old-ie-min.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'IE 8', '!IE' => FALSE), 'every_page' => TRUE, 'weight' => -1, 'preprocess' => FALSE));
-      drupal_add_css('http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'gt IE 8'), 'every_page' => TRUE, 'weight' => -1, 'preprocess' => FALSE));
+      drupal_add_css('https://unpkg.com/purecss@'.get_css_version().'/build/grids-responsive-old-ie-min.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'IE 8', '!IE' => FALSE), 'every_page' => TRUE, 'weight' => -1, 'preprocess' => FALSE));
+      drupal_add_css('https://unpkg.com/purecss@'.get_css_version().'/build/grids-responsive-min.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'gt IE 8'), 'every_page' => TRUE, 'weight' => -1, 'preprocess' => FALSE));
     } else {
-      drupal_add_css(drupal_get_path('theme','zeropoint').'/css/yui/grids-responsive-old-ie-min.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'IE 8', '!IE' => FALSE), 'every_page' => TRUE, 'weight' => -1));
-      drupal_add_css(drupal_get_path('theme','zeropoint').'/css/yui/grids-responsive-min.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'gt IE 8'), 'every_page' => TRUE, 'weight' => -1));
+      drupal_add_css(drupal_get_path('theme','zeropoint').'/css/yui/'.get_css_version().'/grids-responsive-old-ie-min.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'IE 8', '!IE' => FALSE), 'every_page' => TRUE, 'weight' => -1));
+      drupal_add_css(drupal_get_path('theme','zeropoint').'/css/yui/'.get_css_version().'/grids-responsive-min.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'gt IE 8'), 'every_page' => TRUE, 'weight' => -1));
     }
   }
+
 global $language;
 $lang_dir = $language->dir;
 if(theme_get_setting('headerimg')) {
@@ -159,6 +160,11 @@ if(theme_get_setting('headerimg')) {
   }
 }
 
+// Get Pure.css version
+function get_css_version() {
+  $css_ver = theme_get_setting('css_ver');
+  return $css_ver;
+}
 
 // Get css styles
 function get_zeropoint_style() {
@@ -617,6 +623,25 @@ function login_links(){
       print '<div class="element-invisible">'.t('Login links').'</div><ul class="links inline"><li class="ulog first"><a href="' .url('user'). '" rel="nofollow">' .t('Login'). '</a></li><li class="ureg"><a href="' .url('user/register'). '" rel="nofollow">' .t('Register'). '</a></li></ul>';
     }
   }
+}
+
+function dev_link(){
+$devlink = theme_get_setting('devlink');
+  if ($devlink == '0'){
+	  $dvlk = 'byy';
+  }
+  if ($devlink == '1'){
+	  $dvlk = 'by';
+  }
+  $node = menu_get_object();
+  if(isset($node->type)) {
+    $nt = ucfirst($node->type).' | ';
+  }
+  else {
+    $nt='';
+  }
+//  print '<div class="'.$dvlk.'"><a href="https://www.radut.net/" title="Dr. Radut">'.$nt.'DR</a></div>';
+  print '<div class="'.$dvlk.'"><a href="https://www.radut.net/" title="Dr. Radut">DR</a></div>';
 }
 
 function divider() {

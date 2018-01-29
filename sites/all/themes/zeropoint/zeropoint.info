@@ -21,8 +21,9 @@ regions[user8] = User 8
 regions[footer] = Footer
 regions[page_bottom] = Page bottom
 
+settings[css_zone] = 0.6.0
 settings[css_zone] = 0
-settings[wrapper] = '85em'
+settings[wrapper] = '90em'
 settings[first_width] = 5
 settings[second_width] = 5
 settings[grid_responsive] = 1
@@ -39,6 +40,7 @@ settings[fntsize] = 0
 settings[roundcorners] = 1
 settings[headerimg] = 1
 settings[loginlinks] = 1
+settings[devlink] = 1
 settings[breadcrumb_display] = 1
 settings[postedby] = 0
 settings[page_h1] = 0
@@ -65,9 +67,9 @@ settings[youtube] = 'https://www.youtube.com/c/CatalinFlorianRadut'
 settings[rebuild_registry] = 0
 
 
-; Information added by Drupal.org packaging script on 2016-07-16
-version = "7.x-4.10"
+; Information added by Drupal.org packaging script on 2017-12-12
+version = "7.x-4.11"
 core = "7.x"
 project = "zeropoint"
-datestamp = "1468709346"
+datestamp = "1513070591"
 

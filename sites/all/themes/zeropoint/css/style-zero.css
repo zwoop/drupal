@@ -1,4 +1,4 @@
-/* style-zero.css, v5.02 2015/11/06
+/* style-zero.css, v5.03 2017/12/04
  *
  * ZERO POINT responsive theme for Drupal 7
  * Dr. Florian Radut, florian@radut.net
@@ -277,10 +277,9 @@ ul.breadcrumb li {
 	margin: 5px 20px 0;
 }
 .by {
-	float: right; /* LTR */
-	clear: both;
+	text-align: right; /* LTR */
 	font-size: .75em;
-	margin: 0 9px;
+	margin: 0 .3em -1.6em .3em;
 }
 .by a:hover {
 	text-decoration: none;
@@ -352,7 +351,7 @@ ul.breadcrumb li {
 li.topic_reply {
 	list-style-type: none;
 }
-.sitemap-box h2 {
+.sitemap-box h2, .byy {
 	display: none;
 }
 .pane-content h2.title a {
@@ -517,6 +516,21 @@ li.topic_reply {
 .pure-menu-children .pure-menu-children {
 	left: 100%; /* LTR */
 	top: 0;
+}
+
+/* Dropdown delay */
+.pure-menu-children {
+	display: block;
+	opacity: 0;
+	visibility: hidden;
+	-webkit-transition: all 0.5s ease-in;
+	-moz-transition: all 0.5s ease-in;
+	-o-transition: all 0.5s ease-in;
+	transition: all 0.5s ease-in;
+}
+.pure-menu-item:hover > .pure-menu-children {
+	opacity: 1;
+	visibility: visible;
 }
 
 /* Dropdown arrows */
@@ -841,7 +855,7 @@ div.messages,
 		text-align: center;
 	}
 	.nb1 #section1, .nb2 #section2, .nbl #sidebar-left, .nbr #sidebar-right, 
-	.pure-menu-horizontal, .logoimg, .by, #name-and-slogan {
+	.pure-menu-horizontal, .logoimg, #name-and-slogan {
 		display: none;
 	}
 	.pure-menu-allow-hover:hover > .pure-menu-children {
