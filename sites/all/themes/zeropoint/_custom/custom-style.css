@@ -167,8 +167,10 @@ html, .pure-g [class*="pure-u"] {
 
 /* HEADER IMAGE */
 /* Comment or erase the lines below and images rotator will work on mobiles too.
-	 You can also change the image with "mobi-sq" or use your own. */
-	.himg #headimg, #headimg {
-		background: #fff url(../images/all/mobi-dot.png) repeat;
-	}
+ * You can also change the image with "mobi-sq.png" or use your own. */
+/*
+.himg #headimg, #headimg {
+	background: #fff url(../images/all/mobi-dot.png) repeat;
+}*/
+
 }

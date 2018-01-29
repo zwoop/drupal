@@ -22,15 +22,28 @@ function zeropoint_form_system_theme_settings_alter(&$form, &$form_state) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
+  $form['tnt_container']['puregrid']['css_ver'] = array(
+    '#type' => 'select',
+    '#title' => t('Yahoo Pure.CSS version'),
+   	'#description' => t('For compatibility with old browsers, choose Pure.CSS v0.6.0.'),
+    '#default_value' => theme_get_setting('css_ver'),
+    '#options' => array(
+      '0.6.0' => t('Pure.CSS v0.6.0'),
+      '0.6.1' => t('Pure.CSS v0.6.1'),
+      '0.6.2' => t('Pure.CSS v0.6.2'),
+      '1.0.0' => t('Pure.CSS v1.0.0'),
+    ),
+	);
   $form['tnt_container']['puregrid']['css_zone'] = array(
-    '#type'          => 'checkbox',
-    '#title'         => t('<b>Use Yahoo CDN</b> to serve the responsive CSS files. If you use https leave this option unchecked to load any responsive CSS files locally.'),
+    '#type' => 'checkbox',
+    '#title' => t('<b>Use unpkg CDN</b> to serve the responsive CSS files.'),
+    '#description' => t('If you experience problems when on https or if you want to load any responsive CSS files locally, this should be unchecked.'),
     '#default_value' => theme_get_setting('css_zone')
   );
   $form['tnt_container']['puregrid']['wrapper'] = array(
     '#type' => 'textfield',
     '#title' => t('Layout width'),
-   	'#description' => t('Set the width of the layout in <b>em</b> (preferably), px or percent. Leave empty or 100% for fluid layout.'),
+   	'#description' => t('Set the width of the layout in <b>em</b> preferably (e.g. 90em), px (e.g. 1200px) or percent. Leave it empty or 100% for fluid layout.'),
     '#default_value' => theme_get_setting('wrapper'),
     '#size' => 10,
 	);
@@ -61,8 +74,8 @@ function zeropoint_form_system_theme_settings_alter(&$form, &$form_state) {
     ),
 	);
   $form['tnt_container']['puregrid']['grid_responsive'] = array(
-    '#type'          => 'select',
-    '#title'         => t('Non-Responsive/Responsive Grid'),
+    '#type' => 'select',
+    '#title' => t('Non-Responsive/Responsive Grid'),
     '#default_value' => theme_get_setting('grid_responsive'),
     '#options' => array(
       0 => t('Non-Responsive'),
@@ -177,7 +190,14 @@ function zeropoint_form_system_theme_settings_alter(&$form, &$form_state) {
   $form['tnt_container']['layout_settings']['loginlinks'] = array(
     '#type' => 'checkbox',
     '#title' => t('Login/register links'),
+    '#description' => t('Show login/register or user links.'),
     '#default_value' => theme_get_setting('loginlinks'),
+  );
+  $form['tnt_container']['layout_settings']['devlink'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Developer link'),
+    '#description' => t('Show/hide the link.'),
+    '#default_value' => theme_get_setting('devlink'),
   );
 
 // Breadcrumb

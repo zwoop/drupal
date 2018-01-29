@@ -1,5 +1,13 @@
 CHANGELOG - ZERO POINT responsive theme for Drupal 7
 
+0 Point 7.x-4.11 (Dec 12, 2017)
+------------------------------
+    o Updated to use all versions of Yahoo Pure.CSS (https://purecss.io/). It is possible
+      to choose any of the following versions: v0.6.0, v0.6.1, v0.6.2, v1.0.0 (the latest).
+    o Main Menu Displayed Vertically at HTTPS site is no longer an issue. All versions 
+      of Pure.CSS are now served form unpkg CDN over https.
+    o Making a delay on the dropdown menu
+
 0 Point 7.x-4.10 (Jul 17, 2016)
 ------------------------------
     o #2767477: Error on Maintenance Page
