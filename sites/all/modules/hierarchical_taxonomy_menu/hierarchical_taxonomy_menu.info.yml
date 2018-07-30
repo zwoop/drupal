@@ -6,8 +6,8 @@ package: Menu
 dependencies:
   - taxonomy
 
-# Information added by Drupal.org packaging script on 2018-04-20
-version: '8.x-1.21'
+# Information added by Drupal.org packaging script on 2018-07-28
+version: '8.x-1.25'
 core: '8.x'
 project: 'hierarchical_taxonomy_menu'
-datestamp: 1524255487
+datestamp: 1532806985

@@ -26,16 +26,12 @@
         e.preventDefault();
         var isChildVisible = $(this).parent().children('.menu').is(':visible');
         if (isChildVisible) {
-          $(this).parent().children('.menu').slideUp(400, function() {
-              $(this).parent().removeClass('active')
-            }
-          );
+          $(this).parent().children('.menu').slideUp();
+          $(this).parent().removeClass('active');
         }
         else {
-          $(this).parent().children('.menu').slideDown(400, function() {
-              $(this).parent().addClass('active')
-            }
-          );
+          $(this).parent().children('.menu').slideDown();
+          $(this).parent().addClass('active');
         }
       });
     } else {
@@ -44,16 +40,12 @@
         $(this).closest('i').toggleClass("arrow-right arrow-down");
         var isChildVisible = $(this).parent().children('.menu').is(':visible');
         if (isChildVisible) {
-          $(this).parent().children('.menu').slideUp(400, function() {
-              $(this).parent().removeClass('active')
-            }
-          );
+          $(this).parent().children('.menu').slideUp();
+          $(this).parent().removeClass('active');
         }
         else {
-          $(this).parent().children('.menu').slideDown(400, function() {
-              $(this).parent().addClass('active')
-            }
-          );
+          $(this).parent().children('.menu').slideDown();
+          $(this).parent().addClass('active');
         }
       });
     }
